@@ -1,0 +1,24 @@
+<div class="container p-4">
+    <div class="row">
+        {{#each customers}}
+        <div class="col-md-12" margin="auto">
+            <div class="card text-center">
+                <div class="card-body">
+                    {{> list }}
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-md-4 mx-auto">
+            <div class="card card-body text-center">
+                <p>There are not customers saved yet.</p>
+                <a href="/admin/customers/add">Create One!</a>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    <div class="container text-center">
+        <a class="btn btn-lg btn-danger m-3" href="/logout">Logout</a>
+    </div>
+    </li>
+</div>

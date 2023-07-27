@@ -1,0 +1,26 @@
+<h4 class="card-subtitle text-uppercase">{{status}}</h4>
+<h3 class="card-title text-uppercase">{{fullname}}</h3>
+<h4 class="card-subtitle">{{document}}</h4>
+
+
+<p class="m-2">{{phone}}</p>
+<p class="m-2">{{email}}</p>
+
+<div class="card p-4">
+    <h5 class="card-subtitle">Uploaded Files</h3>
+    <div class="card-body">
+    <div class="container"style="height:200px; overflow-y: scroll;">
+        <ul class="list-group">
+            {{#each files}}
+            <li class="list-group-item">
+                <a href="https://drive.google.com/file/d/{{id}}/view" target="_blank">
+                    {{name}}
+                </a>
+            </li>
+            {{else}}
+            <p>You do not have uploaded files yet</p>
+            {{/each}}
+        </ul>
+    </div>
+    </div>
+</div>

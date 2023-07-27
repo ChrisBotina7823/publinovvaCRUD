@@ -1,0 +1,87 @@
+<div class="container" style="height: 300px; overflow-y: auto;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Full Name</th>
+                <th>Document</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Uploaded Files</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each customers}}
+            <tr>
+                <td class="text-uppercase">{{status}}</td>
+                <td>{{fullname}}</td>
+                <td>{{document}}</td>
+                <td>{{phone}}</td>
+                <td>{{email}}</td>
+                <td>
+                    {{#if files}}
+                    <ul>
+                        {{#each files}}
+                        <li><a href="https://drive.google.com/file/d/{{id}}/view" target="_blank">{{name}}</a></li>
+                        {{/each}}
+                    </ul>
+                    {{else}}
+                    You do not have uploaded files yet
+                    {{/if}}
+                </td>
+                <td>{{timeago created_at}}</td>
+                <td class="text-center">
+                    <a style="color:404a9d" href="/admin/customers/edit/{{id}}">Edit</a>
+                    <a style="color:red" href="/admin/customers/delete/{{id}}">Delete</a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+
+
+<div class="m-8 text-center">
+    <a href="/admin/customers/add" class="m-8 btn btn-success">
+        Add a Customer
+    </a>
+</div>
+
+{{!-- <div class="container p-4">
+    <div class="row" style="overflow-x: scroll;">
+        {{#each customers}}
+        <div class="col-md-5">
+            <div class="card text-center">
+                <div class="card-body">
+
+                    {{> table }}
+
+                    <p class="text-muted">{{timeago created_at}}</p>
+
+
+                    <a class="btn btn-danger" href="/admin/customers/delete/{{id}}">
+                        Delete
+                    </a>
+                    <a class="btn btn-secondary" href="/admin/customers/edit/{{id}}">
+                        Edit
+                    </a>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+    <div class="m-8 text-center">
+        <a href="/admin/customers/add" class="m-8 btn btn-success">
+            Add a Customer
+        </a>
+    </div>
+</div> --}}
+
+<script>
+    $(document).ready(function () {
+        $('.table').DataTable();
+    });
+</script>
