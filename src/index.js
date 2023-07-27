@@ -9,6 +9,9 @@ const flash = require('connect-flash');
 const MySQLStore = require('express-mysql-session')(session);
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const dotenv = require('dotenv')
+
+dotenv.config()
 
 const { database } = require('./keys');
 
