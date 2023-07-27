@@ -24,6 +24,16 @@ pool.getConnection((err, connection) => {
   return;
 });
 
+pool.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
+  if (error) {
+    // Manejar el error de conexión aquí
+    console.error('Error al conectarse a la base de datos:', error);
+  } else {
+    console.log('Conexión a la base de datos establecida correctamente');
+    console.log('El resultado de la consulta es:', results[0].solution);
+  }
+});
+
 // Promisify Pool Querys
 pool.query = promisify(pool.query);
 
