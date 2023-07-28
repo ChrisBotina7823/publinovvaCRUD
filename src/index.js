@@ -45,6 +45,7 @@ app.use(session({
   saveUninitialized: false,
   store: new FileStore()
 }));
+
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());

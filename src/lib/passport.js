@@ -1,7 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const pool = require('../database');
+const { pool } = require('../database');
 const helpers = require('./helpers');
 const { createFolder } = require('../lib/driveUpload')
 

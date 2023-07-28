@@ -2,11 +2,10 @@
 module.exports = {
 
     database: {
-        //socketPath: '/cloudsql/eminent-citadel-393914:us-central1:publinovvadb',
-        host: '34.31.125.130',
-        user: 'root',
-        password: 'admin123',
-        database: 'publinovva',
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_DATABASE,
     },
 
     drive: {

@@ -1,33 +1,44 @@
-const mysql = require('mysql');
-const { promisify } = require('util');
+// const mysql = require('mysql');
+// const { promisify } = require('util');
 
-const { database } = require('./keys');
+// const { database } = require('./keys');
 
-const pool = mysql.createPool(database);
+// const pool = mysql.createPool(database);
 
-pool.getConnection((err, connection) => {
-  if (err) {
-    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-      console.error('Database connection was closed.');
-    }
-    if (err.code === 'ER_CON_COUNT_ERROR') {
-      console.error('Database has to many connections');
-    }
-    if (err.code === 'ECONNREFUSED') {
-      console.error('Database connection was refused');
-    }
-  }
+// pool.getConnection((err, connection) => {
+//   if (err) {
+//     console.error(err)
+//   }
 
-  if (connection) connection.release();
-  console.log('DB is Connected');
+//   if (connection) {
+//     connection.release();
+//     console.log('DB is Connected');
+//   }
+//   return;
+// });
 
-  return;
-});
+// // Promisify Pool Querys
+// pool.query = promisify(pool.query);
 
-// Promisify Pool Querys
-pool.query = promisify(pool.query);
+// module.exports = pool;
 
-module.exports = pool;
+
+const {createPool} = require('mysql2/promise')
+const dotenv = require('dotenv')
+
+dotenv.config()
+
+console.log(process.env.DB_HOST)
+
+module.exports = {
+    pool: createPool({
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        database: process.env.DB_NAME
+    })
+}
 
 
 // const mysql = require('mysql')
