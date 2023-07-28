@@ -30,10 +30,12 @@ pool.query = promisify(pool.query);
 module.exports = pool;
 
 
-const mysql = require('mysql')
-const { database } = require('./keys')
-const connection = mysql.createConnection(database)
-module.exports = connection;
+// const mysql = require('mysql')
+// const { database } = require('./keys')
+// const connection = mysql.createConnection(database)
+// module.exports = connection;
+
+
 
 // const { MongoClient, ServerApiVersion } = require('mongodb');
 // const uri = "mongodb+srv://publinovva:Publinovva123@publinovvadb.6qrmmho.mongodb.net/?retryWrites=true&w=majority";
