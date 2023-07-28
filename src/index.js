@@ -6,8 +6,8 @@ const session = require('express-session');
 const validator = require('express-validator');
 const passport = require('passport');
 const flash = require('connect-flash');
-// const MySQLStore = require('express-mysql-session')(session);
-const FileStore = require('session-file-store')(session);
+
+// const FileStore = require('session-file-store')(session);
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const dotenv = require('dotenv')
@@ -39,12 +39,42 @@ app.set('view engine', '.hbs');
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+// const MySQLStore = require('express-mysql-session')(session);
+// app.use(session({
+//   secret: 'faztmysqlnodemysql',
+//   resave: false,
+//   saveUninitialized: false,
+//   store: new MySQLStore({
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     host: process.env.DB_HOST,
+//     port: process.env.DB_PORT,
+//     database: process.env.DB_NAME
+//   })
+// }));
+
+const Sequelize = require('sequelize');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    dialect: 'mysql',
+    // logging: false
+});
+
+const sessionStore = new SequelizeStore({
+    db: sequelize
+});
+
 app.use(session({
-  secret: 'faztmysqlnodemysql',
-  resave: false,
-  saveUninitialized: false,
-  store: new FileStore()
+    secret: 'session secret',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false
 }));
+
+sessionStore.sync();
 
 app.use(flash());
 app.use(passport.initialize());

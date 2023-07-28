@@ -32,7 +32,7 @@ router.post('/add', upload.array('files', 128), async (req, res) => {
             document,
             password,
             user_id: req.user.id,
-            storage: size
+            storage: size,
         };
     
         await pool.query('INSERT INTO customers set ?', [newCustomer]);
@@ -50,18 +50,25 @@ router.post('/add', upload.array('files', 128), async (req, res) => {
 });
 
 router.get('/', isLoggedIn, async (req, res) => {
-    const customers = await pool.query('SELECT * FROM customers WHERE user_id = ?', [req.user.id]);
-    for (const customer of customers) {
-        customer.files = await getFilesInFolder(customer.folderId);
+    console.log(req.user.id)
+    try {
+        const rows = await pool.query('SELECT * FROM customers WHERE user_id = ?', [req.user.id]);
+        const customers = rows[0]
+        console.log(customers)
+        for (const customer of customers) {
+            customer.files = await getFilesInFolder(customer.folderId);
+        }
+        res.render('customers/customer-list', { customers });
+    } catch(err) {
+        console.error("aqui")
     }
-    res.render('customers/customer-list', { customers });
 });
 
 router.get('/delete/:id', async (req, res) => {
     const { id } = req.params;
 
     const result = await pool.query('SELECT * FROM customers WHERE id = ?', [id])
-    const { folderId: fileId } = result[0]
+    const { folderId: fileId } = result[0][0]
     await deleteFile(fileId)
 
     await pool.query('DELETE FROM customers WHERE id = ?', [id]);
@@ -73,7 +80,7 @@ router.get('/edit/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const customers = await pool.query('SELECT * FROM customers WHERE id = ?', [id]);
-        const customer = customers[0]
+        const customer = customers[0][0]
         const files = await getFilesInFolder(customer.folderId)
         console.log(files)
         const remaining_size = (MAX_SIZE - customer.storage) / 1e6
@@ -96,7 +103,7 @@ router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, r
     const files = req.files
     const size = files.reduce( (acc, item) => acc + item.size, 0 );
     const rows = await pool.query('SELECT * FROM customers WHERE id = ?', [userId])
-    const customer = rows[0] 
+    const customer = rows[0][0]
     const newSize = size + customer.storage
     await uploadMultipleFiles(files, folderId)
     await renameFolder(folderId, document) 

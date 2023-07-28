@@ -1,9 +1,9 @@
 const express = require('express');
-const { isLoggedIn } = require('../lib/auth');
+const { isNotAuthenticated } = require('../lib/auth');
 const { pool } = require('../database');
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get('/', isNotAuthenticated, async (req, res) => {
     res.render("index")
 });
 

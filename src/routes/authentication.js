@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../database');
+const { pool } = require('../database');
 const { getFilesInFolder } = require('../lib/driveUpload')
 
 const passport = require('passport');
-const { isLoggedIn } = require('../lib/auth');
+const { isLoggedIn, isNotAuthenticated } = require('../lib/auth');
 
 // SIGNUP
-router.get('/admin/signup', (req, res) => {
+router.get('/admin/signup', isNotAuthenticated, (req, res) => {
   res.render('auth/admin-signup');
 });
 
@@ -18,7 +18,7 @@ router.post('/admin/signup', passport.authenticate('admin.signup', {
 }));
 
 // SINGIN
-router.get('/admin/signin', (req, res) => {
+router.get('/admin/signin', isNotAuthenticated, (req, res) => {
   res.render('auth/admin-signin');
 });
 
@@ -39,7 +39,7 @@ router.post('/admin/signin', (req, res, next) => {
 
 // CUSTOMERS
 
-router.get('/customer/signin', (req, res) => {
+router.get('/customer/signin', isNotAuthenticated, (req, res) => {
   res.render('auth/customer-signin');
 });
 
@@ -61,7 +61,7 @@ router.post('/customer/signin', (req, res, next) => {
 // LOGOUT
 
 router.get('/logout', (req, res) => {
-  req.logOut();
+  req.logout();
   res.redirect('/');
 });
 
@@ -70,7 +70,8 @@ router.get('/logout', (req, res) => {
 // });
 
 router.get('/customer/documents', isLoggedIn, async (req, res) => {
-  const customers = await pool.query('SELECT * FROM customers WHERE document = ?', [req.user.document])
+  const rows = await pool.query('SELECT * FROM customers WHERE document = ?', [req.user.document])
+  const customers = rows[0]
   for (const customer of customers) {
     customer.files = await getFilesInFolder(customer.folderId);
 }
