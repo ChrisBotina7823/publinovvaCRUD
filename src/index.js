@@ -16,12 +16,6 @@ dotenv.config()
 
 const { database } = require('./keys');
 
-
-const mongoose= require('mongoose');
-const uri = "mongodb+srv://publinovva:Publinovva123@publinovvadb.6qrmmho.mongodb.net/?retryWrites=true&w=majority";
-
-
-
 // Intializations
 const app = express();
 require('./lib/passport');
@@ -81,16 +75,6 @@ app.use((err, req, res, next) => {
 
 // Public
 app.use(express.static(path.join(__dirname, 'public')));
-
-mongoose.connect(uri, {
-  useUnifiedTopology: true, // For Mongoose 5 only. Remove for Mongoose 6+
-  serverSelectionTimeoutMS: 1000, // Defaults to 30000 (30 seconds)
-})
-
-const connection = mongoose.connection;
-connection.once("open", () => {
-  console.log("connected db")
-})
 
 
 // Starting

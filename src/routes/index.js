@@ -1,11 +1,11 @@
 const express = require('express');
 const { isLoggedIn } = require('../lib/auth');
-const { connect } = require('../database');
+const pool = require('../database');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-    const client = await connect();
-    console.log(client) 
+    const q = await pool.query('SELECT 1+1 AS result')
+    console.log(q)
 });
 
 module.exports = router;
