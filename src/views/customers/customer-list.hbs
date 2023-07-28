@@ -1,5 +1,5 @@
-<div class="container" style="height: 300px; overflow-y: auto;">
-    <table class="table">
+<div class="container-fluid col-md-10" style="overflow: auto;">
+    <table class="table table-striped table-light">
         <thead>
             <tr>
                 <th>Status</th>
@@ -33,8 +33,8 @@
                 </td>
                 <td>{{timeago created_at}}</td>
                 <td class="text-center">
-                    <a style="color:404a9d" href="/admin/customers/edit/{{id}}">Edit</a>
-                    <a style="color:red" href="/admin/customers/delete/{{id}}">Delete</a>
+                    <a class="mx-1" style="color:#39439a" href="/admin/customers/edit/{{id}}">Edit</a>
+                    <a class="mx-1" style="color:red" href="/admin/customers/delete/{{id}}" onclick="return confirm('¿Estás seguro de que quieres eliminar este elemento?')" >Delete</a>
                 </td>
             </tr>
             {{/each}}
@@ -44,7 +44,7 @@
 
 
 
-<div class="m-8 text-center">
+<div class="mt-8 text-center">
     <a href="/admin/customers/add" class="m-8 btn btn-success">
         Add a Customer
     </a>

@@ -1,3 +1,54 @@
+html {
+  font-size: 16px;
+}
+
+p {
+  font-size: 1.2rem; /* 19.2px */
+}
+
+.table thead th {
+  background-color: #39439a;
+  color: white;
+  border-color: #8a8ecb;
+  font-weight: normal;
+  text-align: center;
+}
+
+.table-bordered td,
+.table-bordered th {
+  border-color: #39439a;
+  border-width: 2px;
+}
+
+
+
+.card {
+  background-color: #c8cbf1;
+}
+
+
+.btn-primary {
+  background-color: #484baa;
+  border-color: #2e3180;
+}
+
+.btn-primary:hover,
+.btn-primary:active {
+  background-color: #1c1d4c;
+  border-color: #1c1d4c;
+}
+
+.form-control {
+  background-color: #e0e1f5;
+  border-color: #9b9dd5;
+  color: #1c1d4c;
+}
+.form-control:focus {
+  background-color: #d1d2ee;
+  border-color: #1c1d4c;
+}
+
+
 body {
   background: #f5f6fa;
   font-family: 'Oswald', sans-serif;
@@ -42,4 +93,9 @@ body {
     .masthead h1 {
       font-size: 5.5rem;
     }
+  }
+
+  .responsive_img {
+    width: 100%;
+    height: auto;
   }

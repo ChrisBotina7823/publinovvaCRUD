@@ -30,7 +30,15 @@
         <li class="nav-item">
           <a class="nav-link" href="/profile">Profile</a>
         </li> --}}
+
+        {{#if user.name}}
+
+        <li class="nav-item ml-5">
+          <a class="nav-link" href="#">{{user.name}}</a>
+        </li>
+        {{/if}}
         
+
         <li class="nav-item ml-5">
           <a class="nav-link" href="/logout">Logout</a>
         </li>
