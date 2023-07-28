@@ -6,7 +6,8 @@ const session = require('express-session');
 const validator = require('express-validator');
 const passport = require('passport');
 const flash = require('connect-flash');
-const MySQLStore = require('express-mysql-session')(session);
+// const MySQLStore = require('express-mysql-session')(session);
+const FileStore = require('session-file-store')(session);
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const dotenv = require('dotenv')
@@ -15,9 +16,18 @@ dotenv.config()
 
 const { database } = require('./keys');
 
+
+const mongoose= require('mongoose');
+const uri = "mongodb+srv://publinovva:Publinovva123@publinovvadb.6qrmmho.mongodb.net/?retryWrites=true&w=majority";
+
+
+
 // Intializations
 const app = express();
 require('./lib/passport');
+
+
+
 
 // Settings
 app.set('port', process.env.PORT || 4000);
@@ -39,7 +49,7 @@ app.use(session({
   secret: 'faztmysqlnodemysql',
   resave: false,
   saveUninitialized: false,
-  store: new MySQLStore(database)
+  store: new FileStore()
 }));
 app.use(flash());
 app.use(passport.initialize());
@@ -71,6 +81,17 @@ app.use((err, req, res, next) => {
 
 // Public
 app.use(express.static(path.join(__dirname, 'public')));
+
+mongoose.connect(uri, {
+  useUnifiedTopology: true, // For Mongoose 5 only. Remove for Mongoose 6+
+  serverSelectionTimeoutMS: 1000, // Defaults to 30000 (30 seconds)
+})
+
+const connection = mongoose.connection;
+connection.once("open", () => {
+  console.log("connected db")
+})
+
 
 // Starting
 app.listen(app.get('port'), () => {

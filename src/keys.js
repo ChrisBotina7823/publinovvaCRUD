@@ -1,14 +1,12 @@
+
 module.exports = {
 
     database: {
-        connectionLimit: 10,
-        connectTimeout: 60 * 60 * 1000,
-        acquireTimeout: 60 * 60 * 1000,
-        timeout: 60 * 60 * 1000,
-        host: process.env.DB_HOST, // || "localhost",
-        user: process.env.DB_USER, // || "root",
-        password: process.env.DB_PASSWORD, //  || "Piececontrol7823#",
-        database: process.env.DB_DATABASE // || "db_links"
+        //socketPath: '/cloudsql/eminent-citadel-393914:us-central1:publinovvadb',
+        host: '34.31.125.130',
+        user: 'root',
+        password: 'admin123',
+        database: 'publinovva',
     },
 
     drive: {

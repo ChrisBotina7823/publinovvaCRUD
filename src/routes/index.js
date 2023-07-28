@@ -1,16 +1,11 @@
 const express = require('express');
-const { isLoggedIn } = require('../lib/auth')
+const { isLoggedIn } = require('../lib/auth');
+const { connect } = require('../database');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-    if(req.isAuthenticated()) {
-        if(req.user.fullname) {
-            return res.redirect("/customer/documents")
-        } else {
-            return res.redirect("admin/customers")
-        }
-    }
-    res.render('index');
+    const client = await connect();
+    console.log(client) 
 });
 
 module.exports = router;
