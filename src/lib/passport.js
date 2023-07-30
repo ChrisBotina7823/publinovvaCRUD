@@ -16,12 +16,12 @@ passport.use('admin.signin', new LocalStrategy({
     const validPassword = await helpers.matchPassword(password, user.password)
     if (validPassword) {
       user.type = 'admin'
-      done(null, user, req.flash('success', 'Welcome ' + user.name));
+      done(null, user, req.flash('success', 'Bienvenido, ' + user.name));
     } else {
-      done(null, false, req.flash('message', 'Incorrect Password'));
+      done(null, false, req.flash('message', 'Contraseña incorrecta'));
     }
   } else {
-    return done(null, false, req.flash('message', 'The Username does not exist.'));
+    return done(null, false, req.flash('message', `El correo ${username} no está registrado en el sistema`));
   }
 }));
 
@@ -67,12 +67,12 @@ passport.use('customer.signin', new LocalStrategy({
     console.log(user)
     console.log(validPassword)
     if (validPassword) {
-      done(null, user, req.flash('success', 'Welcome ' + user.fullname));
+      done(null, user, req.flash('success', 'Bienvenido ' + user.fullname));
     } else {
-      done(null, false, req.flash('message', 'Incorrect Password'));
+      done(null, false, req.flash('message', 'Contraseña incorrecta'));
     }
   } else {
-    return done(null, false, req.flash('message', 'The Username does not exist.'));
+    return done(null, false, req.flash('message', `El documento ${username} no está registrado en el sistema`));
   }
 }))
 

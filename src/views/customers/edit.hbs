@@ -6,39 +6,42 @@
 
                     <form id="form" action="/admin/customers/edit/{{customer.id}}/{{customer.folderId}}" method="POST" enctype="multipart/form-data">
                         <div class="form-group">
-                            <p class="text-left">Full name</p>
-                            <input type="text" value="{{customer.fullname}}" name="fullname" class="form-control" placeholder="Full name"  autofocus required>
+                            <p class="text-left">Nombre Completo</p>
+                            <input type="text" value="{{customer.fullname}}" name="fullname" class="form-control" placeholder="Nombre Completo"  autofocus required>
                         </div>
                         <div class="form-group">
-                            <p class="text-left">Document</p>
-                            <input type="text" value={{{customer.document}}} name="document" class="form-control" placeholder="Document ID" required>
+                            <p class="text-left">Documento</p>
+                            <input type="text" value={{{customer.document}}} name="document" class="form-control" placeholder="Documento" required>
                         </div>
                         <div class="form-group">
-                            <p class="text-left">Password</p>
-                            <input type="text" value={{{customer.password}}} name="password" class="form-control" placeholder="Password" required>
+                            <p class="text-left">Contraseña</p>
+                            <input type="text" value={{{customer.password}}} name="password" class="form-control" placeholder="Contraseña" required>
                         </div>
                         <div class="form-group">
-                            <p class="text-left">Email</p>
-                            <input type="email" value={{customer.email}} name="email" class="form-control" placeholder="Email" required>
+                            <p class="text-left">Correo Electrónico</p>
+                            <input type="email" value={{customer.email}} name="email" class="form-control" placeholder="Correo Electrónico" required>
                         </div>
                         <div class="form-group">
-                            <p class="text-left">Phone</p>
-                            <input type="phone" value={{{customer.phone}}} name="phone" class="form-control" placeholder="Phone number" required>
+                            <p class="text-left">Teléfono</p>
+                            <input type="phone" value={{{customer.phone}}} name="phone" class="form-control" placeholder="Teléfono" required>
                         </div>
                         <div class="form-group">
-                            <p class="text-left">Status</p>
-                            <input type="text" value="{{customer.status}}" name="status" class="form-control" placeholder="Status"
+                            <p class="text-left">Estado</p>
+                            <input type="text" value="{{customer.status}}" name="status" class="form-control" placeholder="Estado"
                                 required>
                         </div>
 
-                        <ul class="list-group">
+                        <p class="text-left">Archivos Subidos</p>
+                        <ul class="form-control">
                             {{#each files}}
-                            <li class="list-group-item">
+                            <li>
                                 <a href="https://drive.google.com/file/d/{{id}}/view" target="_blank">
                                     {{name}}
                                 </a>
                                 <a style="color:red;margin-left:1rem" href="/admin/customers/files/delete/{{../customer.id}}/{{id}}">Delete</a>
                             </li>
+                            {{else}}
+                            <p class="text-muted">No se han subido archivos</p>
                             {{/each}}
                         </ul>
 
@@ -47,25 +50,21 @@
                             <input id="fileInput" type="file" name="files" class="form-control" multiple>
                         </div> --}}
 
-                        <div class="container py-3">
-                        
-                            <div class="input-group custom-file-button">
-                                <label class="input-group-text" for="inputGroupFile">Your Custom Text</label>
-                                <input type="file" style="height:3rem" class="form-control" id="inputGroupFile">
-                            </div>
-                        
+                        <div class="form-group file-upload-wrapper">
+                            <p class="text-left">Subir Archivos <span class="text-muted"> (Tamaño restante: {{ remaining_size }} MB)</span></p>
+                            <input id="fileInput" type="file" style="height:3rem" name="files" class="form-control" multiple>
                         </div>
 
                         <div class="form-group">
                             <div class="row">
                                 <div class="col">
                                     <button class="btn btn-primary btn-block">
-                                        Save
+                                        Guardar
                                     </button>
                                 </div>
                                 <div class="col">
                                     <a href="/admin/customers/" class="btn btn-danger btn-block">
-                                        Cancel
+                                        Cancelar
                                     </a>
                                 </div>
                             </div>

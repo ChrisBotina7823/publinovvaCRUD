@@ -1,29 +1,39 @@
 
-<div class="container p-4">
+<div class="container-fluid pt-2 pb-2" style="height:85vh;overflow-y:scroll;">
     <div class="row">
-        <div class="col-md-4 mx-auto">
+        <div class="col-md-10 mx-auto">
             <div class="card">
                 <div class="card-body">
                     <form id="form" action="/admin/customers/add" method="POST" enctype="multipart/form-data">
 
                         <div class="form-group">
-                            <input type="text" name="fullname" class="form-control" placeholder="Full name" autofocus>
+                            <p class="text-left">Nombre Completo</p>
+                            <input type="text" name="fullname" class="form-control" placeholder="Nombre Completo" autofocus>
                         </div>
                         <div class="form-group">
-                            <input type="text" name="document" class="form-control" placeholder="Document ID" required>
+                            <p class="text-left">Documento</p>
+                            <input type="text" name="document" class="form-control" placeholder="Documento" required>
                         </div>
                         <div class="form-group">
-                            <input type="password" name="password" class="form-control" placeholder="Password" required>
+                            <p class="text-left">Contraseña</p>
+                            <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
                         </div>
                         <div class="form-group">
-                            <input type="email" name="email" class="form-control" placeholder="Email" required>
+                            <p class="text-left">Correo Electrónico</p>
+                            <input type="email" name="email" class="form-control" placeholder="Correo Electrónico" required>
                         </div>
                         <div class="form-group">
-                            <input type="phone" name="phone" class="form-control" placeholder="Phone number" required>
+                            <p class="text-left">Teléfono</p>
+                            <input type="phone" name="phone" class="form-control" placeholder="Teléfono" required>
+                        </div>
+
+                        <div class="form-group">
+                            <p class="text-left">Estado</p>
+                            <input type="text" name="status" class="form-control" placeholder="Estado" required>
                         </div>
 
                         <div class="form-group file-upload-wrapper">
-                            <p class="text-left">Add Files <span class="text-muted"> (Maximum size: {{ size }} MB)</span></p>
+                            <p class="text-left">Subir Archivos <span class="text-muted"> (Tamaño máximo: {{ size }} MB)</span></p>
                             <input id="fileInput" type="file" style="height:3rem" name="files" class="form-control" multiple>
                         </div>
 
@@ -31,12 +41,12 @@
                             <div class="row">
                                 <div class="col">
                                     <button class="btn btn-primary btn-block">
-                                        Save
+                                        Añadir
                                     </button>
                                 </div>
                                 <div class="col">
                                     <a href="/admin/customers/" class="btn btn-danger btn-block">
-                                        Cancel
+                                        Cancelar
                                     </a>
                                 </div>
                             </div>

@@ -3,7 +3,7 @@ html {
 }
 
 p {
-  font-size: 1.2rem; /* 19.2px */
+  font-size: 1.2rem;
 }
 
 .table thead th {
@@ -65,7 +65,7 @@ body {
 
 .nav-link {
     color: #404a9d !important;
-    font-size: 1.5rem;
+    font-size: 3vh
 }
 
 .masthead {

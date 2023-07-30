@@ -23,8 +23,8 @@ router.get('/admin/signin', isNotAuthenticated, (req, res) => {
 });
 
 router.post('/admin/signin', (req, res, next) => {
-  req.check('email', 'Email is Required').notEmpty();
-  req.check('password', 'Password is Required').notEmpty();
+  req.check('email', 'El correo electrónico es obligatorio').notEmpty();
+  req.check('password', 'La contraseña es obligatoria').notEmpty();
   const errors = req.validationErrors();
   if (errors.length > 0) {
     req.flash('message', errors[0].msg);
@@ -44,8 +44,8 @@ router.get('/customer/signin', isNotAuthenticated, (req, res) => {
 });
 
 router.post('/customer/signin', (req, res, next) => {
-  req.check('document', 'Document is Required').notEmpty();
-  req.check('password', 'Password is Required').notEmpty();
+  req.check('document', 'El documento es obligatorio').notEmpty();
+  req.check('password', 'La contraseña es obligatoria').notEmpty();
   const errors = req.validationErrors();
   if (errors.length > 0) {
     req.flash('message', errors[0].msg);

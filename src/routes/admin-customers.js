@@ -13,8 +13,8 @@ router.get('/add', (req, res) => {
 });
 
 router.post('/add', upload.array('files', 128), async (req, res) => {
+    const { fullname, document, password, email, phone, status } = req.body;
     try {
-        const { fullname, document, password, email, phone, } = req.body;
         const files = req.files
         const size = files.reduce( (acc, item) => acc + item.size, 0 );
         // if(size > MAX_SIZE ) {
@@ -33,6 +33,7 @@ router.post('/add', upload.array('files', 128), async (req, res) => {
             password,
             user_id: req.user.id,
             storage: size,
+            status
         };
     
         await pool.query('INSERT INTO customers set ?', [newCustomer]);
@@ -40,7 +41,7 @@ router.post('/add', upload.array('files', 128), async (req, res) => {
         res.redirect('/admin/customers');
     } catch(err) {
         if(err.code == 'ER_DUP_ENTRY') {
-            req.flash('message', 'Customer document must be unique')
+            req.flash('message', `El documento ${document} ya está registrado en el sistema`)
             res.redirect('/admin/customers/add')
         } else {
             req.flash('message', `${err}`)
@@ -54,13 +55,13 @@ router.get('/', isLoggedIn, async (req, res) => {
     try {
         const rows = await pool.query('SELECT * FROM customers WHERE user_id = ?', [req.user.id]);
         const customers = rows[0]
-        console.log(customers)
+        // console.log(customers)
         for (const customer of customers) {
             customer.files = await getFilesInFolder(customer.folderId);
         }
         res.render('customers/customer-list', { customers });
     } catch(err) {
-        console.error("aqui")
+        console.error(err)
     }
 });
 
@@ -68,11 +69,11 @@ router.get('/delete/:id', async (req, res) => {
     const { id } = req.params;
 
     const result = await pool.query('SELECT * FROM customers WHERE id = ?', [id])
-    const { folderId: fileId } = result[0][0]
+    const { folderId: fileId, document } = result[0][0]
     await deleteFile(fileId)
 
     await pool.query('DELETE FROM customers WHERE id = ?', [id]);
-    req.flash('success', 'Link Removed Successfully');
+    req.flash('success', `Cliente identificado con ${document} eliminado`);
     res.redirect('/admin/customers');
 });
 
@@ -88,7 +89,7 @@ router.get('/edit/:id', async (req, res) => {
 
     } catch(err) {
         if(err.code == 'ER_DUP_ENTRY') {
-            req.flash('message', 'Customer document must be unique')
+            req.flash('message', `El documento ${document} ya está registrado en el sistema`)
             res.redirect('/admin/customers/add')
         } else {
             req.flash('message', `${err}`)
@@ -117,7 +118,7 @@ router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, r
         status
     };
     await pool.query('UPDATE customers set ? WHERE id = ?', [newCustomer, userId]);
-    req.flash('success', 'Customer Updated Successfully');
+    req.flash('success', 'Cliente editado con éxito');
     res.redirect('/admin/customers');
 });
 
