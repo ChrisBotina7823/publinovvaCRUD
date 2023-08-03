@@ -77,12 +77,12 @@ passport.use('customer.signin', new LocalStrategy({
 }))
 
 passport.serializeUser((user, done) => {
-  console.log('SERIALIZANDO', user.id)
+  // console.log('SERIALIZANDO', user.id)
   done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
-  console.log('DESERIALIZANDO', id)
+  // console.log('DESERIALIZANDO', id)
   let rows = await pool.query('SELECT * FROM admins WHERE id = ?', [id]);
   if(rows[0].length == 0) {
     rows = await pool.query('SELECT * FROM customers WHERE id = ?', [id]);
