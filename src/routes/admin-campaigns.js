@@ -6,7 +6,6 @@ const { registerMetrics, getLastLog } = require('../lib/sheetsUpload')
 
 router.get('/', async (req, res) => { 
     let campaigns = await getLastLog()
-    await updateCampaignBudget('23856402848000255', 120000)
     // res.send(lastLog)
     res.render('campaigns/campaign-list', {campaigns})
 })

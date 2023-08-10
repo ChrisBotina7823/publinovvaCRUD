@@ -176,7 +176,7 @@ const registerMetrics = async () => {
 
 const getLastLog = async () => {
     const activeCampaigns = await getCampaigns(true)
-    // console.log(activeCampaigns)
+    console.log(activeCampaigns)
 
     let campaigns = activeCampaigns.map( campaign => Object.assign({}, campaign) )
 
@@ -217,6 +217,7 @@ const getLastLog = async () => {
         const log = rowValues.data.values[0];
 
         // console.log(log)
+        // console.log(campaign)
 
         Object.assign(campaign, {
             clicks: Math.round(campaign.clicks - log[0]),

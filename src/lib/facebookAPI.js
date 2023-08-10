@@ -22,10 +22,10 @@ const url_footer = `&access_token=${access_token}`
 
 const getCampaigns = async currentCampaigns => {
     // Getting basic information
-    let url = url_header + `${account_id}` + '/campaigns?fields=id,name,status,daily_budget,insights{actions,inline_link_clicks,cpc,spend}' + url_footer
+    let url = url_header + `${account_id}` + '/campaigns?fields=id,name,status,daily_budget,insights{actions,inline_link_clicks,cpc,spend,objective}' + url_footer
     let response = await axios.get(url)
     let campaigns = response.data.data
-    // console.log(campaigns)
+    console.log(campaigns)
 
     for(let campaign of campaigns) {
         Object.assign(campaign, { cpc: 0, spend: 0, messages: 0, cpr: 0, clicks: 0 });
@@ -49,6 +49,7 @@ const getCampaigns = async currentCampaigns => {
                     campaign.messages = parseFloat(messages.value)
                     if(campaign.messages > 0) {
                         campaign.cpr = campaign.spend / campaign.messages
+                        
                     }
                 }
             }
