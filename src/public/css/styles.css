@@ -6,6 +6,19 @@ p {
   font-size: 1.2rem;
 }
 
+
+.aprobado {
+  color: green;
+}
+
+.no-aprobado {
+  color: red;
+}
+
+.pendiente {
+  color: purple;
+}
+
 .table thead th {
   background-color: #39439a;
   color: white;
@@ -22,9 +35,9 @@ p {
 
 
 
-.card {
+/* .card {
   background-color: #c8cbf1;
-}
+} */
 
 
 .btn-primary {
@@ -38,7 +51,7 @@ p {
   border-color: #1c1d4c;
 }
 
-.form-control {
+/* .form-control {
   background-color: #e0e1f5;
   border-color: #9b9dd5;
   color: #1c1d4c;
@@ -46,7 +59,7 @@ p {
 .form-control:focus {
   background-color: #d1d2ee;
   border-color: #1c1d4c;
-}
+} */
 
 
 body {

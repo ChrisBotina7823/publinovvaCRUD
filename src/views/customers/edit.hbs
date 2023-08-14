@@ -1,75 +1,95 @@
 <div class="container-fluid pt-2 pb-2" style="height:85vh;overflow-y:scroll;">
     <div class="row">
         <div class="col-md-10 mx-auto">
-            <div class="card" >
+            <div class="card">
                 <div class="card-body">
 
-                    <form id="form" action="/admin/customers/edit/{{customer.id}}/{{customer.folderId}}" method="POST" enctype="multipart/form-data">
+                    <form id="form" action="/admin/customers/edit/{{customer.id}}/{{customer.folderId}}" method="POST"
+                        enctype="multipart/form-data">
                         <div class="form-group">
                             <p class="text-left">Nombre Completo</p>
-                            <input type="text" value="{{customer.fullname}}" name="fullname" class="form-control" placeholder="Nombre Completo"  autofocus required>
+                            <input type="text" value="{{customer.fullname}}" name="fullname" class="form-control"
+                                placeholder="Nombre Completo" autofocus required>
                         </div>
                         <div class="form-group">
                             <p class="text-left">Documento</p>
-                            <input type="text" value={{{customer.document}}} name="document" class="form-control" placeholder="Documento" required>
+                            <input type="text" value={{{customer.document}}} name="document" class="form-control"
+                                placeholder="Documento" required>
                         </div>
                         <div class="form-group">
                             <p class="text-left">Contraseña</p>
-                            <input type="text" value={{{customer.password}}} name="password" class="form-control" placeholder="Contraseña" required>
+                            <input type="text" value={{{customer.password}}} name="password" class="form-control"
+                                placeholder="Contraseña" required>
                         </div>
                         <div class="form-group">
                             <p class="text-left">Correo Electrónico</p>
-                            <input type="email" value={{customer.email}} name="email" class="form-control" placeholder="Correo Electrónico" required>
+                            <input type="email" value={{customer.email}} name="email" class="form-control"
+                                placeholder="Correo Electrónico">
                         </div>
                         <div class="form-group">
                             <p class="text-left">Teléfono</p>
-                            <input type="phone" value={{{customer.phone}}} name="phone" class="form-control" placeholder="Teléfono" required>
-                        </div>
-                        <div class="form-group">
-                            <p class="text-left">Estado</p>
-                            <input type="text" value="{{customer.status}}" name="status" class="form-control" placeholder="Estado"
-                                required>
-                        </div>
-
-                        <p class="text-left">Archivos Subidos</p>
-                        <ul class="form-control">
-                            {{#each files}}
-                            <li>
-                                <a href="https://drive.google.com/file/d/{{id}}/view" target="_blank">
-                                    {{name}}
-                                </a>
-                                <a style="color:red;margin-left:1rem" href="/admin/customers/files/delete/{{../customer.id}}/{{id}}">Delete</a>
-                            </li>
-                            {{else}}
-                            <p class="text-muted">No se han subido archivos</p>
-                            {{/each}}
-                        </ul>
-
-                        {{!-- <div class="form-group file-upload-wrapper">
-                            <p class="text-left">Add Files <span class="text-muted"> (Maximum size: {{ remaining_size }} MB)</span></p>
-                            <input id="fileInput" type="file" name="files" class="form-control" multiple>
-                        </div> --}}
-
-                        <div class="form-group file-upload-wrapper">
-                            <p class="text-left">Subir Archivos <span class="text-muted"> (Tamaño restante: {{ remaining_size }} MB)</span></p>
-                            <input id="fileInput" type="file" style="height:3rem" name="files" class="form-control" multiple>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col">
-                                    <button class="btn btn-primary btn-block">
-                                        Guardar
-                                    </button>
-                                </div>
-                                <div class="col">
-                                    <a href="/admin/customers/" class="btn btn-danger btn-block">
-                                        Cancelar
-                                    </a>
-                                </div>
-                            </div>
+                            <input type="phone" value={{{customer.phone}}} name="phone" class="form-control"
+                                placeholder="Teléfono">
                         </div>
                         
+                        <div class="form-group">
+                            <div class="form-group">
+                                <p class="text-left">Estado</p>
+                                <select name="status" class="form-control">
+                                    <option value="pendiente" {{#if (or (eq customer.status "pendiente" ) (not (or (eq
+                                        customer.status "aprobado" ) (eq customer.status "no aprobado"
+                                        ))))}}selected{{/if}}>Pendiente</option>
+                                    <option value="aprobado" {{#if (eq customer.status "aprobado" )}}selected{{/if}}>
+                                        Aprobado</option>
+                                    <option value="no aprobado" {{#if (eq customer.status "no aprobado"
+                                        )}}selected{{/if}}>No aprobado</option>
+                                </select>
+                            </div>
+
+
+                            <p class="text-left">Archivos Subidos</p>
+                            <ul class="form-control">
+                                {{#each files}}
+                                <li>
+                                    <a href="https://drive.google.com/file/d/{{id}}/view" target="_blank">
+                                        {{name}}
+                                    </a>
+                                    <a style="color:red;margin-left:1rem"
+                                        href="/admin/customers/files/delete/{{../customer.id}}/{{id}}">Delete</a>
+                                </li>
+                                {{else}}
+                                <p class="text-muted">No se han subido archivos</p>
+                                {{/each}}
+                            </ul>
+
+                            {{!-- <div class="form-group file-upload-wrapper">
+                                <p class="text-left">Add Files <span class="text-muted"> (Maximum size: {{
+                                        remaining_size }} MB)</span></p>
+                                <input id="fileInput" type="file" name="files" class="form-control" multiple>
+                            </div> --}}
+
+                            <div class="form-group file-upload-wrapper">
+                                <p class="text-left">Subir Archivos <span class="text-muted"> (Tamaño restante: {{
+                                        remaining_size }} MB)</span></p>
+                                <input id="fileInput" type="file" style="height:3rem" name="files" class="form-control"
+                                    multiple>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <button class="btn btn-primary btn-block">
+                                            Guardar
+                                        </button>
+                                    </div>
+                                    <div class="col">
+                                        <a href="/admin/customers/" class="btn btn-danger btn-block">
+                                            Cancelar
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
                     </form>
                 </div>
             </div>
@@ -79,18 +99,18 @@
 </div>
 
 <script>
-  const MAX_SIZE = {{remaining_size}} * 1e6;
-  const fileInput = document.querySelector('#fileInput');
-  fileInput.addEventListener('change', (event) => {
-    const files = fileInput.files
-    let size = 0
-    for(let file of files) {
-        size += file.size
-    }   
-    if (size > MAX_SIZE) {
-      event.preventDefault();
-      alert(`The maximum file size is ${MAX_SIZE/1e6} MB`)
-      fileInput.value = ''
-    }
-  });
+    const MAX_SIZE = {{ remaining_size }} * 1e6;
+    const fileInput = document.querySelector('#fileInput');
+    fileInput.addEventListener('change', (event) => {
+        const files = fileInput.files
+        let size = 0
+        for (let file of files) {
+            size += file.size
+        }
+        if (size > MAX_SIZE) {
+            event.preventDefault();
+            alert(`The maximum file size is ${MAX_SIZE / 1e6} MB`)
+            fileInput.value = ''
+        }
+    });
 </script>

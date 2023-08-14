@@ -7,7 +7,8 @@
 
                         <div class="form-group">
                             <p class="text-left">Nombre Completo</p>
-                            <input type="text" name="fullname" class="form-control" placeholder="Nombre Completo" autofocus>
+                            <input type="text" name="fullname" class="form-control" placeholder="Nombre Completo"
+                                autofocus required>
                         </div>
                         <div class="form-group">
                             <p class="text-left">Documento</p>
@@ -15,25 +16,32 @@
                         </div>
                         <div class="form-group">
                             <p class="text-left">Contraseña</p>
-                            <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
+                            <input type="password" name="password" class="form-control" placeholder="Contraseña"
+                                required>
                         </div>
                         <div class="form-group">
                             <p class="text-left">Correo Electrónico</p>
-                            <input type="email" name="email" class="form-control" placeholder="Correo Electrónico" required>
+                            <input type="email" name="email" class="form-control" placeholder="Correo Electrónico">
                         </div>
                         <div class="form-group">
                             <p class="text-left">Teléfono</p>
-                            <input type="phone" name="phone" class="form-control" placeholder="Teléfono" required>
+                            <input type="phone" name="phone" class="form-control" placeholder="Teléfono">
                         </div>
 
                         <div class="form-group">
                             <p class="text-left">Estado</p>
-                            <input type="text" name="status" class="form-control" placeholder="Estado" required>
+                            <select name="status" class="form-control">
+                                <option value="pendiente" selected>Pendiente</option>
+                                <option value="aprobado">Aprobado</option>
+                                <option value="no aprobado">No aprobado</option>
+                            </select>
                         </div>
 
                         <div class="form-group file-upload-wrapper">
-                            <p class="text-left">Subir Archivos <span class="text-muted"> (Tamaño máximo: {{ size }} MB)</span></p>
-                            <input id="fileInput" type="file" style="height:3rem" name="files" class="form-control" multiple>
+                            <p class="text-left">Subir Archivos <span class="text-muted"> (Tamaño máximo: {{ size }}
+                                    MB)</span></p>
+                            <input id="fileInput" type="file" style="height:3rem" name="files" class="form-control"
+                                multiple>
                         </div>
 
                         <div class="form-group">
@@ -59,18 +67,18 @@
 </div>
 
 <script>
-  const MAX_SIZE = {{size}} * 1e6;
-  const fileInput = document.querySelector('#fileInput');
-  fileInput.addEventListener('change', (event) => {
-    const files = fileInput.files
-    let size = 0
-    for(let file of files) {
-        size += file.size
-    }   
-    if (size > MAX_SIZE) {
-      event.preventDefault();
-      alert(`The maximum file size is ${MAX_SIZE/1e6} MB`)
-      fileInput.value = ''
-    }
-  });
+    const MAX_SIZE = {{ size }} * 1e6;
+    const fileInput = document.querySelector('#fileInput');
+    fileInput.addEventListener('change', (event) => {
+        const files = fileInput.files
+        let size = 0
+        for (let file of files) {
+            size += file.size
+        }
+        if (size > MAX_SIZE) {
+            event.preventDefault();
+            alert(`The maximum file size is ${MAX_SIZE / 1e6} MB`)
+            fileInput.value = ''
+        }
+    });
 </script>

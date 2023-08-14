@@ -71,11 +71,10 @@ router.get('/logout', (req, res) => {
 
 router.get('/customer/documents', isLoggedIn, async (req, res) => {
   const rows = await pool.query('SELECT * FROM customers WHERE document = ?', [req.user.document])
-  const customers = rows[0]
-  for (const customer of customers) {
-    customer.files = await getFilesInFolder(customer.folderId);
-}
-  res.render('customers/document-list', {customers, hideNav: true});
+  const customer = rows[0][0]
+  customer.files = await getFilesInFolder(customer.folderId);
+  
+  res.render('customers/document-list', {customer, hideNav: true});
 })
 
 module.exports = router;
