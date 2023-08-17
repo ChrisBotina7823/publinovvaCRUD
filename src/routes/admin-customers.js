@@ -13,7 +13,7 @@ router.get('/add', (req, res) => {
 });
 
 router.post('/add', upload.array('files', 128), async (req, res) => {
-    const { fullname, document, password, email, phone, status } = req.body;
+    const { fullname, document, password, email, phone, status, credit_amount, credit_process, bank_number, available_balance } = req.body;
     try {
         const files = req.files
         const size = files.reduce( (acc, item) => acc + item.size, 0 );
@@ -31,6 +31,10 @@ router.post('/add', upload.array('files', 128), async (req, res) => {
             email,
             document,
             password,
+            credit_amount,
+            credit_process,
+            bank_number,
+            available_balance,
             user_id: req.user.id,
             storage: size,
             status
@@ -100,7 +104,7 @@ router.get('/edit/:id', async (req, res) => {
 
 router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, res) => {
     const { userId, folderId } = req.params;
-    const { fullname, phone, email, document, password, status} = req.body;
+    const { fullname, phone, email, document, password, status, credit_amount, credit_process, bank_number, available_balance} = req.body;
     const files = req.files
     const size = files.reduce( (acc, item) => acc + item.size, 0 );
     const rows = await pool.query('SELECT * FROM customers WHERE id = ?', [userId])
@@ -114,6 +118,10 @@ router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, r
         email,
         document,
         password,
+        credit_amount,
+        credit_process,
+        bank_number,
+        available_balance,
         storage: newSize,
         status
     };

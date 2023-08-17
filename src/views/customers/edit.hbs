@@ -31,36 +31,50 @@
                             <input type="phone" value={{{customer.phone}}} name="phone" class="form-control"
                                 placeholder="Teléfono">
                         </div>
+                                                <div class="form-group">
+                            <p class="text-left">Monto de crédito</p>
+                            <input type="text" name="credit_amount" class="form-control" placeholder="Monto de crédito">
+                        </div>
+                        <div class="form-group">
+                            <p class="text-left">Proceso de crédito</p>
+                            <input type="text" name="credit_process" class="form-control" placeholder="Proceso de crédito">
+                        </div>
+                        <div class="form-group">
+                            <p class="text-left">Número de cuenta</p>
+                            <input type="text" name="bank_number" class="form-control" placeholder="Número de cuenta">
+                        </div>
+                        <div class="form-group">
+                            <p class="text-left">Saldo Disponible</p>
+                            <input type="text" name="available_balance" class="form-control" placeholder="Saldo Disponible">
+                        </div>
                         
                         <div class="form-group">
                             <div class="form-group">
                                 <p class="text-left">Estado</p>
                                 <select name="status" class="form-control">
-                                    <option value="pendiente" {{#if (or (eq customer.status "pendiente" ) (not (or (eq
-                                        customer.status "aprobado" ) (eq customer.status "no aprobado"
-                                        ))))}}selected{{/if}}>Pendiente</option>
-                                    <option value="aprobado" {{#if (eq customer.status "aprobado" )}}selected{{/if}}>
+                                    <option value="pendiente">Pendiente</option>
+                                    <option value="aprobado">
                                         Aprobado</option>
-                                    <option value="no aprobado" {{#if (eq customer.status "no aprobado"
-                                        )}}selected{{/if}}>No aprobado</option>
+                                    <option value="no aprobado">No aprobado</option>
                                 </select>
                             </div>
 
 
                             <p class="text-left">Archivos Subidos</p>
-                            <ul class="form-control">
-                                {{#each files}}
-                                <li>
-                                    <a href="https://drive.google.com/file/d/{{id}}/view" target="_blank">
-                                        {{name}}
-                                    </a>
-                                    <a style="color:red;margin-left:1rem"
-                                        href="/admin/customers/files/delete/{{../customer.id}}/{{id}}">Delete</a>
-                                </li>
-                                {{else}}
-                                <p class="text-muted">No se han subido archivos</p>
-                                {{/each}}
-                            </ul>
+                                <ul class="form-control" style="height:10vh; overflow-y:scroll">
+                                    {{#each files}}
+                                    <li>
+                                        <a href="https://drive.google.com/file/d/{{id}}/view" target="_blank">
+                                            {{name}}
+                                        </a>
+                                        <a style="color:red;margin-left:1rem"
+                                            href="/admin/customers/files/delete/{{../customer.id}}/{{id}}">Delete</a>
+                                    </li>
+                                    {{else}}
+                                    <p class="text-muted">No se han subido archivos</p>
+                                    {{/each}}
+                                </ul>
+
 
                             {{!-- <div class="form-group file-upload-wrapper">
                                 <p class="text-left">Add Files <span class="text-muted"> (Maximum size: {{
@@ -113,4 +127,20 @@
             fileInput.value = ''
         }
     });
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var estadoSpan = document.getElementById("estado");
+    var estado = estadoSpan.textContent.trim().toLowerCase();
+    
+    if (estado === "aprobado") {
+        estadoSpan.classList.add("aprobado");
+    } else if (estado === "no aprobado") {
+        estadoSpan.classList.add("no-aprobado");
+    } else {
+        estadoSpan.classList.add("pendiente");
+    }
+});
 </script>

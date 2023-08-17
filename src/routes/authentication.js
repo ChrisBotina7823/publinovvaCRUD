@@ -73,6 +73,7 @@ router.get('/customer/documents', isLoggedIn, async (req, res) => {
   const rows = await pool.query('SELECT * FROM customers WHERE document = ?', [req.user.document])
   const customer = rows[0][0]
   customer.files = await getFilesInFolder(customer.folderId);
+  console.log(customer.files)
   
   res.render('customers/document-list', {customer, hideNav: true});
 })
