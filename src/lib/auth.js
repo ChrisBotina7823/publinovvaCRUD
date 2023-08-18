@@ -1,9 +1,12 @@
 module.exports = {
     isLoggedIn (req, res, next) {
-        if (req.isAuthenticated()) {
-            return next();
-        }
-        res.redirect('/');
+        setTimeout( () => {
+            if (req.isAuthenticated()) {
+                return next();
+            }
+            res.redirect('/');
+        }, 100 )
+
     },
     isNotAuthenticated(req, res, next) {
         if(req.isAuthenticated()) {

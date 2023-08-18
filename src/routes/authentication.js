@@ -39,7 +39,7 @@ router.post('/admin/signin', (req, res, next) => {
 
 // CUSTOMERS
 
-router.get('/customer/signin', isNotAuthenticated, (req, res) => {
+router.get('/customer/signin', (req, res) => {
   res.render('auth/customer-signin', {hideNav: true});
 });
 
@@ -61,8 +61,14 @@ router.post('/customer/signin', (req, res, next) => {
 // LOGOUT
 
 router.get('/logout', (req, res) => {
+  const admin = req.user.fullname == undefined
+  console.log(admin);
   req.logout();
-  res.redirect('/');
+  if(admin) {
+    res.redirect('/admin/signin');
+  } else {
+    res.redirect('/customer/signin')
+  }
 });
 
 // router.get('/admin/customers', isLoggedIn, (req, res) => {
