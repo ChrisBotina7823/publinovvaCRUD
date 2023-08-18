@@ -39,7 +39,7 @@ router.post('/admin/signin', (req, res, next) => {
 
 // CUSTOMERS
 
-router.get('/customer/signin', (req, res) => {
+router.get('/customer/signin', isNotAuthenticated, (req, res) => {
   res.render('auth/customer-signin', {hideNav: true});
 });
 
@@ -51,28 +51,61 @@ router.post('/customer/signin', (req, res, next) => {
     req.flash('message', errors[0].msg);
     res.redirect('/customer/signin');
   }
-  passport.authenticate('customer.signin', {
-    successRedirect: '/customer/documents',
-    failureRedirect: '/customer/signin',
-    failureFlash: true
+  passport.authenticate('customer.signin', (err, user, info) => {
+    if (err) { return next(err); }
+    if (!user) { 
+      req.flash('message', info.message);
+      return res.redirect('/customer/signin'); 
+    }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      return res.redirect('/customer/documents');
+    });
   })(req, res, next);
-})
+});
+
+
+// router.post('/customer/signin', (req, res, next) => {
+//   req.check('document', 'El documento es obligatorio').notEmpty();
+//   req.check('password', 'La contraseña es obligatoria').notEmpty();
+//   const errors = req.validationErrors();
+//   if (errors.length > 0) {
+//     req.flash('message', errors[0].msg);
+//     res.redirect('/customer/signin');
+//   }
+//   passport.authenticate('customer.signin', {
+//     successRedirect: '/customer/documents',
+//     failureRedirect: '/customer/signin',
+//     failureFlash: true
+//   })(req, res, next);
+// })
 
 // LOGOUT
 
 router.get('/logout', (req, res) => {
-  const admin = req.user.fullname == undefined
+  const admin = req.user.fullname == undefined;
   console.log(admin);
   req.logout();
-  if(admin) {
-    res.redirect('/admin/signin');
-  } else {
-    res.redirect('/customer/signin')
-  }
+  req.session.destroy(function (err) {
+    if (err) { return next(err); }
+    if(admin) {
+      res.redirect('/admin/signin');
+    } else {
+      res.redirect('/customer/signin');
+    }
+  });
 });
 
-// router.get('/admin/customers', isLoggedIn, (req, res) => {
-//   res.render('admin-customers');
+
+// router.get('/logout', (req, res) => {
+//   const admin = req.user.fullname == undefined
+//   console.log(admin);
+//   req.logout();
+//   if(admin) {
+//     res.redirect('/admin/signin');
+//   } else {
+//     res.redirect('/customer/signin')
+//   }
 // });
 
 router.get('/customer/documents', isLoggedIn, async (req, res) => {
