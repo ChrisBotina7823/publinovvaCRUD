@@ -5,7 +5,7 @@ module.exports = {
                 return next();
             }
             res.redirect('/');
-        }, 100 )
+        }, 500 )
 
     },
     isNotAuthenticated(req, res, next) {
