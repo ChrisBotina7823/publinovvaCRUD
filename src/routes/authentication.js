@@ -40,7 +40,7 @@ router.post('/admin/signin', (req, res, next) => {
 // CUSTOMERS
 
 router.get('/customer/signin', isNotAuthenticated, (req, res) => {
-  res.render('auth/customer-signin');
+  res.render('auth/customer-signin', {hideNav: true});
 });
 
 router.post('/customer/signin', (req, res, next) => {
