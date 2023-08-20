@@ -108,46 +108,6 @@
 
 
 <script>
-    function addLinksListener() {
-        var links = document.querySelectorAll(".a-doc");
-
-        console.log(links);
-
-        links.forEach(function (link) {
-            // Only continue for iframes
-            if (window == top) return; 
-            link.addEventListener("click", function (event) {
-                event.preventDefault(); // evita que el link se abra en otra página
-                var url = link.href; // obtiene el url del link
-                var iframeContainer = document.createElement("div"); // crea un contenedor para el iframe y el botón
-                var iframe = document.createElement("iframe"); // crea el iframe
-                var closeButton = document.createElement("button"); // crea el botón de cerrar
-                iframe.src = url; // asigna el url al iframe
-                closeButton.textContent = "Cerrar"; // asigna el texto al botón
-                closeButton.className = "btn btn-primary"; // asigna la clase al botón
-                iframeContainer.appendChild(iframe); // agrega el iframe al contenedor
-                iframeContainer.appendChild(closeButton); // agrega el botón al contenedor
-                document.body.appendChild(iframeContainer); // agrega el contenedor al cuerpo de la página
-                // aplica los mismos estilos CSS que antes, pero con el 75% de ancho y alto
-                iframeContainer.style.position = "fixed";
-                iframeContainer.style.top = "50%";
-                iframeContainer.style.left = "50%";
-                iframeContainer.style.width = "75%";
-                iframeContainer.style.height = "75%";
-                iframeContainer.style.transform = "translate(-50%, -50%)";
-                iframe.style.width = "100%";
-                iframe.style.height = "100%";
-                closeButton.style.position = "absolute";
-                closeButton.style.top = "-7.5vh";
-                closeButton.style.right = "0vh";
-                // agrega la función para cerrar el contenedor
-                closeButton.addEventListener("click", function () {
-                    document.body.removeChild(iframeContainer);
-                });
-            });
-        });
-    }
-
     function renderStates() {
         var estadoSpan = document.getElementById("estado");
         var estado = estadoSpan.textContent.trim().toLowerCase();
@@ -164,6 +124,5 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         renderStates();
-        addLinksListener();
     });
 </script>
