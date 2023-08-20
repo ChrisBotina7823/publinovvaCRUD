@@ -58,14 +58,18 @@ passport.use('customer.signin', new LocalStrategy({
   passwordField: 'password',
   passReqToCallback: true
 }, async(req, username, password, done) => {
+
+
   const rows = await pool.query('SELECT * FROM customers WHERE document = ?', [username]);
+
+  // console.log(rows)
 
   if (rows[0].length > 0) {
     const user = rows[0][0];
     user.type = 'customer'
     const validPassword = user.password.toString() == password.toString()
-    console.log(user)
-    console.log(validPassword)
+    // console.log(user)
+    // console.log(validPassword)
     if (validPassword) {
       done(null, user, req.flash('success', 'Bienvenido ' + user.fullname));
     } else {
@@ -88,6 +92,6 @@ passport.deserializeUser(async (id, done) => {
     rows = await pool.query('SELECT * FROM customers WHERE id = ?', [id]);
   }
   const user = rows[0][0]
-  done(null, user);
+  return done(null, user);
 });
 

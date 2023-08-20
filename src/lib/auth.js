@@ -1,21 +1,17 @@
 module.exports = {
     isLoggedIn (req, res, next) {
-        console.log(req);
+        console.log(req.isAuthenticated())
         if (req.isAuthenticated()) {
             return next();
         }
-        res.redirect('/');
+        console.log('aaa')
+        res.redirect('/customer/signin');
 
     },
     isNotAuthenticated(req, res, next) {
         if(req.isAuthenticated()) {
-            if(req.user.fullname == undefined) {
-                return res.redirect('/admin/customers')
-            } else {
-                return res.redirect('/customer/documents')
-            }
-        } else {
-            next();
+            return res.redirect('/customer/documents')
         }
+        next();
     }
 };

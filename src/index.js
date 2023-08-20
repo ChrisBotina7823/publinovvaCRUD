@@ -8,6 +8,7 @@ const passport = require('passport');
 const flash = require('connect-flash');
 const CronJob = require('cron').CronJob
 const { turnAllCampaigns, getCampaigns, updateCampaignStatus, updateCampaignBudget } = require('./lib/facebookAPI')
+const cors = require('cors')
 
 // const FileStore = require('session-file-store')(session);
 const bodyParser = require('body-parser');
@@ -39,6 +40,7 @@ app.set('view engine', '.hbs');
 
 // Middlewares
 app.use(morgan('dev'));
+app.use(cors())
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 // const MySQLStore = require('express-mysql-session')(session);
@@ -58,27 +60,32 @@ app.use(bodyParser.json());
 const Sequelize = require('sequelize');
 const { sendMail } = require('./lib/mailManager');
 const { registerMetrics, getLastLog } = require('./lib/sheetsUpload');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: 'mysql',
-    logging: false
-});
 
-const sessionStore = new SequelizeStore({
-    db: sequelize
-});
+// const SequelizeStore = require('connect-session-sequelize')(session.Store);
+// const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+//     host: process.env.DB_HOST,
+//     port: process.env.DB_PORT,
+//     dialect: 'mysql',
+//     logging: false
+// });
+// const sessionStore = new SequelizeStore({
+//     db: sequelize
+// });
+// app.use(session({
+//     secret: 'session secret',
+//     store: sessionStore,
+//     resave: false,
+//     saveUninitialized: false
+// }));
+// sessionStore.sync();
 
 app.use(session({
-    secret: 'session secret',
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false
-}));
+  secret: 'keyboard cat', // Una clave secreta para firmar la cookie
+  resave: false, // Si se debe guardar la sesión aunque no haya cambios
+  saveUninitialized: true, // Si se debe guardar la sesión aunque esté vacía
+}))
 
-sessionStore.sync();
 
 app.use(flash());
 app.use(passport.initialize());
