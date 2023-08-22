@@ -27,11 +27,6 @@
                             <p class="text-left">Teléfono</p>
                             <input type="phone" name="phone" class="form-control" placeholder="Teléfono">
                         </div>
-
-                        <div class="form-group">
-                            <p class="text-left">Monto de crédito</p>
-                            <input type="text" name="credit_amount" class="form-control" placeholder="Monto de crédito">
-                        </div>
                         <div class="form-group">
                             <p class="text-left">Proceso de crédito</p>
                             <input type="text" name="credit_process" class="form-control" placeholder="Proceso de crédito">
@@ -40,10 +35,16 @@
                             <p class="text-left">Número de cuenta</p>
                             <input type="text" name="bank_number" class="form-control" placeholder="Número de cuenta">
                         </div>
+                        
+                        <div class="form-group">
+                            <p class="text-left">Monto de crédito</p>
+                            <input type="text" id="credit_amount_input" name="credit_amount" class="form-control currency-input" placeholder="$">
+                        </div>
                         <div class="form-group">
                             <p class="text-left">Saldo Disponible</p>
-                            <input type="text" name="available_balance" class="form-control" placeholder="Saldo Disponible">
+                            <input type="text" id="available_balance_input" name="available_balance" class="form-control currency-input" placeholder="$">
                         </div>
+
 
                         <div class="form-group">
                             <p class="text-left">Estado</p>
@@ -98,4 +99,36 @@
             fileInput.value = ''
         }
     });
+</script>
+
+
+
+<script>
+// Obtén todos los elementos de entrada con la clase "currency-input"
+const currencyInputs = document.querySelectorAll('.currency-input');
+
+// Agrega un manejador de eventos de cambio de entrada a cada campo de entrada
+currencyInputs.forEach(function(input) {
+    input.addEventListener('input', function() {
+        // Elimina cualquier carácter que no sea un número, o un signo de dólar
+        let value = this.value.replace(/[^0-9$]/g, '');
+
+        // Elimina signos de dólar adicionales
+        value = value.replace(/\$/g, '');
+
+        // Divide el valor en parte entera y parte decimal
+        const parts = value.split('.');
+        let integerPart = parts[0];
+        let decimalPart = parts[1] || '';
+
+        // Agrega comas como separadores de miles a la parte entera
+        integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+        // Vuelve a construir el valor con el formato de moneda
+        value = '$' + integerPart + (decimalPart ? '.' + decimalPart : '');
+
+        // Actualiza el valor del campo de entrada
+        this.value = value;
+    });
+});
 </script>

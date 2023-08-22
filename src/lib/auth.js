@@ -5,12 +5,16 @@ module.exports = {
             return next();
         }
         console.log('aaa')
-        res.redirect('/customer/signin');
+        res.redirect('/admin/signin');
 
     },
     isNotAuthenticated(req, res, next) {
         if(req.isAuthenticated()) {
-            return res.redirect('/customer/documents')
+            if(req.user.fullname) {
+                return res.redirect('/customer/documents')
+            } else {
+                return res.redirect('/admin/customers')
+            }
         }
         next();
     }

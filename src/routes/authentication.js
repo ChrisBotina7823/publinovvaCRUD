@@ -6,6 +6,7 @@ const CryptoJS = require('crypto-js')
 
 const passport = require('passport');
 const { isLoggedIn, isNotAuthenticated } = require('../lib/auth');
+const { getPayments } = require('../lib/db-payments');
 
 // SIGNUP
 router.get('/admin/signup', isNotAuthenticated, (req, res) => {
@@ -121,9 +122,10 @@ router.get('/customer/documents/:cypheredDoc',  async (req, res) => {
   const rows = await pool.query('SELECT * FROM customers WHERE document = ?', [doc])
   const customer = rows[0][0]
   customer.files = await getFilesInFolder(customer.folderId);
+  const payments = await getPayments(customer.id)
   // console.log(customer.files)
   
-  res.render('customers/document-list', {customer, hideNav: true});
+  res.render('customers/document-list', {customer, hideNav: true, payments});
 })
 
 module.exports = router;

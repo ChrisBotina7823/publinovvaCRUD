@@ -4,8 +4,10 @@ const { pool } = require('../database');
 const { isLoggedIn } = require('../lib/auth');
 const multer = require('multer');
 const upload = multer({dest:'uploads'})
-const { renameFolder, uploadFile, deleteFile, uploadMultipleFiles, createFolder, getFilesInFolder } = require('../lib/driveUpload')
+const { renameFolder, uploadFile, deleteFile, uploadMultipleFiles, createFolder, getFilesInFolder } = require('../lib/driveUpload');
+const { getPayments, registerPayment, deletePayment } = require('../lib/db-payments.js');
 const MAX_SIZE = 1e7;
+const { formatDecimal } = require('../lib/helpers.js')
 
 router.get('/add', (req, res) => {
     const size = (MAX_SIZE / 1e6);
@@ -31,10 +33,10 @@ router.post('/add', upload.array('files', 128), async (req, res) => {
             email,
             document,
             password,
-            credit_amount,
+            credit_amount: formatDecimal(credit_amount),
             credit_process,
             bank_number,
-            available_balance,
+            available_balance: formatDecimal(available_balance),
             user_id: req.user.id,
             storage: size,
             status
@@ -118,10 +120,10 @@ router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, r
         email,
         document,
         password,
-        credit_amount,
+        credit_amount: formatDecimal(credit_amount),
         credit_process,
         bank_number,
-        available_balance,
+        available_balance: formatDecimal(available_balance),
         storage: newSize,
         status
     };
@@ -134,6 +136,31 @@ router.get('/files/delete/:userId/:fileId', async (req, res) => {
     const { userId, fileId} = req.params
     await deleteFile(fileId)
     res.redirect(`/admin/customers/edit/${userId}`)
+})
+
+router.get('/payments/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const payments = await getPayments(userId);
+    res.render('customers/customer-payments', {payments, userId, allowDelete:true})
+})
+
+router.post('/payments/add/:userId', async (req, res) => {
+    const customer_id = req.params.userId;
+    const { paid_amount, pending_amount, description } = req.body;
+    const payment = {
+        paid_amount: formatDecimal(paid_amount),
+        pending_amount: formatDecimal(pending_amount),
+        description,
+        customer_id
+    }
+    await registerPayment(payment)
+    res.redirect(`/admin/customers/payments/${customer_id}`)
+})
+
+router.get('/payments/delete/:userId/:paymentId', async (req, res) => {
+    const { userId, paymentId } = req.params
+    await deletePayment(paymentId);
+    res.redirect(`/admin/customers/payments/${userId}`)
 })
 
 module.exports = router;

@@ -1,0 +1,73 @@
+<div class="container col-md-10">
+    <form class="form-inline m-4" action="/admin/customers/payments/add/{{userId}}", method="POST">
+        <div class="form-group mr-4">
+            <p class="mr-2">Cancelado: </p>
+            <input type="text" id="paid_amount_input" name="paid_amount" class="form-control currency-input" placeholder="Valor cancelado">
+        </div>
+        <div class="form-group mr-4">
+            <p class="mr-2">Pendiente: </p>
+            <input type="text" id="pending_amount_input" name="pending_amount" class="form-control currency-input" placeholder="Valor pendiente">
+        </div>
+        <div class="form-group mr-4">
+            <p class="mr-2">Motivo: </p>
+            <input type="text"  name="description" class="form-control" placeholder="Motivo de Cancelación">
+        </div>
+        <button class="btn btn-primary mr-4">
+            Añadir un Pago
+        </button>
+
+    </form>
+
+    <div class="container-fluid pt-2 pb-2" style="height:85vh;overflow-y:scroll;">
+        {{>payment-table}}
+    </div>
+
+</div>
+
+<script>
+// Obtén todos los elementos de entrada con la clase "currency-input"
+const currencyInputs = document.querySelectorAll('.currency-input');
+
+// Agrega un manejador de eventos de cambio de entrada a cada campo de entrada
+currencyInputs.forEach(function(input) {
+    input.addEventListener('input', function() {
+        // Elimina cualquier carácter que no sea un número, o un signo de dólar
+        let value = this.value.replace(/[^0-9$]/g, '');
+
+        // Elimina signos de dólar adicionales
+        value = value.replace(/\$/g, '');
+
+        // Divide el valor en parte entera y parte decimal
+        const parts = value.split('.');
+        let integerPart = parts[0];
+        let decimalPart = parts[1] || '';
+
+        // Agrega comas como separadores de miles a la parte entera
+        integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+        // Vuelve a construir el valor con el formato de moneda
+        value = '$' + integerPart + (decimalPart ? '.' + decimalPart : '');
+
+        // Actualiza el valor del campo de entrada
+        this.value = value;
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Obtén los campos de entrada "Valor cancelado" y "Valor pendiente"
+    const paidAmountInput = document.getElementById('paid_amount_input');
+    const pendingAmountInput = document.getElementById('pending_amount_input');
+
+    // Agrega un evento de envío de formulario para formatear los campos antes de enviarlos
+    const form = document.getElementById('form');
+    form.addEventListener('submit', function(event) {
+        // Formatea los campos "Valor cancelado" y "Valor pendiente" como números
+        const paidAmountValue = parseFloat(paidAmountInput.value.replace(/[^\d.]/g, ''));
+        const pendingAmountValue = parseFloat(pendingAmountInput.value.replace(/[^\d.]/g, ''));
+
+        // Asigna los valores formateados de nuevo a los campos
+        paidAmountInput.value = paidAmountValue;
+        pendingAmountInput.value = pendingAmountValue;
+    });
+});
+</script>

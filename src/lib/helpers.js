@@ -16,5 +16,8 @@ helpers.matchPassword = async (password, savedPassword) => {
   }
 };
 
+helpers.formatDecimal = (number) => {
+  return parseFloat(number.replace(/[^\d.]/g, ''))
+}
 
 module.exports = helpers;

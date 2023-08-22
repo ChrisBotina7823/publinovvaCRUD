@@ -12,9 +12,9 @@
                 <th class="align-middle" >Documento</th>
                 <th class="align-middle" >Teléfono</th>
                 <th class="align-middle" >Correo</th>
-                <th class="align-middle" >Monto de crédito</th>
                 <th class="align-middle" >Proceso de crédito</th>
                 <th class="align-middle" >Número de cuenta</th>
+                <th class="align-middle" >Monto de crédito</th>
                 <th class="align-middle" >Saldo disponible</th>
                 <th class="align-middle" >Archivos Subidos</th>
                 <th class="align-middle" >Fecha de Creación</th>
@@ -24,16 +24,16 @@
         <tbody>
             {{#each customers}}
             <tr>
-                <td class="align-middle"  class="text-uppercase text-center">{{status}}</td>
-                <td class="align-middle" >{{fullname}}</td>
-                <td class="align-middle" >{{document}}</td>
-                <td class="align-middle" >{{phone}}</td>
-                <td class="align-middle" >{{email}}</td>
-                <td class="align-middle" >{{credit_amount}}</td>
-                <td class="align-middle" >{{credit_process}}</td>
-                <td class="align-middle" >{{bank_number}}</td>
-                <td class="align-middle" >{{available_balance}}</td>
-                <td class="align-middle"  class="text-center">
+                <td class="align-middle text-center"  class="text-uppercase text-center">{{status}}</td>
+                <td class="align-middle text-center" >{{fullname}}</td>
+                <td class="align-middle text-center" >{{document}}</td>
+                <td class="align-middle text-center" >{{phone}}</td>
+                <td class="align-middle text-center" >{{email}}</td>
+                <td class="align-middle text-center" >{{credit_process}}</td>
+                <td class="align-middle text-center" >{{bank_number}}</td>
+                <td class="align-middle text-center" >{{formatCurrency credit_amount}}</td>
+                <td class="align-middle text-center" >{{formatCurrency available_balance}}</td>
+                <td class="align-middle text-center"  class="text-center">
                     {{#if files}}
                     <ul>
                         {{#each files}}
@@ -44,9 +44,10 @@
                     Sin archivos
                     {{/if}}
                 </td>
-                <td class="align-middle"  class="text-center" id="date">{{created_at}}</td>
-                <td class="align-middle"  class="text-center">
-                    <a class="mx-1" style="color:#39439a" href="/admin/customers/edit/{{id}}">Editar</a>
+                <td class="align-middle text-center" id="date">{{created_at}}</td>
+                <td class="align-middle">
+                    <a class="mx-1" style="color:#046947" href="/admin/customers/edit/{{id}}">Editar</a>
+                    <a class="mx-1" style="color:#39439a" href="/admin/customers/payments/{{id}}">Ver Pagos</a>
                     <a class="mx-1" style="color:red" href="/admin/customers/delete/{{id}}" onclick="return confirm('¿Estás seguro de que quieres eliminar este elemento?')" >Eliminar</a>
                 </td>
             </tr>

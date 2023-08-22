@@ -1,49 +1,15 @@
-{{!-- <div class="col-md-10 container-fluid pt-2 pb-2" style="height:95vh;overflow-y:scroll;">
 
-    <div class="container mb-4">
-        <h2 class="card-title text-uppercase">{{customer.fullname}}</h2>
-        <h3 class="mb-2">Estado: <span class="text-uppercase card-subtitle">{{customer.status}}</span></h3>
-        <p class="mb-1">Documento: {{customer.document}}</p>
-        <p class="mb-1">Teléfono: {{customer.phone}}</p>
-        <p class="mb-1">Correo Electrónico: {{customer.email}}</p>
-    </div>
+<div class="col-md-12 container-fluid pt-2 pb-2" style="height:100vh;overflow-y:scroll;">
 
-    <div class="card p-4">
-        <h5 class="card-subtitle">Archivos Subidos</h3>
-            <div class="card-body">
-                <div class="container" style="height:200px; overflow-y: scroll;">
-                    <ul class="list-group">
-                        {{#each files}}
-                        <li class="list-group-item">
-                            <a href="https://drive.google.com/file/d/{{id}}/view" target="_blank">
-                                {{name}}
-                            </a>
-                        </li>
-                        {{else}}
-                        <p>No se han subido archivos</p>
-                        {{/each}}
-                    </ul>
-                </div>
-            </div>
-    </div>
-
-
-    <div class="container text-center" style="height:15vh">
-        <a class="btn btn-lg btn-danger m-3" href="/logout">Cerrar Sesión</a>
-    </div>
-</div> --}}
-
-<div class="col-md-10 container-fluid pt-2 pb-2" style="height:95vh;overflow-y:scroll;">
-
-    <a class="btn btn-lg btn-danger m-3" href="/logout">Cerrar Sesión</a>
-    <div class="row text-center ">
+    <a class="btn btn-danger m-2" href="/logout">Cerrar Sesión</a>
+    <div class="row text-center mb-4">
         {{!-- <div class="container text-center" style="height:15vh">
             <button id="info-btn" class="btn btn-lg btn-primary m-3">Información Personal</button>
             <button id="files-btn" class="btn btn-lg btn-primary m-3">Archivos Subidos</button>
         </div> --}}
 
-        <div class="personal-info">
-            <div class="card p-4 m-4">
+        <div class="personal-info col-md-3">
+            <div class="card p-4" style="height: 100%;">
                 <h2 class="card-title text-uppercase text-center">{{customer.fullname}}</h2>
                 {{!-- <h3 class="mb-2">Estado: <span class="text-uppercase card-subtitle">{{customer.status}}</span>
                 </h3> --}}
@@ -65,8 +31,8 @@
             </div>
         </div>
 
-        <div class="document-info">
-            <div class="card p-4 m-4">
+        <div class="document-info col-md-4">
+            <div class="card p-4" style="height: 100%;">
                 <h2 class="card-title">Archivos Subidos</h2>
                 <div class="card-body">
                     <ul class="list-group">
@@ -80,6 +46,15 @@
                         <p>No se han subido archivos</p>
                         {{/each}}
                     </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-info col-md-5">
+            <div class="card p-4" style="height: 100%;">
+                <h2 class="card-title">Historial de Pagos</h2>
+                <div class="card-body" style="height:30vh;overflow-y:scroll">
+                    {{> payment-table}}
                 </div>
             </div>
         </div>
