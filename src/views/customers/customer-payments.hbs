@@ -2,15 +2,15 @@
     <form class="form-inline m-4" action="/admin/customers/payments/add/{{userId}}", method="POST">
         <div class="form-group mr-4">
             <p class="mr-2">Cancelado: </p>
-            <input type="text" id="paid_amount_input" name="paid_amount" class="form-control currency-input" placeholder="Valor cancelado">
+            <input type="text" id="paid_amount_input" name="paid_amount" class="form-control currency-input" placeholder="Valor cancelado" required>
         </div>
         <div class="form-group mr-4">
             <p class="mr-2">Pendiente: </p>
-            <input type="text" id="pending_amount_input" name="pending_amount" class="form-control currency-input" placeholder="Valor pendiente">
+            <input type="text" id="pending_amount_input" name="pending_amount" class="form-control currency-input" placeholder="Valor pendiente" required>
         </div>
         <div class="form-group mr-4">
             <p class="mr-2">Motivo: </p>
-            <input type="text"  name="description" class="form-control" placeholder="Motivo de Cancelación">
+            <input type="text"  name="description" class="form-control" placeholder="Motivo de Cancelación" required>
         </div>
         <button class="btn btn-primary mr-4">
             Añadir un Pago
