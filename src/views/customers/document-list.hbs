@@ -3,8 +3,29 @@
     <a class="btn btn-danger" href="/logout">Cerrar Sesión</a>
 </div>
 
+
+<div class="navigation">
+    <a href="#" class="nav-button" data-target="personal-info">
+        <i class="fas fa-user"></i> <!-- Ícono de usuario -->
+        <p class="text-muted">Perfil</p>
+    </a>
+    <a href="#" class="nav-button text-muted" data-target="credit-info">
+        <i class="fas fa-credit-card"></i> <!-- Nuevo ícono de tarjeta de crédito -->
+        <p class="text-muted">Crédito</p>
+    </a>
+    <a href="#" class="nav-button text-muted" data-target="document-info">
+        <i class="fas fa-file-alt"></i> <!-- Ícono de archivo -->
+        <p class="text-muted">Archivos</p>
+    </a>
+    <a href="#" class="nav-button text-muted" data-target="payment-info">
+        <i class="fas fa-dollar-sign"></i> <!-- Ícono de dólar -->
+        <p class="text-muted">Pagos</p>
+    </a>
+</div>
+
+
 <div class="container main-container col-md-8"
-    style="height: 70vh; width: 100%; display:flex; overflow-x:scroll; background-color:white">
+    style="height: 68vh; width: 100%; display:flex; overflow-x:scroll; background-color:white">
 
     <div class="container section personal-info custom-nav-section" style="height:100%">
         <!-- Información Personal -->
@@ -94,26 +115,6 @@
 </div>
 
 
-<div class="navigation">
-    <a href="#" class="nav-button" data-target="personal-info">
-        <i class="fas fa-user"></i> <!-- Ícono de usuario -->
-        <p class="text-muted">Perfil</p>
-    </a>
-    <a href="#" class="nav-button text-muted" data-target="credit-info">
-        <i class="fas fa-credit-card"></i> <!-- Nuevo ícono de tarjeta de crédito -->
-        <p class="text-muted">Crédito</p>
-    </a>
-    <a href="#" class="nav-button text-muted" data-target="document-info">
-        <i class="fas fa-file-alt"></i> <!-- Ícono de archivo -->
-        <p class="text-muted">Archivos</p>
-    </a>
-    <a href="#" class="nav-button text-muted" data-target="payment-info">
-        <i class="fas fa-dollar-sign"></i> <!-- Ícono de dólar -->
-        <p class="text-muted">Pagos</p>
-    </a>
-</div>
-
-
 <script>
     function renderStates() {
         var estadoSpan = document.getElementById("estado");
@@ -126,7 +127,7 @@
         }
     }
 
-    function scrollConfig() {
+    {{!-- function scrollConfig() {
         const container = document.querySelector(".main-container");
         const sections = document.querySelectorAll(".section.custom-nav-section");
         const navButtons = document.querySelectorAll(".nav-button")
@@ -197,7 +198,108 @@
             navButtons[index].classList.remove("text-muted")
         }
 
+    } --}}
+
+function scrollConfig() {
+    const container = document.querySelector(".main-container");
+    const sections = document.querySelectorAll(".section.custom-nav-section");
+    const navButtons = document.querySelectorAll(".nav-button");
+    const elem = document.querySelectorAll(".btn")[0] // wtf?
+    let currentSectionIndex = 0;
+    const indexSections = {
+        "personal-info": 0,
+        "credit-info": 1,
+        "document-info": 2,
+        "payment-info": 3
     }
+
+    let touchStartX = 0;
+    let touchMoveX = 0;
+
+    container.addEventListener("touchstart", (e) => {
+        touchStartX = e.touches[0].pageX;
+        touchStartY = e.touches[0].pageY;
+    });
+
+    container.addEventListener("onFling", e => {
+        e.preventDefault();
+    })
+
+    container.addEventListener("touchmove", (e) => {
+        touchMoveY = e.touches[0].pageY - touchStartY;
+        touchMoveX = e.touches[0].pageX - touchStartX;
+        // elem.textContent = Math.abs(touchMoveX) + " " + Math.abs(touchMoveY)
+        elem.textContent = currentSectionIndex
+        
+        if(Math.abs(touchMoveY) > Math.abs(touchMoveX)) {
+            return;
+        } else {
+            e.preventDefault();
+        }
+    });
+
+    container.addEventListener("touchend", () => {
+        const deltaX = -touchMoveX;
+
+        if (deltaX > 100 && currentSectionIndex < sections.length - 1) {
+            currentSectionIndex++;
+        } else if (deltaX < -100 && currentSectionIndex > 0) {
+            currentSectionIndex--;
+        }
+
+        const targetScrollLeft = currentSectionIndex * container.offsetWidth;
+        updateNavStates(currentSectionIndex);
+
+        // elem.textContent = targetScrollLeft
+
+        container.scrollTo({
+            left: targetScrollLeft,
+            behavior: "smooth"
+        });
+    });
+
+    container.addEventListener("wheel", (event) => {
+        event.preventDefault();
+
+
+        if (event.deltaY > 0 && currentSectionIndex < sections.length - 1) {
+            currentSectionIndex++;
+        } else if (event.deltaY < 0 && currentSectionIndex > 0) {
+            currentSectionIndex--;
+        }
+
+        const targetScrollLeft = currentSectionIndex * container.offsetWidth;
+        updateNavStates(currentSectionIndex);
+        container.scrollTo({
+            left: targetScrollLeft,
+            behavior: "smooth"
+        });
+    });
+
+    for (let navButton of navButtons) {
+        navButton.addEventListener("click", (e) => {
+            const target = navButton.dataset.target;
+            currentSectionIndex = indexSections[target];
+            const targetScrollLeft = currentSectionIndex * container.offsetWidth;
+            updateNavStates(currentSectionIndex);
+            elem.textContent = currentSectionIndex
+            container.scrollTo({
+                left: targetScrollLeft,
+                behavior: "smooth"
+            });
+        });
+    }
+
+    function updateNavStates(index) {
+        for (let navButton of navButtons) {
+            navButton.classList.add("text-muted");
+        }
+        navButtons[index].classList.remove("text-muted")
+    }
+}
+
+
+
 
     document.addEventListener("DOMContentLoaded", () => {
         renderStates();
