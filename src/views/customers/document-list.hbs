@@ -229,7 +229,7 @@ function scrollConfig() {
         touchMoveY = e.touches[0].pageY - touchStartY;
         touchMoveX = e.touches[0].pageX - touchStartX;
         // elem.textContent = Math.abs(touchMoveX) + " " + Math.abs(touchMoveY)
-        elem.textContent = currentSectionIndex
+        // elem.textContent = currentSectionIndex
         
         if(Math.abs(touchMoveY) > Math.abs(touchMoveX)) {
             return;
@@ -282,7 +282,7 @@ function scrollConfig() {
             currentSectionIndex = indexSections[target];
             const targetScrollLeft = currentSectionIndex * container.offsetWidth;
             updateNavStates(currentSectionIndex);
-            elem.textContent = currentSectionIndex
+            // elem.textContent = currentSectionIndex
             container.scrollTo({
                 left: targetScrollLeft,
                 behavior: "smooth"
