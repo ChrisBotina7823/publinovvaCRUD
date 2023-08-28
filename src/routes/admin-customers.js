@@ -74,13 +74,17 @@ router.get('/', isLoggedIn, async (req, res) => {
 router.get('/delete/:id', async (req, res) => {
     const { id } = req.params;
 
-    const result = await pool.query('SELECT * FROM customers WHERE id = ?', [id])
-    const { folderId: fileId, document } = result[0][0]
-    await deleteFile(fileId)
-
-    await pool.query('DELETE FROM customers WHERE id = ?', [id]);
-    req.flash('success', `Cliente identificado con ${document} eliminado`);
-    res.redirect('/admin/customers');
+    try {
+        const result = await pool.query('SELECT * FROM customers WHERE id = ?', [id])
+        const { folderId: fileId, document } = result[0][0]
+        await deleteFile(fileId)
+    
+        await pool.query('DELETE FROM customers WHERE id = ?', [id]);
+        req.flash('success', `Cliente identificado con ${document} eliminado`);
+        res.redirect('/admin/customers');
+    } catch(err) {
+        console.log(err);
+    }
 });
 
 router.get('/edit/:id', async (req, res) => {
@@ -109,27 +113,33 @@ router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, r
     const { fullname, phone, email, document, password, status, credit_amount, credit_process, bank_number, available_balance} = req.body;
     const files = req.files
     const size = files.reduce( (acc, item) => acc + item.size, 0 );
-    const rows = await pool.query('SELECT * FROM customers WHERE id = ?', [userId])
-    const customer = rows[0][0]
-    const newSize = size + customer.storage
-    await uploadMultipleFiles(files, folderId)
-    await renameFolder(folderId, document) 
-    const newCustomer = {
-        fullname,
-        phone,
-        email,
-        document,
-        password,
-        credit_amount: formatDecimal(credit_amount),
-        credit_process,
-        bank_number,
-        available_balance: formatDecimal(available_balance),
-        storage: newSize,
-        status
-    };
-    await pool.query('UPDATE customers set ? WHERE id = ?', [newCustomer, userId]);
-    req.flash('success', 'Cliente editado con éxito');
-    res.redirect('/admin/customers');
+    try {
+        const rows = await pool.query('SELECT * FROM customers WHERE id = ?', [userId])
+        const customer = rows[0][0]
+        const newSize = size + customer.storage
+        const newCustomer = {
+            fullname,
+            phone,
+            email,
+            document,
+            password,
+            credit_amount: formatDecimal(credit_amount),
+            credit_process,
+            bank_number,
+            available_balance: formatDecimal(available_balance),
+            storage: newSize,
+            status
+        };
+        await pool.query('UPDATE customers set ? WHERE id = ?', [newCustomer, userId]);
+        await uploadMultipleFiles(files, folderId)
+        await renameFolder(folderId, document) 
+        req.flash('success', 'Cliente editado con éxito');
+        res.redirect('/admin/customers');
+    } catch(err) {
+        console.log(err);
+        req.flash('message', `Error al editar usuario`)
+        res.redirect('/admin/customers')
+    }
 });
 
 router.get('/files/delete/:userId/:fileId', async (req, res) => {
@@ -139,6 +149,7 @@ router.get('/files/delete/:userId/:fileId', async (req, res) => {
 })
 
 router.get('/payments/:userId', async (req, res) => {
+    // console.log(req.user)
     const userId = req.params.userId;
     const payments = await getPayments(userId);
     res.render('customers/customer-payments', {payments, userId, allowDelete:true})

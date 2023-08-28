@@ -17,7 +17,15 @@ helpers.matchPassword = async (password, savedPassword) => {
 };
 
 helpers.formatDecimal = (number) => {
-  return parseFloat(number.replace(/[^\d.]/g, ''))
+  if(number == '') return 0;
+  let decimal = parseFloat(number.replace(/[^\d.]/g, ''))
+  // console.log(decimal == NaN)
+  if(isNaN(decimal)) {
+    // console.log(`Failed to parse ${number}`)
+    return 0;
+  }
+  // console.log(decimal)
+  return decimal
 }
 
 module.exports = helpers;

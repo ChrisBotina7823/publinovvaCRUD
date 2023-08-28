@@ -12,7 +12,7 @@ p {
 }
 
 .no-aprobado {
-  color: red;
+  color: rgb(212, 54, 54);
 }
 
 .pendiente {
@@ -112,3 +112,52 @@ body {
     width: 100%;
     height: auto;
   }
+
+
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.custom-nav-section {
+  height: 80%;
+  flex: 0 0 100%;
+  position: sticky;
+  top: 0; /* La sección se fijará en la parte superior del contenedor */
+  left: 0;
+  z-index: 0; /* Puedes ajustar esto según sea necesario */
+  background-color: white; /* Cambia el fondo de la sección cuando se fija */
+  margin: 8px;
+}
+
+.nav-element-active {
+  color: red;
+}
+
+
+
+.navigation {
+  display: flex;
+  flex-direction: row; /* Mostrar en horizontal */
+  justify-content: center; /* Centrar los elementos horizontalmente */
+  align-items: center; /* Centrar los elementos verticalmente */
+}
+
+.nav-button {
+  text-align: center; /* Centrar el texto horizontalmente */
+  margin: 10px; /* Espacio entre los elementos */
+  text-decoration: none; /* Quitar subrayado de los enlaces */
+}
+
+.nav-button i {
+  font-size: 6vh; /* Tamaño del ícono */
+  display: block; /* Mostrar el ícono como bloque para centrar */
+  margin-bottom: 5px; /* Espacio entre el ícono y el texto */
+}
+
+.nav-button p {
+  margin: 0; /* Eliminar el margen predeterminado del párrafo */
+  font-size: 2vh;
+}
