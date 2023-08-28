@@ -15,7 +15,7 @@
         <tr>
             <td class="align-middle text-center"  class="text-uppercase text-center">{{formatTime payment_date}}</td>
             <td class="align-middle text-center" >{{formatCurrency paid_amount}}</td>
-            <td class="align-middle text-center" >{{formatCurrency pending_amount}}</td>
+            <td class="align-middle text-center" style="color:red; font-weight:700" >{{formatCurrency pending_amount}}</td>
             <td class="align-middle text-center" >{{description}}</td>
             {{#if ../allowDelete}}
             <td class="align-middle text-center">

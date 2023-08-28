@@ -23,9 +23,17 @@
     </a>
 </div>
 
+<div class="container main-container text-center my-4">
+    <div class="d-flex align-items-center justify-content-center">
+        <i class="fas fa-chevron-left text-muted"></i>
+        <p class="mb-0 mx-2 text-muted">Desliza para cambiar de sección</p>
+        <i class="fas fa-chevron-right text-muted"></i>
+    </div>
+</div>
 
-<div class="container main-container col-md-8"
+<div id="scrollable-container" class="container main-container col-md-8"
     style="height: 68vh; width: 100%; display:flex; overflow-x:scroll; background-color:white">
+
 
     <div class="container section personal-info custom-nav-section" style="height:100%">
         <!-- Información Personal -->
@@ -127,74 +135,98 @@
         }
     }
 
-    {{!-- function scrollConfig() {
-        const container = document.querySelector(".main-container");
+    function scrollConfig() {
+        const containers = document.querySelectorAll(".main-container");
         const sections = document.querySelectorAll(".section.custom-nav-section");
-        const navButtons = document.querySelectorAll(".nav-button")
+        const navButtons = document.querySelectorAll(".nav-button");
+        const scrollableContainer = document.querySelector("#scrollable-container")
+        const elem = document.querySelectorAll(".btn")[0] // wtf?
         let currentSectionIndex = 0;
         const indexSections = {
             "personal-info": 0,
-            "credit-info": 1, // Añade la nueva sección de crédito
+            "credit-info": 1,
             "document-info": 2,
             "payment-info": 3
         }
 
+        let touchStartX = 0;
+        let touchMoveX = 0;
 
-        // Declara una variable para rastrear el estado del bloqueo
-let isWheelBlocked = false;
+        for (let container of containers) {
 
-container.addEventListener("wheel", function (event) {
-    if (isWheelBlocked) {
-        return; // Si el bloqueo está activado, ignora el evento
-    }
+            container.addEventListener("touchstart", (e) => {
+                touchStartX = e.touches[0].pageX;
+                touchStartY = e.touches[0].pageY;
+            });
 
-    const originalTarget = event.originalTarget;
-    if (!(originalTarget.tagName == 'H2' || originalTarget.tagName == 'H3' || originalTarget.classList.contains('container'))) {
-        return;
-    }
+            container.addEventListener("onFling", e => {
+                e.preventDefault();
+            })
 
-    event.preventDefault();
+            container.addEventListener("touchmove", (e) => {
+                touchMoveY = e.touches[0].pageY - touchStartY;
+                touchMoveX = e.touches[0].pageX - touchStartX;
+                // elem.textContent = Math.abs(touchMoveX) + " " + Math.abs(touchMoveY)
+                // elem.textContent = currentSectionIndex
 
-    const delta = event.deltaY;
+                if (Math.abs(touchMoveY) > Math.abs(touchMoveX)) {
+                    return;
+                } else {
+                    e.preventDefault();
+                }
+            });
 
-    console.log(deltaY)
+            container.addEventListener("touchend", () => {
+                const deltaX = -touchMoveX;
 
-    if (delta > 0 && currentSectionIndex < sections.length - 1) {
-        currentSectionIndex++;
-    } else if (delta < 0 && currentSectionIndex > 0) {
-        currentSectionIndex--;
-    }
+                if (deltaX > 100 && currentSectionIndex < sections.length - 1) {
+                    currentSectionIndex++;
+                } else if (deltaX < -100 && currentSectionIndex > 0) {
+                    currentSectionIndex--;
+                }
 
-    const targetScrollLeft = currentSectionIndex * container.offsetWidth;
-
-
-    updateNavStates(currentSectionIndex);
-
-    container.scrollTo({
-        left: targetScrollLeft,
-        behavior: "smooth"
-    });
-
-    // Activa el bloqueo y configura un temporizador para desactivarlo después de 500 ms
-    isWheelBlocked = true;
-    setTimeout(() => {
-        isWheelBlocked = false;
-    }, 1000);
-});
-
-
-        for (let navButton of navButtons) {
-            navButton.addEventListener("click", e => {
-
-                const target = navButton.dataset.target;
-                const currentSectionIndex = indexSections[target];
                 const targetScrollLeft = currentSectionIndex * container.offsetWidth;
                 updateNavStates(currentSectionIndex);
-                container.scrollTo({
+
+                // elem.textContent = targetScrollLeft
+
+                scrollableContainer.scrollTo({
                     left: targetScrollLeft,
                     behavior: "smooth"
                 });
-            })
+            });
+
+            container.addEventListener("wheel", (event) => {
+                event.preventDefault();
+
+
+                if (event.deltaY > 0 && currentSectionIndex < sections.length - 1) {
+                    currentSectionIndex++;
+                } else if (event.deltaY < 0 && currentSectionIndex > 0) {
+                    currentSectionIndex--;
+                }
+
+                const targetScrollLeft = currentSectionIndex * container.offsetWidth;
+                updateNavStates(currentSectionIndex);
+                scrollableContainer.scrollTo({
+                    left: targetScrollLeft,
+                    behavior: "smooth"
+                });
+            });
+        }
+
+        for (let navButton of navButtons) {
+            navButton.addEventListener("click", (e) => {
+                const target = navButton.dataset.target;
+                currentSectionIndex = indexSections[target];
+                const targetScrollLeft = currentSectionIndex * container.offsetWidth;
+                updateNavStates(currentSectionIndex);
+                // elem.textContent = currentSectionIndex
+                scrollableContainer.scrollTo({
+                    left: targetScrollLeft,
+                    behavior: "smooth"
+                });
+            });
         }
 
         function updateNavStates(index) {
@@ -203,106 +235,7 @@ container.addEventListener("wheel", function (event) {
             }
             navButtons[index].classList.remove("text-muted")
         }
-
-    } --}}
-
-function scrollConfig() {
-    const container = document.querySelector(".main-container");
-    const sections = document.querySelectorAll(".section.custom-nav-section");
-    const navButtons = document.querySelectorAll(".nav-button");
-    const elem = document.querySelectorAll(".btn")[0] // wtf?
-    let currentSectionIndex = 0;
-    const indexSections = {
-        "personal-info": 0,
-        "credit-info": 1,
-        "document-info": 2,
-        "payment-info": 3
     }
-
-    let touchStartX = 0;
-    let touchMoveX = 0;
-
-    container.addEventListener("touchstart", (e) => {
-        touchStartX = e.touches[0].pageX;
-        touchStartY = e.touches[0].pageY;
-    });
-
-    container.addEventListener("onFling", e => {
-        e.preventDefault();
-    })
-
-    container.addEventListener("touchmove", (e) => {
-        touchMoveY = e.touches[0].pageY - touchStartY;
-        touchMoveX = e.touches[0].pageX - touchStartX;
-        // elem.textContent = Math.abs(touchMoveX) + " " + Math.abs(touchMoveY)
-        // elem.textContent = currentSectionIndex
-        
-        if(Math.abs(touchMoveY) > Math.abs(touchMoveX)) {
-            return;
-        } else {
-            e.preventDefault();
-        }
-    });
-
-    container.addEventListener("touchend", () => {
-        const deltaX = -touchMoveX;
-
-        if (deltaX > 100 && currentSectionIndex < sections.length - 1) {
-            currentSectionIndex++;
-        } else if (deltaX < -100 && currentSectionIndex > 0) {
-            currentSectionIndex--;
-        }
-
-        const targetScrollLeft = currentSectionIndex * container.offsetWidth;
-        updateNavStates(currentSectionIndex);
-
-        // elem.textContent = targetScrollLeft
-
-        container.scrollTo({
-            left: targetScrollLeft,
-            behavior: "smooth"
-        });
-    });
-
-    container.addEventListener("wheel", (event) => {
-        event.preventDefault();
-
-
-        if (event.deltaY > 0 && currentSectionIndex < sections.length - 1) {
-            currentSectionIndex++;
-        } else if (event.deltaY < 0 && currentSectionIndex > 0) {
-            currentSectionIndex--;
-        }
-
-        const targetScrollLeft = currentSectionIndex * container.offsetWidth;
-        updateNavStates(currentSectionIndex);
-        container.scrollTo({
-            left: targetScrollLeft,
-            behavior: "smooth"
-        });
-    });
-
-    for (let navButton of navButtons) {
-        navButton.addEventListener("click", (e) => {
-            const target = navButton.dataset.target;
-            currentSectionIndex = indexSections[target];
-            const targetScrollLeft = currentSectionIndex * container.offsetWidth;
-            updateNavStates(currentSectionIndex);
-            // elem.textContent = currentSectionIndex
-            container.scrollTo({
-                left: targetScrollLeft,
-                behavior: "smooth"
-            });
-        });
-    }
-
-    function updateNavStates(index) {
-        for (let navButton of navButtons) {
-            navButton.classList.add("text-muted");
-        }
-        navButtons[index].classList.remove("text-muted")
-    }
-}
 
 
 
