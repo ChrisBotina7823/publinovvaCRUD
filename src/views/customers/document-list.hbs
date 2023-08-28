@@ -121,9 +121,9 @@
         var estado = estadoSpan.textContent.trim().toLowerCase();
 
         if (estado === "aprobado") {
-            estadoSpan.classList("aprobado");
+            estadoSpan.classList.add("aprobado");
         } else {
-            estadoSpan.classList.add("no-aprobado");
+            estadoSpan.classList.remove("aprobado");
         }
     }
 
@@ -140,42 +140,48 @@
         }
 
 
-        container.addEventListener("wheel", function (event) {
+        // Declara una variable para rastrear el estado del bloqueo
+let isWheelBlocked = false;
 
-            console.log(event.originalTarget.tagName)
-            console.log(event.originalTarget.classList)
-            // event.originalTarget.tagName == 'TH'|| event.originalTarget.tagName == 'TD'
-            const originalTarget = event.originalTarget
-            if (!(originalTarget.tagName == 'H2' || originalTarget.tagName == 'H3' || originalTarget.classList.contains('container'))) {
-                // console.log("cancelled")
-                return;
-            }
-            // Detecta el desplazamiento del ratón
-            event.preventDefault(); // Evita el desplazamiento predeterminado
+container.addEventListener("wheel", function (event) {
+    if (isWheelBlocked) {
+        return; // Si el bloqueo está activado, ignora el evento
+    }
 
-            const delta = event.deltaY;
+    const originalTarget = event.originalTarget;
+    if (!(originalTarget.tagName == 'H2' || originalTarget.tagName == 'H3' || originalTarget.classList.contains('container'))) {
+        return;
+    }
 
-            if (delta > 0 && currentSectionIndex < sections.length - 1) {
-                // Desplázate hacia abajo si no estás en la última sección
-                currentSectionIndex++;
-                // console.log(sections[currentSectionIndex])
-            } else if (delta < 0 && currentSectionIndex > 0) {
-                // Desplázate hacia arriba si no estás en la primera sección
-                currentSectionIndex--;
-            }
+    event.preventDefault();
 
-            // Calcula el valor de desplazamiento necesario
-            const targetScrollLeft = currentSectionIndex * container.offsetWidth;
+    const delta = event.deltaY;
 
-            // Realiza un desplazamiento suave hacia la sección objetivo
+    console.log(deltaY)
 
-            updateNavStates(currentSectionIndex);
+    if (delta > 0 && currentSectionIndex < sections.length - 1) {
+        currentSectionIndex++;
+    } else if (delta < 0 && currentSectionIndex > 0) {
+        currentSectionIndex--;
+    }
 
-            container.scrollTo({
-                left: targetScrollLeft,
-                behavior: "smooth"
-            });
-        });
+    const targetScrollLeft = currentSectionIndex * container.offsetWidth;
+
+
+    updateNavStates(currentSectionIndex);
+
+    container.scrollTo({
+        left: targetScrollLeft,
+        behavior: "smooth"
+    });
+
+    // Activa el bloqueo y configura un temporizador para desactivarlo después de 500 ms
+    isWheelBlocked = true;
+    setTimeout(() => {
+        isWheelBlocked = false;
+    }, 1000);
+});
+
 
         for (let navButton of navButtons) {
             navButton.addEventListener("click", e => {
