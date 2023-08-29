@@ -147,12 +147,13 @@ body {
 
 .nav-button {
   text-align: center; /* Centrar el texto horizontalmente */
-  margin: 10px; /* Espacio entre los elementos */
+  margin-left: 10px; /* Espacio entre los elementos */
+  margin-right: 10px;
   text-decoration: none; /* Quitar subrayado de los enlaces */
 }
 
 .nav-button i {
-  font-size: 6vh; /* Tamaño del ícono */
+  font-size: 5vh; /* Tamaño del ícono */
   display: block; /* Mostrar el ícono como bloque para centrar */
   margin-bottom: 5px; /* Espacio entre el ícono y el texto */
 }
@@ -160,4 +161,9 @@ body {
 .nav-button p {
   margin: 0; /* Eliminar el margen predeterminado del párrafo */
   font-size: 2vh;
+}
+
+.pending-amount-highlighted {
+  color: rgb(174, 44, 44);
+  font-weight: 700;
 }

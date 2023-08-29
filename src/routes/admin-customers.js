@@ -157,12 +157,14 @@ router.get('/payments/:userId', async (req, res) => {
 
 router.post('/payments/add/:userId', async (req, res) => {
     const customer_id = req.params.userId;
-    const { paid_amount, pending_amount, description } = req.body;
+    const { paid_amount, pending_amount, description, recipient, address } = req.body;
     const payment = {
         paid_amount: formatDecimal(paid_amount),
         pending_amount: formatDecimal(pending_amount),
         description,
-        customer_id
+        customer_id,
+        address,
+        recipient
     }
     await registerPayment(payment)
     res.redirect(`/admin/customers/payments/${customer_id}`)
