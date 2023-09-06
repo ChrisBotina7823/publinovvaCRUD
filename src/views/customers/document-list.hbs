@@ -74,15 +74,17 @@
                     </p>
 
                     {{#if customer.credit_process}}
-                    <p class="mb-1">Proceso de crédito: {{customer.credit_process}}</p>
+                    <p class="mb-1">Proceso de {{#if is_credit}}crédito{{else}}trámite{{/if}}: {{customer.credit_process}}</p>
                     {{/if}}
 
                     {{#if customer.bank_number}}
-                    <p class="mb-1">Número de cuenta: {{customer.bank_number}}</p>
+                    <p class="mb-1">Número de {{#if is_credit}}crédito{{else}}placa{{/if}}: {{customer.bank_number}}</p>
                     {{/if}}
 
+                    {{#if is_credit}}
                     {{#if customer.credit_amount}}
                     <p class="mb-1">Monto de crédito: {{formatCurrency customer.credit_amount}}</p>
+                    {{/if}}
                     {{/if}}
 
                     {{#if customer.available_balance}}

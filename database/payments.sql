@@ -5,6 +5,8 @@ CREATE TABLE `payments` (
     `paid_amount` DECIMAL DEFAULT 0,
     `pending_amount` DECIMAL DEFAULT 0,
     `description` TEXT,
+    `address` VARCHAR(255)
+    `recipient` VARCHAR(255)
     KEY `fk_customer` (`customer_id`),
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_customer` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`)

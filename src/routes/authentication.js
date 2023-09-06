@@ -117,15 +117,22 @@ router.get('/logout', (req, res) => {
 
 router.get('/customer/documents/:cypheredDoc',  async (req, res) => {
   // console.log(req.session)
-  const cypheredDoc = decodeURIComponent(req.params.cypheredDoc);
-  const doc = CryptoJS.AES.decrypt(cypheredDoc.toString(), process.env.CYPHER_KEY).toString(CryptoJS.enc.Utf8);
-  const rows = await pool.query('SELECT * FROM customers WHERE document = ?', [doc])
-  const customer = rows[0][0]
-  customer.files = await getFilesInFolder(customer.folderId);
-  const payments = await getPayments(customer.id)
-  // console.log(customer.files)
+  try {
+    const cypheredDoc = decodeURIComponent(req.params.cypheredDoc);
+    const doc = CryptoJS.AES.decrypt(cypheredDoc.toString(), process.env.CYPHER_KEY).toString(CryptoJS.enc.Utf8);
+    const rows = await pool.query('SELECT * FROM customers WHERE document = ?', [doc])
+    const customer = rows[0][0]
+    customer.files = await getFilesInFolder(customer.folderId);
+    const payments = await getPayments(customer.id)
+    let is_credit = await pool.query('SELECT is_credit FROM admins WHERE id = ?', [customer.user_id])
+    is_credit = is_credit[0][0].is_credit
+    // console.log(customer.files)
   
-  res.render('customers/document-list', {customer, hideNav: true, payments});
+    console.log(is_credit);
+    res.render('customers/document-list', {customer, hideNav: true, payments, is_credit});
+  } catch(err) {
+    res.redirect("/logout")
+  }
 })
 
 module.exports = router;

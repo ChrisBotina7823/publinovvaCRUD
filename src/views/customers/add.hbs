@@ -28,23 +28,25 @@
                             <input type="phone" name="phone" class="form-control" placeholder="Teléfono">
                         </div>
                         <div class="form-group">
-                            <p class="text-left">Proceso de crédito</p>
-                            <input type="text" name="credit_process" class="form-control" placeholder="Proceso de crédito">
+                            <p class="text-left">Proceso de {{#if is_credit}}crédito{{else}}trámite{{/if}}</p>
+                            <input type="text" name="credit_process" class="form-control" placeholder="Proceso de {{#if is_credit}}crédito{{else}}trámite{{/if}}">
                         </div>
                         <div class="form-group">
-                            <p class="text-left">Número de cuenta</p>
-                            <input type="text" name="bank_number" class="form-control" placeholder="Número de cuenta">
+                            <p class="text-left">Número de {{#if is_credit}}cuenta{{else}}placa{{/if}}</p>
+                            <input type="text" name="bank_number" class="form-control" placeholder="Número de {{#if is_credit}}cuenta{{else}}placa{{/if}}">
                         </div>
                         
+                        {{#if is_credit}}
                         <div class="form-group">
                             <p class="text-left">Monto de crédito</p>
                             <input type="text" id="credit_amount_input" name="credit_amount" class="form-control currency-input" placeholder="$">
                         </div>
+                        {{/if}}
+                        
                         <div class="form-group">
                             <p class="text-left">Saldo Disponible</p>
                             <input type="text" id="available_balance_input" name="available_balance" class="form-control currency-input" placeholder="$">
                         </div>
-
 
                         <div class="form-group">
                             <p class="text-left">Estado</p>

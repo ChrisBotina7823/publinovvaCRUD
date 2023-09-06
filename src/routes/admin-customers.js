@@ -10,13 +10,16 @@ const MAX_SIZE = 1e7;
 const { formatDecimal } = require('../lib/helpers.js')
 
 router.get('/add', (req, res) => {
+    let is_credit = req.user == undefined ? true : req.user.is_credit
     const size = (MAX_SIZE / 1e6);
-    res.render('customers/add', { size });
+    res.render('customers/add', { size, is_credit });
 });
 
 router.post('/add', upload.array('files', 128), async (req, res) => {
-    const { fullname, document, password, email, phone, status, credit_amount, credit_process, bank_number, available_balance } = req.body;
+    let { fullname, document, password, email, phone, status, credit_amount, credit_process, bank_number, available_balance } = req.body;
     try {
+        if(!credit_amount) credit_amount = 0;
+
         const files = req.files
         const size = files.reduce( (acc, item) => acc + item.size, 0 );
         // if(size > MAX_SIZE ) {
@@ -95,7 +98,8 @@ router.get('/edit/:id', async (req, res) => {
         const files = await getFilesInFolder(customer.folderId)
         console.log(files)
         const remaining_size = (MAX_SIZE - customer.storage) / 1e6
-        res.render('customers/edit', {customer, remaining_size, files});
+        let is_credit = req.user == undefined ? true : req.user.is_credit
+        res.render('customers/edit', {customer, remaining_size, files, is_credit});
 
     } catch(err) {
         if(err.code == 'ER_DUP_ENTRY') {
@@ -110,10 +114,11 @@ router.get('/edit/:id', async (req, res) => {
 
 router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, res) => {
     const { userId, folderId } = req.params;
-    const { fullname, phone, email, document, password, status, credit_amount, credit_process, bank_number, available_balance} = req.body;
+    let { fullname, phone, email, document, password, status, credit_amount, credit_process, bank_number, available_balance} = req.body;
     const files = req.files
     const size = files.reduce( (acc, item) => acc + item.size, 0 );
     try {
+        if(!credit_amount) credit_amount = 0;
         const rows = await pool.query('SELECT * FROM customers WHERE id = ?', [userId])
         const customer = rows[0][0]
         const newSize = size + customer.storage

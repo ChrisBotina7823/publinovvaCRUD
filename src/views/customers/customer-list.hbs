@@ -13,9 +13,9 @@
                 <th class="align-middle">Documento</th>
                 <th class="align-middle">Teléfono</th>
                 <th class="align-middle">Correo</th>
-                <th class="align-middle">Proceso de crédito</th>
-                <th class="align-middle">Número de cuenta</th>
-                <th class="align-middle">Monto de crédito</th>
+                <th class="align-middle">Proceso de {{#if is_credit}}crédito{{else}}trámite{{/if}}</th>
+                <th class="align-middle">Número de {{#if is_credit}}cuenta{{else}}placa{{/if}}</th>
+                {{#if is_credit}}<th class="align-middle">Monto de crédito</th>{{/if}}
                 <th class="align-middle">Saldo disponible</th>
                 <th class="align-middle">Archivos Subidos</th>
                 <th class="align-middle">Fecha de Creación</th>
@@ -57,7 +57,7 @@
                     {{/if}}
                 </td>
 
-                <td class="align-middle text-center">{{formatCurrency credit_amount}}</td>
+                {{#if is_credit}}<td class="align-middle text-center">{{formatCurrency credit_amount}}</td>{{/if}}
                 <td class="align-middle text-center">{{formatCurrency available_balance}}</td>
                 <td class="align-middle text-center" class="text-center">
                     {{#if files}}
