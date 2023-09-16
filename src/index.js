@@ -6,8 +6,6 @@ const session = require('express-session');
 const validator = require('express-validator');
 const passport = require('passport');
 const flash = require('connect-flash');
-const CronJob = require('cron').CronJob
-const { turnAllCampaigns, getCampaigns, updateCampaignStatus, updateCampaignBudget } = require('./lib/facebookAPI')
 const cors = require('cors')
 
 // const FileStore = require('session-file-store')(session);
@@ -57,10 +55,6 @@ app.use(bodyParser.json());
 //   })
 // }));
 
-const Sequelize = require('sequelize');
-const { sendMail } = require('./lib/mailManager');
-const { registerMetrics, getLastLog } = require('./lib/sheetsUpload');
-
 
 // const SequelizeStore = require('connect-session-sequelize')(session.Store);
 // const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
@@ -105,7 +99,6 @@ app.use((req, res, next) => {
 app.use(require('./routes/index'));
 app.use(require('./routes/authentication'));
 app.use('/admin/customers', require('./routes/admin-customers'));
-app.use('/admin/campaigns', require('./routes/admin-campaigns'))
 
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {

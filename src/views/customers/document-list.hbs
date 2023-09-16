@@ -1,127 +1,131 @@
-<div class="container px-4 pt-2 pb-4 d-flex justify-content-between align-items-center">
-    <h4 class="text-uppercase m-0" style="font-size:3vh">{{customer.fullname}}</h4>
-    <a class="btn btn-danger" href="/logout">Cerrar Sesión</a>
-</div>
-
-
-<div class="navigation">
-    <a href="#" class="nav-button" data-target="personal-info">
-        <i class="fas fa-user"></i> <!-- Ícono de usuario -->
-        <p class="text-muted">Perfil</p>
-    </a>
-    <a href="#" class="nav-button text-muted" data-target="credit-info">
-        <i class="fas fa-credit-card"></i> <!-- Nuevo ícono de tarjeta de crédito -->
-        <p class="text-muted">Crédito</p>
-    </a>
-    <a href="#" class="nav-button text-muted" data-target="document-info">
-        <i class="fas fa-file-alt"></i> <!-- Ícono de archivo -->
-        <p class="text-muted">Archivos</p>
-    </a>
-    <a href="#" class="nav-button text-muted" data-target="payment-info">
-        <i class="fas fa-dollar-sign"></i> <!-- Ícono de dólar -->
-        <p class="text-muted">Pagos</p>
-    </a>
-</div>
-
-<div class="container main-container text-center mt-2 mb-4">
-    <div class="d-flex align-items-center justify-content-center">
-        <i class="fas fa-chevron-left text-muted"></i>
-        <p class="mb-0 mx-2 text-muted" style="font-size:3vh">Desliza para cambiar de sección</p>
-        <i class="fas fa-chevron-right text-muted"></i>
+    <div class="container px-4 pt-2 pb-4 d-flex justify-content-between align-items-center">
+        <h4 class="text-uppercase m-0" style="font-size:3vh">{{customer.fullname}}</h4>
+        <a class="btn btn-danger" href="/logout">Cerrar Sesión</a>
     </div>
-</div>
-
-<div id="scrollable-container" class="container main-container col-md-8" style="height: 65vh; width: 100%; display:flex; overflow-x:scroll; background-color:white">
 
 
-    <section id="personal-info" class="container section personal-info custom-nav-section" style="height:100%">
-        <!-- Información Personal -->
-        <div class="col-md-6 mx-auto">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="mb-2">Información Personal</h3>
-                </div>
-                <div class="card-body">
-                    {{#if customer.document}}
-                    <p class="mb-1">Documento: {{customer.document}}</p>
-                    {{/if}}
+    <div class="navigation">
+        <a href="#" class="nav-button " data-target="credit-info">
+            <i class="fas fa-credit-card"></i> <!-- Nuevo ícono de tarjeta de crédito -->
+            <p class="text-muted">Crédito</p>
+        </a>
+        <a href="#" class="nav-button text-muted" data-target="personal-info">
+            <i class="fas fa-user"></i> <!-- Ícono de usuario -->
+            <p class="text-muted">Perfil</p>
+        </a>
+        <a href="#" class="nav-button text-muted" data-target="document-info">
+            <i class="fas fa-file-alt"></i> <!-- Ícono de archivo -->
+            <p class="text-muted">Archivos</p>
+        </a>
+        <a href="#" class="nav-button text-muted" data-target="payment-info">
+            <i class="fas fa-dollar-sign"></i> <!-- Ícono de dólar -->
+            <p class="text-muted">Pagos</p>
+        </a>
+    </div>
 
-                    {{#if customer.phone}}
-                    <p class="mb-1">Teléfono: {{customer.phone}}</p>
-                    {{/if}}
+    <div class="container main-container text-center mt-2 mb-4">
+        <div class="d-flex align-items-center justify-content-center">
+            <i class="fas fa-chevron-left text-muted"></i>
+            <p class="mb-0 mx-2 text-muted" style="font-size:3vh">Desliza para cambiar de sección</p>
+            <i class="fas fa-chevron-right text-muted"></i>
+        </div>
+    </div>
 
-                    {{#if customer.email}}
-                    <p class="mb-1">Correo Electrónico: {{customer.email}}</p>
-                    {{/if}}
+    <div id="scrollable-container" class="container main-container col-md-8"
+        style="height: 65vh; width: 100%; display:flex; overflow-x:scroll;">
 
+
+
+        <section id="credit-info" class="container section credit-info custom-nav-section" style="height:100%;">
+            <!-- Información de Crédito -->
+            <div class="col-md-6 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-2">Información de Crédito</h3>
+                    </div>
+                    <div class="card-body">
+                        {{#if customer.credit_process}}
+                        <p class="mb-1">Proceso de {{#if is_credit}}crédito{{else}}trámite{{/if}}:
+                            {{customer.credit_process}}</p>
+                        {{/if}}
+
+                        {{#if customer.bank_number}}
+                        <p class="mb-1">Número de {{#if is_credit}}crédito{{else}}placa{{/if}}: {{customer.bank_number}}
+                        </p>
+                        {{/if}}
+
+                        {{#if is_credit}}
+                        {{#if customer.credit_amount}}
+                        <p class="mb-1">Monto de crédito: {{formatCurrency customer.credit_amount}}</p>
+                        {{/if}}
+                        {{/if}}
+
+                        {{#if customer.available_balance}}
+                        <p class="mb-1">Saldo disponible: {{formatCurrency customer.available_balance}}</p>
+                        {{/if}}
+
+                        <div class="card card-body text-center">
+                            <p class="mb-1"></p>
+                            <h1 id="estado" class="text-uppercase card-subtitle"> <strong>{{customer.status}}</strong>
+                            </h1>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="credit-info" class="container section credit-info custom-nav-section" style="height:100%">
-        <!-- Información de Crédito -->
-        <div class="col-md-6 mx-auto">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="mb-2">Información de Crédito</h3>
-                </div>
-                <div class="card-body">
-                    <p class="mb-1">Estado:
-                        <strong>
-                            <span id="estado" class="text-uppercase card-subtitle">{{customer.status}}</span>
-                        </strong>
-                    </p>
+        <section id="personal-info" class="container section personal-info custom-nav-section" style="height:100%;">
+            <!-- Información Personal -->
+            <div class="col-md-6 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-2">Información Personal</h3>
+                    </div>
+                    <div class="card-body">
+                        {{#if customer.document}}
+                        <p class="mb-1">Documento: {{customer.document}}</p>
+                        {{/if}}
 
-                    {{#if customer.credit_process}}
-                    <p class="mb-1">Proceso de {{#if is_credit}}crédito{{else}}trámite{{/if}}: {{customer.credit_process}}</p>
-                    {{/if}}
+                        {{#if customer.phone}}
+                        <p class="mb-1">Teléfono: {{customer.phone}}</p>
+                        {{/if}}
 
-                    {{#if customer.bank_number}}
-                    <p class="mb-1">Número de {{#if is_credit}}crédito{{else}}placa{{/if}}: {{customer.bank_number}}</p>
-                    {{/if}}
+                        {{#if customer.email}}
+                        <p class="mb-1">Correo Electrónico: {{customer.email}}</p>
+                        {{/if}}
 
-                    {{#if is_credit}}
-                    {{#if customer.credit_amount}}
-                    <p class="mb-1">Monto de crédito: {{formatCurrency customer.credit_amount}}</p>
-                    {{/if}}
-                    {{/if}}
-
-                    {{#if customer.available_balance}}
-                    <p class="mb-1">Saldo disponible: {{formatCurrency customer.available_balance}}</p>
-                    {{/if}}
-
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
+        <section id="document-info" class="container section document-info custom-nav-section" style="height:100%;">
+            <h2 class="card-title text-center">Archivos Subidos</h2>
+            <div class="card-body mx-auto col-md-8">
+                <ul class="list-group">
+                    {{#each customer.files}}
+                    <li class="list-group-item">
+                        <a class="a-doc" href="https://drive.google.com/file/d/{{id}}/view" target="_blank">
+                            {{name}}
+                        </a>
+                    </li>
+                    {{else}}
+                    <p>No se han subido archivos</p>
+                    {{/each}}
+                </ul>
+            </div>
+        </section>
 
-    <section id="document-info" class="container section document-info custom-nav-section" style="height:100%">
-        <h2 class="card-title text-center">Archivos Subidos</h2>
-        <div class="card-body mx-auto col-md-8">
-            <ul class="list-group">
-                {{#each customer.files}}
-                <li class="list-group-item">
-                    <a class="a-doc" href="https://drive.google.com/file/d/{{id}}/view" target="_blank">
-                        {{name}}
-                    </a>
-                </li>
-                {{else}}
-                <p>No se han subido archivos</p>
-                {{/each}}
-            </ul>
-        </div>
-    </section>
+        <section id="payment-info" class="container section payment-info custom-nav-section text-center"
+            style="height:100">
+            <h2 class="card-title">Historial de Pagos</h2>
+            <div class="col-md-12 mx-auto" style="height:90%;overflow-y:scroll">
+                {{> payment-table}}
+            </div>
+        </section>
 
-    <section id="payment-info" class="container section payment-info custom-nav-section text-center" style="height:100%">
-        <h2 class="card-title">Historial de Pagos</h2>
-        <div class="col-md-12 mx-auto" style="height:90%;overflow-y:scroll">
-            {{> payment-table}}
-        </div>
-    </section>
-
-</div>
+    </div>
 
 
 <script>
@@ -144,12 +148,11 @@
         const elem = document.querySelectorAll(".btn")[0] // wtf?
         let currentSectionIndex = 0;
         const indexSections = {
-            "personal-info": 0,
-            "credit-info": 1,
+            "credit-info": 0,
+            "personal-info": 1,
             "document-info": 2,
             "payment-info": 3
         }
-
         let touchStartX = 0;
         let touchMoveX = 0;
 
@@ -171,7 +174,7 @@
                 // elem.textContent = Math.abs(touchMoveX) + " " + Math.abs(touchMoveY)
                 // elem.textContent = currentSectionIndex
 
-                if (Math.abs(touchMoveY) > Math.abs(touchMoveX) || e.target.tagName == 'TD' || e.target.tagName == 'TH' ) {
+                if (Math.abs(touchMoveY) > Math.abs(touchMoveX) || e.target.tagName == 'TD' || e.target.tagName == 'TH') {
                     return;
                 } else {
                     e.preventDefault();
@@ -188,7 +191,6 @@
                 }
 
                 const targetScrollLeft = currentSectionIndex * container.offsetWidth;
-                updateNavStates(currentSectionIndex);
 
                 // elem.textContent = targetScrollLeft
 
@@ -196,12 +198,13 @@
                     left: targetScrollLeft,
                     behavior: "smooth"
                 });
+                updateNavStates(currentSectionIndex);
             });
 
             container.addEventListener("wheel", (event) => {
-                
-                if(event.target.tagName == 'TH' || event.target.tagName == 'TD') return;
-                
+
+                if (event.target.tagName == 'TH' || event.target.tagName == 'TD') return;
+
                 event.preventDefault();
 
                 if (event.deltaY > 0 && currentSectionIndex < sections.length - 1) {
@@ -211,11 +214,11 @@
                 }
 
                 const targetScrollLeft = currentSectionIndex * container.offsetWidth;
-                updateNavStates(currentSectionIndex);
                 scrollableContainer.scrollTo({
                     left: targetScrollLeft,
                     behavior: "smooth"
                 });
+                updateNavStates(currentSectionIndex);
             });
 
 
@@ -224,22 +227,29 @@
                     const target = navButton.dataset.target;
                     currentSectionIndex = indexSections[target];
                     const targetScrollLeft = currentSectionIndex * container.offsetWidth;
-                    updateNavStates(currentSectionIndex);
                     // elem.textContent = currentSectionIndex
                     scrollableContainer.scrollTo({
                         left: targetScrollLeft,
                         behavior: "smooth"
                     });
+                    updateNavStates(currentSectionIndex);
                 });
             }
-        
+
             function updateNavStates(index) {
                 for (let navButton of navButtons) {
                     navButton.classList.add("text-muted");
                 }
                 navButtons[index].classList.remove("text-muted")
+
+
+                for(let i = 0; i<sections.length; i++) {
+                    let currentSection = sections[i]
+                    currentSection.style.display = i == index ? "block" : "none"
+                }
+
             }
-        
+
         }
 
 
@@ -248,6 +258,11 @@
 
 
     document.addEventListener("DOMContentLoaded", () => {
+
+        {{#if pending_credit}}
+        alert("Tu estado de crédito está pendiente, ponte en contacto con el administrador para más información")
+        {{/if}}
+
         renderStates();
         scrollConfig();
     });

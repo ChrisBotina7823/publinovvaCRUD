@@ -129,7 +129,8 @@ router.get('/customer/documents/:cypheredDoc',  async (req, res) => {
     // console.log(customer.files)
   
     console.log(is_credit);
-    res.render('customers/document-list', {customer, hideNav: true, payments, is_credit});
+    pending_credit = customer.status == "pendiente"
+    res.render('customers/document-list', {customer, hideNav: true, payments, is_credit, pending_credit, error_color:"#ffb8b6"});
   } catch(err) {
     res.redirect("/logout")
   }

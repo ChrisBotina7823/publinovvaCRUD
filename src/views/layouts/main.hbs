@@ -16,7 +16,7 @@
   <link rel="icon" href="/img/favicon.png">
 </head>
 
-<body style="background-color: white;">
+<body style="{{#if pending_credit}}background: radial-gradient(circle, white, red){{/if}}; height:100%">
   {{#if hideNav}}
   {{else}}
   {{>navigation}}

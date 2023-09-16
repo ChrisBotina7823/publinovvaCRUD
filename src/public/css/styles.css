@@ -127,8 +127,8 @@ body {
   position: sticky;
   top: 0; /* La sección se fijará en la parte superior del contenedor */
   left: 0;
+  padding: 24px;
   z-index: 0; /* Puedes ajustar esto según sea necesario */
-  background-color: white; /* Cambia el fondo de la sección cuando se fija */
   margin: 8px;
 }
 
@@ -166,4 +166,8 @@ body {
 .pending-amount-highlighted {
   color: rgb(174, 44, 44);
   font-weight: 700;
+}
+
+section {
+  background-color: transparent;
 }
