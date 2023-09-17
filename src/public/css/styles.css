@@ -125,7 +125,7 @@ body {
   height: 80%;
   flex: 0 0 100%;
   position: sticky;
-  background-color: ;
+  background-color: white;
   top: 0; /* La sección se fijará en la parte superior del contenedor */
   left: 0;
   padding: 24px;
