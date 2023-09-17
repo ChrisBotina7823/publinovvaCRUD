@@ -12,7 +12,7 @@ p {
 }
 
 .no-aprobado {
-  color: rgb(212, 54, 54);
+  color: rgb(163, 38, 38);
 }
 
 .pendiente {
@@ -125,6 +125,7 @@ body {
   height: 80%;
   flex: 0 0 100%;
   position: sticky;
+  background-color: ;
   top: 0; /* La sección se fijará en la parte superior del contenedor */
   left: 0;
   padding: 24px;

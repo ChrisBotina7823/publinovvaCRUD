@@ -64,8 +64,8 @@
                         <p class="mb-1">Saldo disponible: {{formatCurrency customer.available_balance}}</p>
                         {{/if}}
 
-                        <div class="card card-body text-center">
-                            <p class="mb-1"></p>
+                        <div class="card card-body text-center my-4" {{#if pending_credit}}style="background-color:#ffc6cd"{{/if}}>
+                            <p class="mb-1"><strong>ESTADO</strong></p>
                             <h1 id="estado" class="text-uppercase card-subtitle"> <strong>{{customer.status}}</strong>
                             </h1>
                         </div>
@@ -243,10 +243,10 @@
                 navButtons[index].classList.remove("text-muted")
 
 
-                for(let i = 0; i<sections.length; i++) {
+                {{!-- for(let i = 0; i<sections.length; i++) {
                     let currentSection = sections[i]
                     currentSection.style.display = i == index ? "block" : "none"
-                }
+                } --}}
 
             }
 
