@@ -172,3 +172,10 @@ body {
 section {
   background-color: transparent;
 }
+
+.img-circle {
+  border-radius: 50%;
+  object-fit: cover;
+  width:100%;
+  height:100%;
+}

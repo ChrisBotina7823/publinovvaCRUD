@@ -67,6 +67,8 @@ router.get('/', isLoggedIn, async (req, res) => {
         // console.log(customers)
         for (const customer of customers) {
             customer.files = await getFilesInFolder(customer.folderId);
+            // console.log(customer)
+            customer.photoUrl = customer.photoId ? `https://drive.google.com/uc?export=view&id=${customer.photoId}` : "https://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png"
         }
         res.render('customers/customer-list', { customers });
     } catch(err) {
@@ -96,7 +98,7 @@ router.get('/edit/:id', async (req, res) => {
         const customers = await pool.query('SELECT * FROM customers WHERE id = ?', [id]);
         const customer = customers[0][0]
         const files = await getFilesInFolder(customer.folderId)
-        console.log(files)
+        // console.log(files)
         const remaining_size = (MAX_SIZE - customer.storage) / 1e6
         let is_credit = req.user == undefined ? true : req.user.is_credit
         res.render('customers/edit', {customer, remaining_size, files, is_credit});
@@ -111,6 +113,35 @@ router.get('/edit/:id', async (req, res) => {
         }
     }
 });
+router.get('/updatePhoto/:id', async(req, res) => {
+    try {
+        const {id} = req.params
+        const customers = await pool.query('SELECT * FROM customers WHERE id = ?', [id]);
+        const customer = customers[0][0]
+        console.log(customer)
+        customer.photoUrl = customer.photoId ? `https://drive.google.com/uc?export=view&id=${customer.photoId}` : "https://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png"
+        res.render('customers/updatePhoto', {customer});
+    } catch(err) {
+        console.error(err)
+    }
+})
+
+router.post('/updatePhoto/:id/:photoId', upload.single('photo'), async(req, res) => {
+    const { id, photoId } = req.params
+    const picture = req.file
+    const fileId = await uploadFile(picture, '1wMq4IRQBC-TA0pFdX-6_6U5kZLkjH6vr')
+    try {
+        await pool.query('UPDATE customers SET photoId = ? WHERE ID = ?', [fileId, id])
+        if(photoId != -1) {
+            console.log("PHOTO ID: ", photoId)
+            const result = await deleteFile(photoId)
+            console.log(result)
+        }
+    } catch(err) {
+        console.error(err)
+    }
+    res.redirect('/')
+})
 
 router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, res) => {
     const { userId, folderId } = req.params;

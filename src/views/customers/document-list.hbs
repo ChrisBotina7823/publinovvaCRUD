@@ -83,6 +83,12 @@
                         <h3 class="mb-2">Información Personal</h3>
                     </div>
                     <div class="card-body">
+
+                        <h4 class="text-center text-uppercase mb-2" style="font-size:3vh">{{customer.fullname}}</h4>
+                        <div class="mx-auto" style="height:20vh; width:20vh">
+                            <img id="img-preview" class="img-circle" src="{{customer.photoUrl}}" alt="photo">
+                        </div>
+
                         {{#if customer.document}}
                         <p class="mb-1">Documento: {{customer.document}}</p>
                         {{/if}}

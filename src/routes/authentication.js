@@ -130,6 +130,7 @@ router.get('/customer/documents/:cypheredDoc',  async (req, res) => {
   
     console.log(is_credit);
     pending_credit = customer.status == "pendiente"
+    customer.photoUrl = customer.photoId ? `https://drive.google.com/uc?export=view&id=${customer.photoId}` : "https://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png"
     res.render('customers/document-list', {customer, hideNav: true, payments, is_credit, pending_credit, error_color:"#ffb8b6"});
   } catch(err) {
     res.redirect("/logout")

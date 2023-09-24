@@ -1,0 +1,51 @@
+
+
+<div class="container main-container col-md-8 d-flex flex-column"
+    style="height: 80vh; width: 100%; display:flex; overflow-x:scroll;">
+    <div class="card text-center p-4">
+        <h4 class="text-uppercase mb-2" style="font-size:3vh">{{customer.fullname}}</h4>
+        <div class="mx-auto" style="height:40vh; width:40vh">
+            <img id="img-preview" class="img-circle" src="{{customer.photoUrl}}" alt="photo">
+        </div>
+    </div>
+
+    <form id="form" action="/admin/customers/updatePhoto/{{customer.id}}/{{#if customer.photoId}}{{customer.photoId}}{{else}}-1{{/if}}" method="POST"
+        enctype="multipart/form-data">
+        <div class="card mt-4 p-4 text-center">
+            <h3>Subir Foto</h3>
+            <input id="input-file" type="file" accept="image/*" name="photo" class="form-control" style="height:6vh">
+            <div class="mx-auto mt-4">
+                <button id="save-btn" disabled="true" class="btn btn-primary">
+                    Guardar
+                </button>
+                <a class="btn btn-danger" href="/">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+
+
+<script>
+    const inputFile = document.getElementById('input-file');
+    const imgPreview = document.getElementById('img-preview');
+    const saveBtn = document.getElementById('save-btn') 
+
+    inputFile.addEventListener('change', () => {
+        
+        console.log('{{{customer.photoUrl}}}')
+
+        saveBtn.disabled = !inputFile.value
+        const reader = new FileReader();
+        reader.onload = () => {
+            imgPreview.src = reader.result;
+        };
+
+        try {
+            reader.readAsDataURL(inputFile.files[0]);
+        } catch(err) {
+            imgPreview.src = '{{{customer.photoUrl}}}'
+        }
+    });
+
+</script>

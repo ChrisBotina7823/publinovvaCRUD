@@ -7,6 +7,7 @@ const validator = require('express-validator');
 const passport = require('passport');
 const flash = require('connect-flash');
 const cors = require('cors')
+const fileUpload = require('express-fileupload');
 
 // const FileStore = require('session-file-store')(session);
 const bodyParser = require('body-parser');

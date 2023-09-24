@@ -19,13 +19,14 @@
                 <th class="align-middle">Saldo disponible</th>
                 <th class="align-middle">Archivos Subidos</th>
                 <th class="align-middle">Fecha de Creación</th>
+                <th class="align-middle">Foto</th>
                 <th class="align-middle">Acciones</th>
             </tr>
         </thead>
         <tbody>
             {{#each customers}}
             <tr>
-                <td class="align-middle text-center" class="text-uppercase text-center">{{status}}</td>
+                <td class="align-middle text-center text-uppercase" >{{status}}</td>
                 <td class="align-middle text-center">{{fullname}}</td>
                 <td class="align-middle text-center">{{document}}</td>
                 <td class="align-middle text-center">
@@ -71,11 +72,17 @@
                     {{/if}}
                 </td>
                 <td class="align-middle text-center" id="date">{{created_at}}</td>
-                <td class="align-middle">
-                    <a class="mx-1" style="color:#046947" href="/admin/customers/edit/{{id}}">Editar</a>
-                    <a class="mx-1" style="color:#39439a" href="/admin/customers/payments/{{id}}">Ver Pagos</a>
-                    <a class="mx-1" style="color:red" href="/admin/customers/delete/{{id}}"
-                        onclick="return confirm('¿Estás seguro de que quieres eliminar este elemento?')">Eliminar</a>
+
+                <td class="align-middle text-center text-uppercase">
+                    <img class="mx-auto img-circle" src="{{photoUrl}}" alt="photo" style="height: 4vh; width:4vh">
+                    </div>
+                    <a class="mx-1" style="color:#39439a" href="/admin/customers/updatePhoto/{{id}}" >Cambiar</a>
+                </td>
+
+                <td class="align-middle d-flex flex-column">
+                    <a class="mx-1" style="color:#39439a" href="/admin/customers/edit/{{id}}">Editar</a>
+                    <a class="mx-1" style="color:#046947" href="/admin/customers/payments/{{id}}">Ver Pagos</a>
+                    <a class="mx-1" style="color:red" href="/admin/customers/delete/{{id}}" onclick="return confirm('¿Estás seguro de que quieres eliminar este elemento?')">Eliminar</a>
                 </td>
             </tr>
             {{/each}}
