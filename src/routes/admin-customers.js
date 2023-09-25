@@ -81,9 +81,11 @@ router.get('/delete/:id', async (req, res) => {
 
     try {
         const result = await pool.query('SELECT * FROM customers WHERE id = ?', [id])
-        const { folderId: fileId, document } = result[0][0]
+        const { folderId: fileId, document, photoId } = result[0][0]
         await deleteFile(fileId)
+        if(photoId != null) await deleteFile(photoId)
     
+        await pool.query("DELETE FROM payments WHERE customer_id = ?", [id]) 
         await pool.query('DELETE FROM customers WHERE id = ?', [id]);
         req.flash('success', `Cliente identificado con ${document} eliminado`);
         res.redirect('/admin/customers');
@@ -150,7 +152,8 @@ router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, r
     const size = files.reduce( (acc, item) => acc + item.size, 0 );
     try {
         if(!credit_amount) credit_amount = 0;
-        const rows = await pool.query('SELECT * FROM customers WHERE id = ?', [userId])
+
+        rows = await pool.query('SELECT * FROM customers WHERE id = ?', [userId])
         const customer = rows[0][0]
         const newSize = size + customer.storage
         const newCustomer = {
