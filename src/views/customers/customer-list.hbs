@@ -17,8 +17,8 @@
                 <th class="align-middle">Documento</th>
                 <th class="align-middle">Teléfono</th>
                 <th class="align-middle">Correo</th>
-                <th class="align-middle">Proceso de {{#if is_credit}}crédito{{else}}trámite{{/if}}</th>
-                <th class="align-middle">Número de {{#if is_credit}}cuenta{{else}}placa{{/if}}</th>
+                <th class="align-middle">Proceso de {{#if user.is_credit}}crédito{{else}}trámite{{/if}}</th>
+                <th class="align-middle">Número de {{#if user.is_credit}}cuenta{{else}}placa{{/if}}</th>
                 {{#if is_credit}}<th class="align-middle">Monto de crédito</th>{{/if}}
                 <th class="align-middle">Saldo disponible</th>
                 <th class="align-middle">Archivos Subidos</th>
