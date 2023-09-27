@@ -127,15 +127,20 @@
             rows = Array.from(table.rows);
             for (i = 1; i < (rows.length - 1); i++) {
                 shouldSwitch = false;
-                x = rows[i].getElementsByTagName("td")[1].textContent.toLowerCase().replace(/\s/g, "");
+
+                let row1 = rows[i].getElementsByTagName("td")
+                let row2 = rows[i + 1].getElementsByTagName("td")
+                
+                let x = y = ""
+                for(let i = 1; i<=4; i++) x += (row1[i].textContent).toLowerCase().replace(/\s/g, "");
                 console.log(x)
-                console.log(target)
                 x = x.includes(target)
-                console.log(x)
-                y = rows[i + 1].getElementsByTagName("td")[1].textContent.toLowerCase().replace(/\s/g, "");
+                
+                for(let i = 1; i<=4; i++) y += (row2[i].textContent).toLowerCase().replace(/\s/g, "");
                 console.log(y)
                 y = y.includes(target)
-                console.log(y)
+
+
                 if (x < y) {
                     shouldSwitch = true;
                     break;
