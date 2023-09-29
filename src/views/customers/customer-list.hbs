@@ -21,9 +21,9 @@
                 <th class="align-middle">Número de {{#if user.is_credit}}cuenta{{else}}placa{{/if}}</th>
                 {{#if is_credit}}<th class="align-middle">Monto de crédito</th>{{/if}}
                 <th class="align-middle">Saldo disponible</th>
-                <th class="align-middle">Archivos Subidos</th>
-                <th class="align-middle">Fecha de Creación</th>
+                <th class="align-middle">Información</th>
                 <th class="align-middle">Foto</th>
+                <th class="align-middle">Archivos Subidos</th>
                 <th class="align-middle">Acciones</th>
             </tr>
         </thead>
@@ -64,35 +64,28 @@
 
                 {{#if is_credit}}<td class="align-middle text-center">{{formatCurrency credit_amount}}</td>{{/if}}
                 <td class="align-middle text-center">{{formatCurrency available_balance}}</td>
-                <td class="align-middle text-center" class="text-center">
-                    {{#if files}}
-                    <ul>
-                        {{#each files}}
-                        <li><a href="https://drive.google.com/file/d/{{id}}/view" target="_blank">{{name}}</a></li>
-                        {{/each}}
-                    </ul>
-                    {{else}}
-                    Sin archivos
-                    {{/if}}
+                <td class="align-middle text-center d-flex flex-column" >
+                    <a class="mx-1" style="color:#046947" href="/admin/customers/payments/{{id}}">Pagos</a>
+                    <a class="mx-1" style="color:#046947" href="/admin/customers/uploads/{{id}}">Archivos</a>
                 </td>
                 <td class="align-middle text-center" id="date">{{created_at}}</td>
 
                 <td class="align-middle text-center text-uppercase">
                     <img class="mx-auto img-circle" src="{{photoUrl}}" alt="photo" style="height: 4vh; width:4vh">
-</div>
-<a class="mx-1" style="color:#39439a" href="/admin/customers/updatePhoto/{{id}}">Cambiar</a>
-</td>
+                    <div>
+                        <a class="mx-1" style="color:#39439a" href="/admin/customers/updatePhoto/{{id}}">Cambiar</a>
+                    </div>
+                </td>
 
-<td class="align-middle d-flex flex-column">
-    <a class="mx-1" style="color:#39439a" href="/admin/customers/edit/{{id}}">Editar</a>
-    <a class="mx-1" style="color:#046947" href="/admin/customers/payments/{{id}}">Ver Pagos</a>
-    <a class="mx-1" style="color:red" href="/admin/customers/delete/{{id}}"
-        onclick="return confirm('¿Estás seguro de que quieres eliminar este elemento?')">Eliminar</a>
-</td>
-</tr>
-{{/each}}
-</tbody>
-</table>
+                <td class="align-middle d-flex flex-column">
+                    <a class="mx-1" style="color:#39439a" href="/admin/customers/edit/{{id}}">Editar</a>
+                    <a class="mx-1" style="color:red" href="/admin/customers/delete/{{id}}"
+                        onclick="return confirm('¿Estás seguro de que quieres eliminar este elemento?')">Eliminar</a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
 </div>
 
 
@@ -130,13 +123,13 @@
 
                 let row1 = rows[i].getElementsByTagName("td")
                 let row2 = rows[i + 1].getElementsByTagName("td")
-                
+
                 let x = y = ""
-                for(let i = 1; i<=4; i++) x += (row1[i].textContent).toLowerCase().replace(/\s/g, "");
+                for (let i = 1; i <= 4; i++) x += (row1[i].textContent).toLowerCase().replace(/\s/g, "");
                 console.log(x)
                 x = x.includes(target)
-                
-                for(let i = 1; i<=4; i++) y += (row2[i].textContent).toLowerCase().replace(/\s/g, "");
+
+                for (let i = 1; i <= 4; i++) y += (row2[i].textContent).toLowerCase().replace(/\s/g, "");
                 console.log(y)
                 y = y.includes(target)
 

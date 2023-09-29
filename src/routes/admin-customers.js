@@ -64,10 +64,7 @@ router.get('/', isLoggedIn, async (req, res) => {
     try {
         const rows = await pool.query('SELECT * FROM customers WHERE user_id = ?', [req.user.id]);
         const customers = rows[0]
-        // console.log(customers)
-        for (const customer of customers) {
-            customer.files = await getFilesInFolder(customer.folderId);
-            // console.log(customer)
+        for(let customer of customers) {
             customer.photoUrl = customer.photoId ? `https://drive.google.com/uc?export=view&id=${customer.photoId}` : "https://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png"
         }
         res.render('customers/customer-list', { customers });
@@ -192,6 +189,14 @@ router.get('/payments/:userId', async (req, res) => {
     const userId = req.params.userId;
     const payments = await getPayments(userId);
     res.render('customers/customer-payments', {payments, userId, allowDelete:true})
+})
+
+router.get('/uploads/:userId', async (req, res) => {
+    const { userId } = req.params
+    const result = await pool.query('SELECT * FROM customers WHERE id = ?', [userId])
+    let customer = result[0][0]
+    customer.files = await getFilesInFolder(customer.folderId)
+    res.render('customers/customer-uploads', {customer, userId})
 })
 
 router.post('/payments/add/:userId', async (req, res) => {
