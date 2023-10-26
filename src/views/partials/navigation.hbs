@@ -20,14 +20,14 @@
         {{#if user.name}}
 
         <li class="nav-item">
-          <h3 class="nav-link mb-0 text-center">{{user.name}}</h3>
+          <h3 class="nav-link mb-0 mx-4 text-center p-0">{{user.name}}</h3>
           <a class="nav-link mt-0 text-center" style="font-size: 2vh" href="/admin/edit">Editar perfil</a>
         </li>
         {{/if}}
         
 
-        <li class="nav-item ml-5">
-          <a class="nav-link" href="/logout">Cerrar Sesión</a>
+        <li class="nav-item">
+          <a class="nav-link text-center" href="/logout">Cerrar Sesión</a>
         </li>
 
         {{else}}
