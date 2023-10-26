@@ -59,10 +59,12 @@ passport.use('customer.signin', new LocalStrategy({
   passReqToCallback: true
 }, async(req, username, password, done) => {
 
+  const {admin_id } = req.params
 
-  const rows = await pool.query('SELECT * FROM customers WHERE document = ?', [username]);
+  const rows = await pool.query('SELECT * FROM customers WHERE document = ? AND user_id = ?', [username, admin_id]);
 
-  // console.log(rows)
+  console.log(admin_id)
+  console.log(rows)
 
   if (rows[0].length > 0) {
     const user = rows[0][0];

@@ -9,7 +9,7 @@
         </div>
         {{!-- <img src="/img/logo.png" alt="Logo Fazt" class="card-img-top mx-auto m-2 rounded-circle w-50"> --}}
         <div class="card-body">
-          <form action="/customer/signin" method="POST">
+          <form action="/customer/signin/{{admin_id}}" method="POST">
             <div class="form-group">
               <input type="text" name="document" placeholder="Documento" class="form-control" autofocus required>
             </div>

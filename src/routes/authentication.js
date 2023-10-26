@@ -3,6 +3,7 @@ const router = express.Router();
 const { pool } = require('../database');
 const { getFilesInFolder } = require('../lib/driveUpload')
 const CryptoJS = require('crypto-js')
+const helpers = require("../lib/helpers")
 
 const passport = require('passport');
 const { isLoggedIn, isNotAuthenticated } = require('../lib/auth');
@@ -34,6 +35,28 @@ router.post('/admin/signup', (req, res, next) => {
   })(req, res, next);
 });
 
+router.get('/admin/edit', isLoggedIn, async (req,res) => {
+  res.render('auth/admin-edit', {id: req.user.id})
+})
+
+router.post('/admin/edit/:id', async (req, res) => {
+  const { id } = req.params;
+  let { email, password, name } = req.body;
+  try {
+      const newAdmin = {
+          email,
+          password: await helpers.encryptPassword(password),
+          name
+      };
+      await pool.query('UPDATE admins set ? WHERE id = ?', [newAdmin, id]);
+      req.flash('success', 'Administrador editado con éxito');
+      res.redirect('/admin/customers');
+  } catch(err) {
+      console.log(err);
+      req.flash('message', `Error al editar usuario`)
+      res.redirect('/admin/customers')
+  }
+})
 
 // router.post('/admin/signup', passport.authenticate('admin.signup', {
 //   successRedirect: '/admin/customers',
@@ -67,22 +90,44 @@ router.post('/admin/signin', (req, res, next) => {
 
 // CUSTOMERS
 
-router.get('/customer/signin', isNotAuthenticated, (req, res) => {
-  res.render('auth/customer-signin', {hideNav: true});
+router.get('/customer/signin/:admin_id', isNotAuthenticated, (req, res) => {
+  res.render('auth/customer-signin', {hideNav: true, admin_id: req.params.admin_id});
 });
 
-router.post('/customer/signin', passport.authenticate('customer.signin', {
-  failureRedirect: '/customer/signin',
-  failureFlash: true
-}), function(req, res) {
-  // Encriptar el documento del usuario con AES
-  const cypheredDoc = CryptoJS.AES.encrypt(req.user.document, process.env.CYPHER_KEY);
-  // Codificar el documento encriptado para usarlo como parámetro en la URL
-  const encodedDoc = encodeURIComponent(cypheredDoc);
-  console.log(encodedDoc)
+// router.post('/customer/signin/:admin_id', passport.authenticate('customer.signin', {
+//   failureRedirect: '/customer/signin/:admin_id',
+//   failureFlash: true
+// }), function(req, res) {
+//   // Encriptar el documento del usuario con AES
+//   const cypheredDoc = CryptoJS.AES.encrypt(req.user.document, process.env.CYPHER_KEY);
+//   // Codificar el documento encriptado para usarlo como parámetro en la URL
+//   const encodedDoc = encodeURIComponent(cypheredDoc);
+//   console.log(encodedDoc)
 
-  // Redirigir a /customer/documents con el documento codificado
-  res.redirect(`/customer/documents/${encodedDoc}`);
+//   // Redirigir a /customer/documents con el documento codificado
+//   res.redirect(`/customer/documents/${encodedDoc}`);
+// });
+
+
+router.post('/customer/signin/:admin_id', function(req, res, next) {
+  passport.authenticate('customer.signin', function(err, user, info) {
+    if (err) { 
+      return next(err); 
+    }
+    if (!user) { 
+      return res.redirect('/customer/signin/' + req.params.admin_id); 
+    }
+    req.logIn(user, function(err) {
+      if (err) { 
+        return next(err); 
+      }
+      
+      const cypheredDoc = CryptoJS.AES.encrypt(req.user.document, process.env.CYPHER_KEY);
+      const encodedDoc = encodeURIComponent(cypheredDoc);
+      console.log(encodedDoc)
+      return res.redirect(`/customer/documents/${encodedDoc}/${req.params.admin_id}`);
+    });
+  })(req, res, next);
 });
 
 
@@ -91,6 +136,8 @@ router.post('/customer/signin', passport.authenticate('customer.signin', {
 router.get('/logout', (req, res) => {
   if(!req.isAuthenticated()) res.redirect('/customer/signin');
   const admin = req.user.fullname == undefined;
+  let admin_id
+  if(!admin) admin_id = req.user.user_id
   console.log(admin);
   req.logout();
   req.session.destroy(function (err) {
@@ -98,11 +145,11 @@ router.get('/logout', (req, res) => {
     if(admin) {
       res.redirect('/admin/signin');
     } else {
-      res.redirect('/customer/signin');
+      res.redirect(`/customer/signin/${admin_id}`);
     }
   });
 });
-
+  
 
 // router.get('/logout', (req, res) => {
 //   const admin = req.user.fullname == undefined
@@ -115,12 +162,13 @@ router.get('/logout', (req, res) => {
 //   }
 // });
 
-router.get('/customer/documents/:cypheredDoc',  async (req, res) => {
+router.get('/customer/documents/:cypheredDoc/:admin_id',  async (req, res) => {
   // console.log(req.session)
   try {
+    const { admin_id } = req.params
     const cypheredDoc = decodeURIComponent(req.params.cypheredDoc);
     const doc = CryptoJS.AES.decrypt(cypheredDoc.toString(), process.env.CYPHER_KEY).toString(CryptoJS.enc.Utf8);
-    const rows = await pool.query('SELECT * FROM customers WHERE document = ?', [doc])
+    const rows = await pool.query('SELECT * FROM customers WHERE document = ? AND user_id = ?', [doc, admin_id]);
     const customer = rows[0][0]
     customer.files = await getFilesInFolder(customer.folderId);
     const payments = await getPayments(customer.id)
