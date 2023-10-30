@@ -10,7 +10,7 @@ const { isLoggedIn, isNotAuthenticated } = require('../lib/auth');
 const { getPayments } = require('../lib/db-payments');
 
 // SIGNUP
-router.get('/admin/signup', isNotAuthenticated, (req, res) => {
+router.get('/admin/signup', (req, res) => {
   res.render('auth/admin-signup');
 });
 
@@ -71,19 +71,11 @@ router.post('/admin/edit/:id', async (req, res) => {
   }
 })
 
-// router.post('/admin/signup', passport.authenticate('admin.signup', {
-//   successRedirect: '/admin/customers',
-//   failureRedirect: '/admin/signup',
-//   failureFlash: true
-// }));
-
 
 // SINGIN
 router.get('/admin/signin', isNotAuthenticated, (req, res) => {
   res.render('auth/admin-signin');
 });
-
-
 
 
 router.post('/admin/signin', (req, res, next) => {
@@ -106,20 +98,6 @@ router.post('/admin/signin', (req, res, next) => {
 router.get('/customer/signin/:admin_id', isNotAuthenticated, (req, res) => {
   res.render('auth/customer-signin', {hideNav: true, admin_id: req.params.admin_id});
 });
-
-// router.post('/customer/signin/:admin_id', passport.authenticate('customer.signin', {
-//   failureRedirect: '/customer/signin/:admin_id',
-//   failureFlash: true
-// }), function(req, res) {
-//   // Encriptar el documento del usuario con AES
-//   const cypheredDoc = CryptoJS.AES.encrypt(req.user.document, process.env.CYPHER_KEY);
-//   // Codificar el documento encriptado para usarlo como parámetro en la URL
-//   const encodedDoc = encodeURIComponent(cypheredDoc);
-//   console.log(encodedDoc)
-
-//   // Redirigir a /customer/documents con el documento codificado
-//   res.redirect(`/customer/documents/${encodedDoc}`);
-// });
 
 
 router.post('/customer/signin/:admin_id', function(req, res, next) {
@@ -169,17 +147,6 @@ router.get('/logout', (req, res) => {
 });
   
 
-// router.get('/logout', (req, res) => {
-//   const admin = req.user.fullname == undefined
-//   console.log(admin);
-//   req.logout();
-//   if(admin) {
-//     res.redirect('/admin/signin');
-//   } else {
-//     res.redirect('/customer/signin')
-//   }
-// });
-
 router.get('/customer/documents/:cypheredDoc/:admin_id',  async (req, res) => {
   // console.log(req.session)
   try {
@@ -215,9 +182,10 @@ router.post('/superuser/signin', async (req, res, next) => {
   })(req, res, next);
 } )
 
-router.get('/superuser/signup', isNotAuthenticated, async (req, res) => {
-  res.render('auth/superuser-signup')
-})
+// HIDE INTENTIONALLY
+// router.get('/superuser/signup', isNotAuthenticated, async (req, res) => {
+//   res.render('auth/superuser-signup')
+// })
 
 router.post('/superuser/signup', (req, res, next) => {
   passport.authenticate('superuser.signup', (err, user, info) => {

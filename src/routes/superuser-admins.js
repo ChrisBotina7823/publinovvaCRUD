@@ -19,4 +19,8 @@ router.get('/', isLoggedIn, async (req, res) => {
     }
 });
 
+router.get('/add', isLoggedIn, async(req, res) => {
+    res.redirect('/admin/signup')
+})
+
 module.exports = router;
