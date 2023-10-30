@@ -20,8 +20,7 @@
         {{#if user.name}}
 
         <li class="nav-item">
-          <h3 class="nav-link mb-0 mx-4 text-center p-0">{{user.name}}</h3>
-          <a class="nav-link mt-0 text-center" style="font-size: 2vh" href="/admin/edit">Editar perfil</a>
+          <a class="nav-link" href="/">{{user.name}}</a>
         </li>
         {{/if}}
         
@@ -31,15 +30,9 @@
         </li>
 
         {{else}}
-        {{!-- <li class="nav-item ml-5">
-          <a class="nav-link" href="/customer/signin">Clientes</a>
-        </li> --}}
         <li class="nav-item ml-5">
-          <a class="nav-link" href="/admin/signin">Iniciar Sesión</a>
+          <a class="nav-link" href="/admin/signin">Administradores</a>
         </li>
-        {{!-- <li class="nav-item ml-5">
-          <a class="nav-link" href="/admin/signup">Admin SignUp</a>
-        </li> --}}
         {{/if}}
       </ul>
     </div>

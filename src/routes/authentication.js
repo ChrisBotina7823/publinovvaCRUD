@@ -35,26 +35,39 @@ router.post('/admin/signup', (req, res, next) => {
   })(req, res, next);
 });
 
-router.get('/admin/edit', isLoggedIn, async (req,res) => {
-  res.render('auth/admin-edit', {id: req.user.id})
+router.get('/admin/edit/:id', isLoggedIn, async (req,res) => {
+  try {
+      const { id } = req.params;
+      const rows = await pool.query('SELECT * FROM admins WHERE id = ?', [id]);
+      const admin = rows[0][0]
+      res.render('auth/admin-edit', {admin});
+
+  } catch(err) {
+    console.log(err)
+    req.flash('message', `${err}`)
+    res.redirect('/superuser/admins')
+  }
 })
 
 router.post('/admin/edit/:id', async (req, res) => {
   const { id } = req.params;
   let { email, password, name } = req.body;
   try {
-      const newAdmin = {
+      let newAdmin = {
           email,
-          password: await helpers.encryptPassword(password),
           name
       };
+      if(password != "") {
+        newAdmin.password = await helpers.encryptPassword(password)
+      }
+
       await pool.query('UPDATE admins set ? WHERE id = ?', [newAdmin, id]);
       req.flash('success', 'Administrador editado con éxito');
-      res.redirect('/admin/customers');
+      res.redirect('/superuser/admins');
   } catch(err) {
       console.log(err);
       req.flash('message', `Error al editar usuario`)
-      res.redirect('/admin/customers')
+      res.redirect('/superuser/admins')
   }
 })
 
@@ -136,6 +149,7 @@ router.post('/customer/signin/:admin_id', function(req, res, next) {
 router.get('/logout', (req, res) => {
   if(!req.isAuthenticated()) res.redirect('/customer/signin');
   const admin = req.user.fullname == undefined;
+  const superuser = admin && req.user.user_id
   let admin_id
   if(!admin) admin_id = req.user.user_id
   console.log(admin);
@@ -143,7 +157,11 @@ router.get('/logout', (req, res) => {
   req.session.destroy(function (err) {
     if (err) { return next(err); }
     if(admin) {
-      res.redirect('/admin/signin');
+      if(superuser) {
+        res.redirect('/superuser/signin');
+      } else {
+        res.redirect('/admin/signin');
+      }
     } else {
       res.redirect(`/customer/signin/${admin_id}`);
     }
@@ -184,5 +202,42 @@ router.get('/customer/documents/:cypheredDoc/:admin_id',  async (req, res) => {
     res.redirect("/logout")
   }
 })
+
+router.get('/superuser/signin', isNotAuthenticated, async (req, res) => {
+  res.render('auth/superuser-signin')
+})
+
+router.post('/superuser/signin', async (req, res, next) => {
+  passport.authenticate('superuser.signin', {
+    successRedirect: '/superuser/admins/',
+    failureRedirect: '/superuser/signin',
+    failureFlash: true
+  })(req, res, next);
+} )
+
+router.get('/superuser/signup', isNotAuthenticated, async (req, res) => {
+  res.render('auth/superuser-signup')
+})
+
+router.post('/superuser/signup', (req, res, next) => {
+  passport.authenticate('superuser.signup', (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (!user) {
+      req.flash('message', info.message);
+      return res.redirect('/superuser/signup');
+    }
+
+    req.login(user, function(err) {
+      if (err) {
+        return next(err);
+      }
+
+      return res.redirect('/superuser/admins');
+    });
+  })(req, res, next);
+});
 
 module.exports = router;

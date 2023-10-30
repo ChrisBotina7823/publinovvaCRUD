@@ -100,6 +100,7 @@ app.use((req, res, next) => {
 app.use(require('./routes/index'));
 app.use(require('./routes/authentication'));
 app.use('/admin/customers', require('./routes/admin-customers'));
+app.use('/superuser/admins', require('./routes/superuser-admins'));
 
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {

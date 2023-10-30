@@ -1,0 +1,27 @@
+<div class="container-fluid pt-2 pb-2" style="height:85vh;overflow-y:scroll;">
+  <div class="row">
+
+    <div class="col-md-6 mx-auto">
+      <div class="card text-center">
+        <div class="card-header">
+          <h3>Iniciar Sesión</h3>
+          <h4>Super Usuario</h4>
+        </div>
+        <div class="card-body">
+          <form action="/superuser/signin" method="POST">
+            <div class="form-group">
+              <input type="text" name="user_id" placeholder="Código de Usuario" class="form-control" autofocus required>
+            </div>
+            <div class="form-group">
+              <input type="password" name="password" placeholder="Contraseña" class="form-control" required>
+            </div>
+            <button class="btn btn-primary btn-block">
+              Ingresar
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
