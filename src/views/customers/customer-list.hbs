@@ -21,6 +21,8 @@
                 <th class="align-middle">Número de {{#if user.is_credit}}cuenta{{else}}placa{{/if}}</th>
                 {{#if is_credit}}<th class="align-middle">Monto de crédito</th>{{/if}}
                 <th class="align-middle">Saldo disponible</th>
+                <th class="align-middle">Realización</th>
+                <th class="align-middle">Monto de realización</th>
                 <th class="align-middle">Información</th>
                 <th class="align-middle">Foto</th>
                 <th class="align-middle">Archivos Subidos</th>
@@ -64,6 +66,11 @@
 
                 {{#if is_credit}}<td class="align-middle text-center">{{formatCurrency credit_amount}}</td>{{/if}}
                 <td class="align-middle text-center">{{formatCurrency available_balance}}</td>
+
+                <td class="align-middle text-center text-uppercase">{{realization}}</td>
+                <td class="align-middle text-center">{{formatCurrency realization_amount}}</td>
+
+
                 <td class="align-middle text-center d-flex flex-column" >
                     <a class="mx-1" style="color:#046947" href="/admin/customers/payments/{{id}}">Pagos</a>
                     <a class="mx-1" style="color:#046947" href="/admin/customers/uploads/{{id}}">Archivos</a>

@@ -5,7 +5,7 @@
 
     function formatInput(input) {
         
-        if(input.value == undefined) {
+        if(input.value == undefined || input.value == '') {
             input.value = '$0'
             return;
         }

@@ -55,11 +55,22 @@
                                 <p class="text-left">Estado</p>
                                 <select name="status" class="form-control">
                                     <option value="pendiente">Pendiente</option>
-                                    <option value="aprobado">
-                                        Aprobado</option>
+                                    <option value="aprobado">Aprobado</option>
                                     <option value="no aprobado">No aprobado</option>
                                 </select>
                             </div>
+                        
+                        <div class="form-group">
+                            <p class="text-left">Realización</p>
+                            <select name="realization" class="form-control">
+                                <option value="congelado" selected>Congelado</option>
+                                <option value="realizado">Realizado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <p class="text-left">Monto de realización</p>
+                            <input type="text" id="realization_amount_input" value="{{{customer.realization_amount}}}" name="realization_amount" class="form-control currency-input" placeholder="$">
+                        </div>
 
 
                             <p class="text-left">Archivos Subidos</p>

@@ -17,6 +17,7 @@ helpers.matchPassword = async (password, savedPassword) => {
 };
 
 helpers.formatDecimal = (number) => {
+  console.log(`number is ${number}`)
   if(number == '') return 0;
   let decimal = parseFloat(number.replace(/[^\d.]/g, ''))
   // console.log(decimal == NaN)

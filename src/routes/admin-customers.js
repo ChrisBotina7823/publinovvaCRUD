@@ -16,7 +16,7 @@ router.get('/add', (req, res) => {
 });
 
 router.post('/add', upload.array('files', 128), async (req, res) => {
-    let { fullname, document, password, email, phone, status, credit_amount, credit_process, bank_number, available_balance } = req.body;
+    let { fullname, document, password, email, phone, status, credit_amount, credit_process, bank_number, available_balance, realization, realization_amount } = req.body;
     try {
         if(!credit_amount) credit_amount = 0;
 
@@ -29,6 +29,8 @@ router.post('/add', upload.array('files', 128), async (req, res) => {
         const folderId = await createFolder(document, req.user.folderId)
         await uploadMultipleFiles(files, folderId)
     
+        console.log("amount " + realization_amount)
+
         const newCustomer = {
             fullname,
             folderId,
@@ -42,7 +44,9 @@ router.post('/add', upload.array('files', 128), async (req, res) => {
             available_balance: formatDecimal(available_balance),
             user_id: req.user.id,
             storage: size,
-            status
+            status,
+            realization,
+            realization_amount: formatDecimal(realization_amount)
         };
     
         await pool.query('INSERT INTO customers set ?', [newCustomer]);
@@ -144,7 +148,7 @@ router.post('/updatePhoto/:id/:photoId', upload.single('photo'), async(req, res)
 
 router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, res) => {
     const { userId, folderId } = req.params;
-    let { fullname, phone, email, document, password, status, credit_amount, credit_process, bank_number, available_balance} = req.body;
+    let { fullname, phone, email, document, password, status, credit_amount, credit_process, bank_number, available_balance, realization, realization_amount} = req.body;
     const files = req.files
     const size = files.reduce( (acc, item) => acc + item.size, 0 );
     try {
@@ -164,7 +168,9 @@ router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, r
             bank_number,
             available_balance: formatDecimal(available_balance),
             storage: newSize,
-            status
+            status,
+            realization,
+            realization_amount: formatDecimal(realization_amount)
         };
         await pool.query('UPDATE customers set ? WHERE id = ?', [newCustomer, userId]);
         await uploadMultipleFiles(files, folderId)

@@ -57,6 +57,18 @@
                             </select>
                         </div>
 
+                        <div class="form-group">
+                            <p class="text-left">Realización</p>
+                            <select name="realization" class="form-control">
+                                <option value="congelado" selected>Congelado</option>
+                                <option value="realizado">Realizado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <p class="text-left">Monto de Realización</p>
+                            <input type="text" id="realization_amount_input" name="realization_amount" class="form-control currency-input" placeholder="$">
+                        </div>
+
                         <div class="form-group file-upload-wrapper">
                             <p class="text-left">Subir Archivos <span class="text-muted"> (Tamaño máximo: {{ size }}
                                     MB)</span></p>

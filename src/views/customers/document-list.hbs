@@ -64,9 +64,39 @@
                         <p class="mb-1">Saldo disponible: {{formatCurrency customer.available_balance}}</p>
                         {{/if}}
 
-                        <p class="mb-1 text-center"><strong>ESTADO</strong></p>
-                        <h1 id="estado" class="text-uppercase text-center card-subtitle" style="font-size: 5vh"> <strong>{{customer.status}}</strong>
-                        </h1>
+                        <div>
+                            <p class="my-0 text-center" style="font-size:3vh"><strong>ESTADO</strong></p>
+                            <h1 id="estado" class="my-0 text-uppercase text-center card-subtitle" style="font-size: 5vh"> <strong>{{customer.status}}</strong></h1>
+                        </div>
+
+                        <div class="my-4 card py-4" style="
+                            {{#if realized}}
+                            background-color:rgba(0, 255, 0, 0.25)
+                            {{else}}
+                                background-color:rgba(163, 38, 38, 0.25)
+                            {{/if}}
+                        ">
+                            <div class="row text-center align-items-center justify-content-center">
+                                <p class="my-0 mx-2 text-center text-uppercase" style="font-size: 5vh;
+                                {{#if realized}}
+                                color: green
+                                {{else}}
+                                color: rgb(163, 38, 38)
+                                {{/if}}
+                                "><strong>{{{customer.realization}}}</strong></p>
+                                {{#if realized}}
+                                    <i class="fa fa-check" style="font-size:5vh; color:green"></i>
+                                {{else}}
+                                    <i class="fa fa-times" style="font-size:5vh; color:rgb(163, 38, 38)"></i>
+                                {{/if}}
+
+                            </div>
+                        
+                            <h1 class="my-0 text-uppercase text-center card-subtitle" style="font-size: 5vh"> <strong>{{formatCurrency customer.realization_amount}}</strong></h1>
+                            
+
+                        </div>
+
 
                     </div>
                 </div>
