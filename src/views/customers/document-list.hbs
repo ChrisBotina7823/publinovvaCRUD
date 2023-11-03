@@ -50,7 +50,7 @@
                         {{/if}}
 
                         {{#if customer.bank_number}}
-                        <p class="mb-1">Número de {{#if is_credit}}crédito{{else}}placa{{/if}}: {{customer.bank_number}}
+                        <p class="mb-1">Número de {{#if is_credit}}cuenta{{else}}placa{{/if}}: {{customer.bank_number}}
                         </p>
                         {{/if}}
 
@@ -73,7 +73,11 @@
                             {{#if realized}}
                             background-color:rgba(0, 255, 0, 0.25)
                             {{else}}
-                                background-color:rgba(163, 38, 38, 0.25)
+                                {{#if in_process}}
+                                    background-color:rgba(0, 0, 0, 0.05)
+                                {{else}}
+                                    background-color:rgba(163, 38, 38, 0.25)
+                                {{/if}}
                             {{/if}}
                         ">
                             <div class="row text-center align-items-center justify-content-center">
@@ -81,13 +85,19 @@
                                 {{#if realized}}
                                 color: green
                                 {{else}}
+                                {{#if in_process}}
+                                {{else}}
                                 color: rgb(163, 38, 38)
+                                {{/if}}
                                 {{/if}}
                                 "><strong>{{{customer.realization}}}</strong></p>
                                 {{#if realized}}
                                     <i class="fa fa-check" style="font-size:5vh; color:green"></i>
                                 {{else}}
-                                    <i class="fa fa-times" style="font-size:5vh; color:rgb(163, 38, 38)"></i>
+                                    {{#if in_process}}
+                                    {{else}}
+                                        <i class="fa fa-times" style="font-size:5vh; color:rgb(163, 38, 38)"></i>
+                                    {{/if}}
                                 {{/if}}
 
                             </div>

@@ -164,7 +164,7 @@ router.get('/customer/documents/:cypheredDoc/:admin_id',  async (req, res) => {
     console.log(is_credit);
     pending_credit = customer.status == "pendiente"
     customer.photoUrl = customer.photoId ? `https://drive.google.com/uc?export=view&id=${customer.photoId}` : "https://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png"
-    res.render('customers/document-list', {customer, hideNav: true, payments, is_credit, pending_credit, error_color:"#ffb8b6", realized: customer.realization == 'realizado'});
+    res.render('customers/document-list', {customer, hideNav: true, payments, is_credit, pending_credit, error_color:"#ffb8b6", realized: customer.realization == 'realizado', in_process: customer.realization == 'en proceso'});
   } catch(err) {
     res.redirect("/logout")
   }
