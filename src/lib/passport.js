@@ -5,6 +5,27 @@ const { pool } = require('../database');
 const helpers = require('./helpers');
 const { createFolder } = require('../lib/driveUpload')
 
+const registerAdmin = async (email, name, password) => {
+  const hashedPassword = await helpers.encryptPassword(password);
+  const folderId = await createFolder(name, '1V_V3uSqGJELkVfyJIB10vXrE4gjV8QNO');
+  let newUser = {
+    email,
+    password: hashedPassword,
+    name,
+    folderId,
+  };
+  // Saving in the Database
+  const result = await pool.query('INSERT INTO admins SET ? ', newUser);
+  const header = result[0]
+  newUser.type = 'admin'
+  newUser.id = header.insertId
+  return newUser
+}
+
+module.exports = {
+  registerAdmin
+}
+
 passport.use('admin.signin', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
@@ -52,19 +73,8 @@ passport.use('admin.signup', new LocalStrategy({
   passReqToCallback: true
 }, async (req, email, password, done) => {
   const { name } = req.body;
-  const hashedPassword = await helpers.encryptPassword(password);
-  const folderId = await createFolder(name, '1V_V3uSqGJELkVfyJIB10vXrE4gjV8QNO');
-  const newUser = {
-    email,
-    password: hashedPassword,
-    name,
-    folderId,
-  };
-  // Saving in the Database
-  const result = await pool.query('INSERT INTO admins SET ? ', newUser);
-  const header = result[0]
-  newUser.type = 'admin'
-  newUser.id = header.insertId
+
+  let newUser = await registerAdmin(name, email, password)
   // console.log(result.insertId)
   return done(null, newUser);
 }));

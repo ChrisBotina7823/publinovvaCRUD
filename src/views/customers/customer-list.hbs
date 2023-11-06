@@ -1,3 +1,19 @@
+
+<div class="container col-md-10 my-4">
+    <div class="card p-3 text-uppercase" style=" display:inline;
+    {{#if user.pending_amount}}
+    background-color: rgba(255,0,0, 0.1);
+    color: rgba(255,0,0)
+    {{else}}
+    background-color: rgba(0,150,0, 0.1);
+    color: rgba(0,150,0)
+    {{/if}}
+    ">
+    Estado de la suscripción: {{timeago user.last_pay}}
+    </div>
+
+</div>
+
 <div class="mx-auto col-md-10 text-center">
     <div class="row mr-4 my-2" style="">
         <input class="ml-auto mr-2" type="text" id="nameSearcher">

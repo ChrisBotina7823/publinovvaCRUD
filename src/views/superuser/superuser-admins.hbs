@@ -1,5 +1,5 @@
 <div class="container text-center">
-    <a href="/admin/signup" class="btn btn-primary mx-auto my-4">
+    <a href="/superuser/admins/add" class="btn btn-primary mx-auto my-4">
         Añadir un Administrador
     </a>
 </div>
@@ -12,6 +12,8 @@
             <th class="align-middle">Email</th>
             <th class="align-middle">Nombre</th>
             <th class="align-middle">Código</th>
+            <th class="align-middle">Estado de pago</th>
+            <th class="align-middle">Pagos</th>
             <th class="align-middle">Acciones</th>
         </tr>
     </thead>
@@ -21,8 +23,24 @@
             <td class="align-middle text-center" class="text-uppercase text-center">{{email}}</td>
             <td class="align-middle text-center">{{name}}</td>
             <td class="align-middle text-center">{{id}}</td>
-            <td class="align-middle text-center">
-                <a class="mx-1" style="color:blue" href="/admin/edit/{{id}}">Editar</a>
+            <td class="align-middle text-center" style="
+                {{#if pending_payment}}
+                color: rgb(163, 38, 38)
+                {{else}}
+                color: black
+                {{/if}}
+
+            ">
+            <p class="my-0" style="display: block;">{{timeago last_pay}}</p>
+            <p class="my-0" style="font-size: 1.5vh">{{formatDate last_pay}}</p>
+            </td>
+            <td class="column align-middle text-center">
+                <a class="mx-1" style="color:green; display:block" href="/admin/pay/{{id}}/1">Registrar Pago</a>
+                <a class="mx-1" style="color:red; display:block" href="/admin/pay/{{id}}/0">Anular Pago</a>
+            </td>
+            <td class="column align-middle text-center">
+                <a class="mx-1" style="color:blue; display:block" href="/admin/edit/{{id}}">Editar</a>
+                <a class="mx-1" style="color:gray; display:block" href="/admin/payments/{{id}}">Ver pagos</a>
             </td>
         </tr>
         {{/each}}

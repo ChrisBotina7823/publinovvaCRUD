@@ -3,7 +3,7 @@ const router = express.Router();
 const { pool } = require('../database');
 const { getFilesInFolder } = require('../lib/driveUpload')
 const CryptoJS = require('crypto-js')
-const helpers = require("../lib/helpers")
+const { formatDate, unformatDate } = require("../lib/helpers")
 
 const passport = require('passport');
 const { isLoggedIn, isNotAuthenticated } = require('../lib/auth');
@@ -40,6 +40,12 @@ router.get('/admin/edit/:id', isLoggedIn, async (req,res) => {
       const { id } = req.params;
       const rows = await pool.query('SELECT * FROM admins WHERE id = ?', [id]);
       const admin = rows[0][0]
+      let date = formatDate(admin.last_pay)
+      let year = date.getFullYear();
+      let month = (date.getMonth() + 1).toString().padStart(2, '0'); // los meses empiezan desde 0 en JavaScript
+      let day = date.getDate().toString().padStart(2, '0');
+      admin.last_pay = `${year}-${month}-${day}`; // crea una cadena en el formato "yyyy-mm-dd"
+
       res.render('auth/admin-edit', {admin});
 
   } catch(err) {
@@ -49,19 +55,66 @@ router.get('/admin/edit/:id', isLoggedIn, async (req,res) => {
   }
 })
 
-router.post('/admin/edit/:id', async (req, res) => {
+router.get('/admin/payments/:id', isLoggedIn, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const admins = await pool.query('select * from admins where id = ?', [id])
+      let admin = admins[0][0]
+      console.log(admin)
+      const rows = await pool.query('SELECT * FROM admin_payments WHERE admin_id = ?', [id]);
+      let payments = rows[0]
+      admin.initial_pay = formatDate(admin.initial_pay, /*30*24*3600*1000*/)
+      for(let i = 0; i<payments.length; i++) {
+        payments[i].oportune_date = formatDate(admin.initial_pay,i*30*24*60*60*1000)
+        payments[i].oportune = payments[i].payment_date < payments[i].oportune_date
+        payments[i].offset = Math.round( Math.abs( payments[i].oportune_date.getTime() - payments[i].payment_date.getTime() ) / (1000*60*60*24) ) 
+        console.log(payments[i].offset)
+      }
+      res.render('auth/admin-payments', {admin, payments});
+
+  } catch(err) {
+    console.log(err)
+    req.flash('message', `${err}`)
+    res.redirect('/superuser/admins')
+  }
+})
+
+router.get('/admin/pay/:admin_id/:option', isLoggedIn, async (req, res) => {
+  const {admin_id, option} = req.params
+  
+  try {
+
+    if(option == 1) {
+      await pool.query('insert into admin_payments(admin_id) values (?)', [admin_id]);
+    } else {
+      await pool.query('delete from admin_payments where admin_id = ? order by id desc limit 1', [admin_id]);
+    }
+    await pool.query('CALL update_last_pay(?)', [admin_id]);
+
+    req.flash('success', 'Pago realizado con éxito');
+    res.redirect('/superuser/admins');
+} catch(err) {
+    console.log(err);
+    req.flash('message', `Error al realizar el pago`)
+    res.redirect('/superuser/admins')
+}
+})
+
+router.post('/admin/edit/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params;
-  let { email, password, name } = req.body;
+  let { email, password, name, last_pay } = req.body;
   try {
       let newAdmin = {
           email,
-          name
+          name,
+          initial_pay : unformatDate(last_pay)
       };
       if(password != "") {
         newAdmin.password = await helpers.encryptPassword(password)
       }
 
       await pool.query('UPDATE admins set ? WHERE id = ?', [newAdmin, id]);
+      console.log(await pool.query('CALL update_last_pay(?)', [id]));
       req.flash('success', 'Administrador editado con éxito');
       res.redirect('/superuser/admins');
   } catch(err) {

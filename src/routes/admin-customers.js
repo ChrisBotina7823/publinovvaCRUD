@@ -7,7 +7,7 @@ const upload = multer({dest:'uploads'})
 const { renameFolder, uploadFile, deleteFile, uploadMultipleFiles, createFolder, getFilesInFolder } = require('../lib/driveUpload');
 const { getPayments, registerPayment, deletePayment } = require('../lib/db-payments.js');
 const MAX_SIZE = 1e7;
-const { formatDecimal } = require('../lib/helpers.js')
+const { formatDecimal, formatDate } = require('../lib/helpers.js')
 
 router.get('/add', (req, res) => {
     let is_credit = req.user == undefined ? true : req.user.is_credit
@@ -71,6 +71,9 @@ router.get('/', isLoggedIn, async (req, res) => {
         for(let customer of customers) {
             customer.photoUrl = customer.photoId ? `https://drive.google.com/uc?export=view&id=${customer.photoId}` : "https://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png"
         }
+        req.user.last_pay = formatDate(req.user.last_pay, /*30*24*3600*1000*/)
+        let curr_date = new Date()
+        req.user.pending_amount = req.user.last_pay < curr_date
         res.render('customers/customer-list', { customers });
     } catch(err) {
         console.error(err)
@@ -95,7 +98,7 @@ router.get('/delete/:id', async (req, res) => {
     }
 });
 
-router.get('/edit/:id', async (req, res) => {
+router.get('/edit/:id', isLoggedIn, async (req, res) => {
     try {
         const { id } = req.params;
         const customers = await pool.query('SELECT * FROM customers WHERE id = ?', [id]);
@@ -116,7 +119,7 @@ router.get('/edit/:id', async (req, res) => {
         }
     }
 });
-router.get('/updatePhoto/:id', async(req, res) => {
+router.get('/updatePhoto/:id', isLoggedIn, async(req, res) => {
     try {
         const {id} = req.params
         const customers = await pool.query('SELECT * FROM customers WHERE id = ?', [id]);

@@ -1,15 +1,26 @@
 const timeago = require('timeago.js');
+
+const daysLocale = (number, index, totalSec) => {
+  // totalSec es el total de segundos
+  const days = Math.round(totalSec / 60 / 60 / 24);
+  return [`Venció hace ${days} días`, `Quedan ${days} días`];
+};
+
+// Registra tu localización personalizada
+timeago.register('daysOnly', daysLocale);
+
+
 const timeagoInstance = timeago();
 
 const helpers = {};
 
 helpers.timeago = (savedTimestamp) => {
-    return timeagoInstance.format(savedTimestamp);
+    return timeagoInstance.format(savedTimestamp, 'daysOnly');
 };
 
 helpers.formatCurrency = value => {
     const formatter = new Intl.NumberFormat('en-US', {
-        style: 'currency',
+        style: 'currency',  
         currency: 'USD',
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,
@@ -36,5 +47,15 @@ helpers.formatCurrency = value => {
     return formattedDate
   
   }
+
+  helpers.formatDate = value => {
+    const date = value ? new Date(value) : new Date()
+    date.setHours( date.getHours() - 5 )
+    const options = { year:'numeric', day: '2-digit', month: '2-digit'};
+    const formattedDate = date.toLocaleDateString('es-ES', options).replace(/\//g, '-');
+    
+    return formattedDate
+  }
+  
 
 module.exports = helpers;

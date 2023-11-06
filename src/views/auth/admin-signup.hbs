@@ -7,7 +7,7 @@
           <h4>Administradores</h4>
         </div>
         <div class="card-body">
-          <form action="/admin/signup" method="POST">
+          <form action= {{#if superuser}}"/superuser/admins/add" {{else}} "/admin/signup" {{/if}} method="POST">
             <div class="form-group">
               <input type="text" name="name" placeholder="Nombre de la Empresa" class="form-control" autofocus>
             </div>
