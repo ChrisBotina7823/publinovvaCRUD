@@ -10,7 +10,7 @@ const MAX_SIZE = 1e7;
 const { formatDecimal, formatDate } = require('../lib/helpers.js');
 const { registerAdmin } = require('../lib/passport.js');
 
-router.get('/', /* isLoggedIn, */ async (req, res) => {
+router.get('/', isLoggedIn, async (req, res) => {
     try {
         const rows = await pool.query('SELECT * FROM admins');
         const admins = rows[0]

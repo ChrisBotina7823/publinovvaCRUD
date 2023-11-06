@@ -100,6 +100,14 @@ router.get('/admin/pay/:admin_id/:option', isLoggedIn, async (req, res) => {
 }
 })
 
+router.get('/admin/switch-block/:id', isLoggedIn, async (req, res) => {
+  const {id} = req.params
+  const admins = await pool.query('select * from admins where id = ?', [id])
+  let admin = admins[0][0]
+  await pool.query('update admins set blocked = ? where id = ?', [!admin.blocked, id])
+  res.redirect('/')
+})
+
 router.post('/admin/edit/:id', isLoggedIn, async (req, res) => {
   const { id } = req.params;
   let { email, password, name, last_pay } = req.body;

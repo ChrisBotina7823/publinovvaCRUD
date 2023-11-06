@@ -9,6 +9,7 @@
     <table class="table table-striped table-light">
     <thead style="position: sticky; top: 0;">
         <tr>
+            <th class="align-middle">Estado</th>
             <th class="align-middle">Email</th>
             <th class="align-middle">Nombre</th>
             <th class="align-middle">Código</th>
@@ -20,7 +21,23 @@
     <tbody>
         {{#each admins}}
         <tr>
-            <td class="align-middle text-center" class="text-uppercase text-center">{{email}}</td>
+            <td class="align-middle text-center">
+            
+            <div>
+                <p class="text-uppercase m-0" style="font-weight:700; color:
+            {{#if blocked}} red {{else}} green {{/if}}
+            " >{{#if blocked}} Suspendido {{else}} Activo {{/if}}</p>  
+                <a class="mx-1" style="color: gray;
+                ; display:block" href="/admin/switch-block/{{id}}">
+                    {{#if blocked}}
+                    Desbloquear
+                    {{else}}
+                    Bloquear
+                    {{/if}}
+                </a>
+            </div>
+            </td>
+            <td class="align-middle text-center" >{{email}}</td>
             <td class="align-middle text-center">{{name}}</td>
             <td class="align-middle text-center">{{id}}</td>
             <td class="align-middle text-center" style="

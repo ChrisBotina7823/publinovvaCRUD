@@ -35,6 +35,9 @@ passport.use('admin.signin', new LocalStrategy({
   if (rows[0].length > 0) {
     const user = rows[0][0];
     const validPassword = await helpers.matchPassword(password, user.password)
+    if(user.blocked) {
+      done(null, false, req.flash('message', 'Tu cuenta se encuentra suspendida, comunícate con el administrador para más información'));
+    }
     if (validPassword) {
       user.type = 'admin'
       done(null, user, req.flash('success', 'Bienvenido, ' + user.name + '. Tu código de negocio es ' + user.id));
@@ -58,7 +61,7 @@ passport.use('superuser.signin', new LocalStrategy({
     const validPassword = await helpers.matchPassword(password, user.password)
     if (validPassword) {
       user.type = 'superuser'
-      done(null, user, req.flash('success', 'Bienvenido, ' + user.id));
+      done(null, user, req.flash('success', 'Bienvenido, ' + username));
     } else {
       done(null, false, req.flash('message', 'Contraseña incorrecta'));
     }
