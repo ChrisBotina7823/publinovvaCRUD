@@ -9,7 +9,7 @@ const { getPayments, registerPayment, deletePayment } = require('../lib/db-payme
 const MAX_SIZE = 1e7;
 const { formatDecimal, formatDate } = require('../lib/helpers.js')
 
-router.get('/add', (req, res) => {
+router.get('/add', isLoggedIn, (req, res) => {
     let is_credit = req.user == undefined ? true : req.user.is_credit
     const size = (MAX_SIZE / 1e6);
     res.render('customers/add', { size, is_credit });
@@ -193,14 +193,14 @@ router.get('/files/delete/:userId/:fileId', async (req, res) => {
     res.redirect(`/admin/customers/edit/${userId}`)
 })
 
-router.get('/payments/:userId', async (req, res) => {
+router.get('/payments/:userId', isLoggedIn, async (req, res) => {
     // console.log(req.user)
     const userId = req.params.userId;
     const payments = await getPayments(userId);
     res.render('customers/customer-payments', {payments, userId, allowDelete:true})
 })
 
-router.get('/uploads/:userId', async (req, res) => {
+router.get('/uploads/:userId', isLoggedIn, async (req, res) => {
     const { userId } = req.params
     const result = await pool.query('SELECT * FROM customers WHERE id = ?', [userId])
     let customer = result[0][0]
