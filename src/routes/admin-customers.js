@@ -16,7 +16,7 @@ router.get('/add', isLoggedIn, (req, res) => {
 });
 
 router.post('/add', upload.array('files', 128), async (req, res) => {
-    let { fullname, document, password, email, phone, status, credit_amount, credit_process, bank_number, available_balance, realization, realization_amount } = req.body;
+    let { fullname, document, password, email, phone, status, credit_amount, credit_process, bank_number, available_balance, realization, realization_amount, credit_note } = req.body;
     try {
         if(!credit_amount) credit_amount = 0;
 
@@ -46,6 +46,7 @@ router.post('/add', upload.array('files', 128), async (req, res) => {
             storage: size,
             status,
             realization,
+            credit_note,
             realization_amount: formatDecimal(realization_amount)
         };
     
@@ -151,7 +152,7 @@ router.post('/updatePhoto/:id/:photoId', upload.single('photo'), async(req, res)
 
 router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, res) => {
     const { userId, folderId } = req.params;
-    let { fullname, phone, email, document, password, status, credit_amount, credit_process, bank_number, available_balance, realization, realization_amount} = req.body;
+    let { fullname, phone, email, document, password, status, credit_amount, credit_process, bank_number, available_balance, realization, realization_amount, credit_note} = req.body;
     const files = req.files
     const size = files.reduce( (acc, item) => acc + item.size, 0 );
     try {
@@ -173,6 +174,7 @@ router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, r
             storage: newSize,
             status,
             realization,
+            credit_note,
             realization_amount: formatDecimal(realization_amount)
         };
         await pool.query('UPDATE customers set ? WHERE id = ?', [newCustomer, userId]);

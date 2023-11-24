@@ -29,6 +29,7 @@
         <thead style="position: sticky; top: 0;">
             <tr>
                 <th class="align-middle">Estado</th>
+                <th class="align-middle">Notas</th>
                 <th class="align-middle">Nombre completo</th>
                 <th class="align-middle">Documento</th>
                 <th class="align-middle">Teléfono</th>
@@ -49,6 +50,7 @@
             {{#each customers}}
             <tr>
                 <td class="align-middle text-center text-uppercase">{{status}}</td>
+                <td class="align-middle text-center">{{credit_note}}</td>
                 <td class="align-middle text-center">{{fullname}}</td>
                 <td class="align-middle text-center">{{document}}</td>
                 <td class="align-middle text-center">

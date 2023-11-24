@@ -36,7 +36,7 @@
 
 
 
-        <section id="credit-info" class="container section credit-info custom-nav-section p-0" style="height:100%;">
+        <section id="credit-info" class="container section credit-info custom-nav-section p-0" style="height:100%; overflow-y:scroll">
             <!-- Información de Crédito -->
             <div class="">
                 <div class="card">
@@ -67,6 +67,12 @@
                         <div>
                             <p class="my-0 text-center" style="font-size:3vh"><strong>ESTADO</strong></p>
                             <h1 id="estado" class="my-0 text-uppercase text-center card-subtitle" style="font-size: 5vh"> <strong>{{customer.status}}</strong></h1>
+                        </div>
+                        <div class="card card-body my-4 text-center">
+                            <p class="my-0">
+                                <span class="text-uppercase" style="font-weight: 700;">Notas:</span>
+                                {{customer.credit_note}}
+                            </p>
                         </div>
 
                         <div class="my-4 card py-4" style="
@@ -113,7 +119,7 @@
             </div>
         </section>
 
-        <section id="personal-info" class="container section personal-info custom-nav-section p-0" style="height:100%;">
+        <section id="personal-info" class="container section personal-info custom-nav-section p-0" style="height:100%; overflow-y:scroll">
             <!-- Información Personal -->
             <div class="col-md-6 mx-auto">
                 <div class="card">
@@ -144,7 +150,7 @@
             </div>
         </section>
 
-        <section id="document-info" class="container section document-info custom-nav-section p-0" style="height:100%;">
+        <section id="document-info" class="container section document-info custom-nav-section p-0" style="height:100%; overflow-y:scroll">
             <h2 class="card-title text-center">Archivos Subidos</h2>
             <div class="card-body mx-auto col-md-8">
                 <ul class="list-group">
