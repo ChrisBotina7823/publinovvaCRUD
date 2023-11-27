@@ -68,12 +68,13 @@
                             <p class="my-0 text-center" style="font-size:3vh"><strong>ESTADO</strong></p>
                             <h1 id="estado" class="my-0 text-uppercase text-center card-subtitle" style="font-size: 5vh"> <strong>{{customer.status}}</strong></h1>
                         </div>
-                        <div class="card card-body my-4 text-center">
-                            <p class="my-0">
-                                <span class="text-uppercase" style="font-weight: 700;">Notas:</span>
-                                {{customer.credit_note}}
-                            </p>
-                        </div>
+                        {{#if customer.credit_note}}
+                            <div class="card card-body my-4 text-center">
+                                    <p class="my-0">
+                                        {{customer.credit_note}}
+                                    </p>
+                            </div>
+                        {{/if}}
 
                         <div class="my-4 card py-4" style="
                             {{#if realized}}

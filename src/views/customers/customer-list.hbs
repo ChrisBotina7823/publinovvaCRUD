@@ -104,8 +104,7 @@
 
                 <td class="align-middle d-flex flex-column">
                     <a class="mx-1" style="color:#39439a" href="/admin/customers/edit/{{id}}">Editar</a>
-                    <a class="mx-1" style="color:red" href="/admin/customers/delete/{{id}}"
-                        onclick="return confirm('¿Estás seguro de que quieres eliminar este elemento?')">Eliminar</a>
+                    <a class="mx-1 delete-link" style="color:red" href="/admin/customers/delete/{{id}}">Eliminar</a>
                 </td>
             </tr>
             {{/each}}
@@ -171,6 +170,36 @@
             }
         }
     }
+</script>
 
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('customer-table').addEventListener('click', function (event) {
+      // Verificar si el clic fue en un enlace de eliminación
+      if (event.target.classList.contains('delete-link')) {
+        event.preventDefault();
+        var deleteUrl = event.target.getAttribute('href');
+
+        // Confirmar la eliminación
+        if (confirm('¿Estás seguro de que quieres eliminar este elemento?')) {
+          // Realizar la petición DELETE
+          fetch(deleteUrl, {
+            method: 'DELETE'
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`Error al eliminar: ${response.status} ${response.statusText}`);
+            }
+          })
+          .catch(error => {
+            console.error(error);
+            // Manejar errores si es necesario
+          });
+        // Ocultar la fila de la tabla después de la eliminación
+        event.target.closest('tr').style.display = 'none';
+        }
+      }
+    });
+  });
 </script>

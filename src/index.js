@@ -17,6 +17,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const { database } = require('./keys');
+const { strict } = require('assert');
 
 // Intializations
 const app = express();
@@ -40,8 +41,8 @@ app.set('view engine', '.hbs');
 // Middlewares
 app.use(morgan('dev'));
 app.use(cors())
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.json({strict:false}));
 // const MySQLStore = require('express-mysql-session')(session);
 // app.use(session({
 //   secret: 'faztmysqlnodemysql',

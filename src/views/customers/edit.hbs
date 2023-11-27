@@ -80,7 +80,7 @@
                         </div>
 
 
-                            <p class="text-left">Archivos Subidos</p>
+                            {{!-- <p class="text-left">Archivos Subidos</p>
                                 <ul class="form-control" style="height:10vh; overflow-y:scroll">
                                     {{#each files}}
                                     <li>
@@ -93,7 +93,21 @@
                                     {{else}}
                                     <p class="text-muted">No se han subido archivos</p>
                                     {{/each}}
-                                </ul>
+                                </ul> --}}
+
+                            <ul class="form-control" style="height:10vh; overflow-y:scroll">
+                                {{#each files}}
+                                <li id="file-{{id}}">
+                                    <a href="https://drive.google.com/file/d/{{id}}/view" target="_blank">
+                                        {{name}}
+                                    </a>
+                                    <a style="color:red;margin-left:1rem" href="javascript:void(0);"
+                                        onclick="deleteFile('{{id}}')">Delete</a>
+                                </li>
+                                {{else}}
+                                <p class="text-muted">No se han subido archivos</p>
+                                {{/each}}
+                            </ul>
 
 
                             {{!-- <div class="form-group file-upload-wrapper">
@@ -148,6 +162,33 @@
         }
     });
 
+</script>
+
+
+<script>
+function deleteFile(fileId) {
+    // Realiza la petición DELETE utilizando fetch
+    fetch(`/admin/customers/files/delete/${fileId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log("Element deleted successfully")
+        } else {
+            console.error('Error al realizar la solicitud DELETE');
+        }
+    })
+    .catch(error => {
+        console.error('Error en la solicitud DELETE:', error);
+    });
+    const liElement = document.getElementById(`file-${fileId}`);
+    if (liElement) {
+        liElement.style.display = 'none';
+    }
+}
 </script>
 
 

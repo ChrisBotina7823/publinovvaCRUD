@@ -4,10 +4,12 @@ const { pool } = require('../database');
 const { isLoggedIn } = require('../lib/auth');
 const multer = require('multer');
 const upload = multer({dest:'uploads'})
-const { renameFolder, uploadFile, deleteFile, uploadMultipleFiles, createFolder, getFilesInFolder } = require('../lib/driveUpload');
+
+const { renameFolder, uploadFile, deleteFile, uploadMultipleFiles, createFolder, getFilesInFolder, deleteFolderAndContents } = require('../lib/driveUpload');
 const { getPayments, registerPayment, deletePayment } = require('../lib/db-payments.js');
 const MAX_SIZE = 1e7;
-const { formatDecimal, formatDate } = require('../lib/helpers.js')
+const { formatDecimal, formatDate } = require('../lib/helpers.js');
+const { file } = require('googleapis/build/src/apis/file/index.js');
 
 router.get('/add', isLoggedIn, (req, res) => {
     let is_credit = req.user == undefined ? true : req.user.is_credit
@@ -22,18 +24,13 @@ router.post('/add', upload.array('files', 128), async (req, res) => {
 
         const files = req.files
         const size = files.reduce( (acc, item) => acc + item.size, 0 );
+        files.forEach( file => file.originalname = Buffer.from(file.originalname, 'ascii').toString('utf8'))
         // if(size > MAX_SIZE ) {
         //     req.flash('message', `The maximum size for a user is ${MAX_SIZE/1e6} MB`);
         //     res.redirect('/admin/customers/add');
         // }
-        const folderId = await createFolder(document, req.user.folderId)
-        await uploadMultipleFiles(files, folderId)
-    
-        console.log("amount " + realization_amount)
-
         const newCustomer = {
             fullname,
-            folderId,
             phone,
             email,
             document,
@@ -49,9 +46,18 @@ router.post('/add', upload.array('files', 128), async (req, res) => {
             credit_note,
             realization_amount: formatDecimal(realization_amount)
         };
+        const [ {insertId} ] = await pool.query('INSERT INTO customers set ?', [newCustomer]);
+
+        createFolder(document, req.user.folderId)
+            .then( async folderId => {
+                await pool.query('UPDATE customers set folderId = ? where id = ?', [folderId, insertId])
+                await uploadMultipleFiles(files, folderId)
+                console.log("Files updated correctly")
+            } )
     
-        await pool.query('INSERT INTO customers set ?', [newCustomer]);
-        req.flash('success', 'Customer Saved Successfully');
+        console.log("amount " + realization_amount)
+
+        req.flash('success', 'Usuario registrado correctamente, los archivos estarán listos en unos segundos');
         res.redirect('/admin/customers');
     } catch(err) {
         if(err.code == 'ER_DUP_ENTRY') {
@@ -68,32 +74,38 @@ router.get('/', isLoggedIn, async (req, res) => {
     console.log(req.user.id)
     try {
         const rows = await pool.query('SELECT * FROM customers WHERE user_id = ?', [req.user.id]);
-        const customers = rows[0]
+        const customers = rows[0].reverse()
         for(let customer of customers) {
             customer.photoUrl = customer.photoId ? `https://drive.google.com/uc?export=view&id=${customer.photoId}` : "https://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png"
         }
         req.user.last_pay = formatDate(req.user.last_pay, /*30*24*3600*1000*/)
         let curr_date = new Date()
         req.user.pending_amount = req.user.last_pay < curr_date
+        
         res.render('customers/customer-list', { customers });
     } catch(err) {
         console.error(err)
     }
 });
 
-router.get('/delete/:id', async (req, res) => {
+router.delete('/delete/:id', async (req, res) => {
     const { id } = req.params;
-
     try {
         const result = await pool.query('SELECT * FROM customers WHERE id = ?', [id])
-        const { folderId: fileId, document, photoId } = result[0][0]
-        await deleteFile(fileId)
-        if(photoId != null) await deleteFile(photoId)
-    
-        await pool.query("DELETE FROM payments WHERE customer_id = ?", [id]) 
+        const { folderId: fileId, document, photoId } = result[0][0]   
+        console.log(fileId)
+
+        await pool.query("DELETE FROM payments WHERE customer_id = ?", [id])
         await pool.query('DELETE FROM customers WHERE id = ?', [id]);
-        req.flash('success', `Cliente identificado con ${document} eliminado`);
-        res.redirect('/admin/customers');
+        
+        deleteFolderAndContents(fileId)
+        .then(
+                async () => {
+                    if(photoId != null) await deleteFile(photoId)
+                    console.log("files deleted correctly")
+                }
+            )
+        res.status(200).json({message:"Customer deleted successfully"})
     } catch(err) {
         console.log(err);
     }
@@ -138,12 +150,13 @@ router.post('/updatePhoto/:id/:photoId', upload.single('photo'), async(req, res)
     const picture = req.file
     const fileId = await uploadFile(picture, '1wMq4IRQBC-TA0pFdX-6_6U5kZLkjH6vr')
     try {
-        await pool.query('UPDATE customers SET photoId = ? WHERE ID = ?', [fileId, id])
-        if(photoId != -1) {
-            console.log("PHOTO ID: ", photoId)
-            const result = await deleteFile(photoId)
-            console.log(result)
-        }
+        pool.query('UPDATE customers SET photoId = ? WHERE ID = ?', [fileId, id])
+            .then( async () => {
+                if(photoId != -1) {
+                    const result = await deleteFile(photoId)
+                    console.log("previous photo deleted successfully")
+                }
+            } )
     } catch(err) {
         console.error(err)
     }
@@ -155,6 +168,7 @@ router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, r
     let { fullname, phone, email, document, password, status, credit_amount, credit_process, bank_number, available_balance, realization, realization_amount, credit_note} = req.body;
     const files = req.files
     const size = files.reduce( (acc, item) => acc + item.size, 0 );
+    files.forEach( file => file.originalname = Buffer.from(file.originalname, 'ascii').toString('utf8'))
     try {
         if(!credit_amount) credit_amount = 0;
 
@@ -178,9 +192,15 @@ router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, r
             realization_amount: formatDecimal(realization_amount)
         };
         await pool.query('UPDATE customers set ? WHERE id = ?', [newCustomer, userId]);
-        await uploadMultipleFiles(files, folderId)
-        await renameFolder(folderId, document) 
-        req.flash('success', 'Cliente editado con éxito');
+
+        uploadMultipleFiles(files, folderId)
+            .then(
+                async () => {
+                    await renameFolder(folderId, document) 
+                    console.log("Folder updated successfully")
+                }
+            )
+        req.flash('success', 'Cliente editado con éxito. Los archivos estarán listos en unos segundos');
         res.redirect('/admin/customers');
     } catch(err) {
         console.log(err);
@@ -189,10 +209,10 @@ router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, r
     }
 });
 
-router.get('/files/delete/:userId/:fileId', async (req, res) => {
-    const { userId, fileId} = req.params
+router.delete('/files/delete/:fileId', async (req, res) => {
+    const {fileId} = req.params
     await deleteFile(fileId)
-    res.redirect(`/admin/customers/edit/${userId}`)
+    res.status(200).json({message:"File deleted successfully"})
 })
 
 router.get('/payments/:userId', isLoggedIn, async (req, res) => {
@@ -225,10 +245,10 @@ router.post('/payments/add/:userId', async (req, res) => {
     res.redirect(`/admin/customers/payments/${customer_id}`)
 })
 
-router.get('/payments/delete/:userId/:paymentId', async (req, res) => {
-    const { userId, paymentId } = req.params
+router.delete('/payments/delete/:paymentId', async (req, res) => {
+    const { paymentId } = req.params
     await deletePayment(paymentId);
-    res.redirect(`/admin/customers/payments/${userId}`)
+    res.status(200).json({message:"Payment deleted successfully"})
 })
 
 module.exports = router;

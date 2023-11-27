@@ -41,10 +41,17 @@
                 {{/if}}
             </td>
             {{#if ../allowDelete}}
-            <td class="align-middle text-center">
-                <a class="mx-1" style="color:red" href="/admin/customers/payments/delete/{{../userId}}/{{this.id}}"
+            {{!-- <td class="align-middle text-center">
+                <a class="mx-1" style="color:red" href="/admin/customers/payments/delete/{{this.id}}"
                     onclick="return confirm('¿Estás seguro de que quieres eliminar este registro?')">Eliminar</a>
+            </td> --}}
+
+            <td class="align-middle text-center">
+                <a class="mx-1 delete-payment-link" style="color:red" href="#"
+                    data-payment-id="{{this.id}}"
+                    onclick="deletePaymentRow(this); return false;">Eliminar</a>
             </td>
+
             {{/if}}
         </tr>
         {{/each}}
@@ -60,4 +67,41 @@
             }
         })
     })
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll(".pending-amount-highlighted").forEach(elem => {
+            const content = elem.firstChild.textContent.replace(/[^0-9]/g, "");
+            if (content == '0') {
+                elem.classList.remove("pending-amount-highlighted");
+            }
+        });
+    });
+
+    function deletePaymentRow(link) {
+        const paymentId = link.getAttribute('data-payment-id');
+        const row = link.closest('tr');
+
+        // Oculta el elemento tr
+        row.style.display = 'none';
+
+        // Realiza la petición DELETE utilizando fetch
+        fetch(`/admin/customers/payments/delete/${paymentId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                console.error('Error al realizar la solicitud DELETE');
+                // Puedes mostrar un mensaje de error o realizar otras acciones si es necesario
+            }
+        })
+        .catch(error => {
+            console.error('Error en la solicitud DELETE:', error);
+            // Puedes mostrar un mensaje de error o realizar otras acciones si es necesario
+        });
+    }
 </script>

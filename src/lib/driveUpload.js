@@ -99,11 +99,36 @@
         }
     }
 
+    const deleteFolderAndContents = async (folderId) => {
+        try {
+            // Get the list of files and subfolders in the folder
+            const filesInFolder = await getFilesInFolder(folderId);
+    
+            // Delete each file and subfolder
+            await Promise.all(filesInFolder.map(async (file) => {
+                if (file.mimeType === 'application/vnd.google-apps.folder') {
+                    // Recursively delete subfolders
+                    await deleteFolderAndContents(file.id);
+                } else {
+                    // Delete individual file
+                    await deleteFile(file.id);
+                }
+            }));
+    
+            // After deleting all contents, delete the folder itself
+            await deleteFile(folderId);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+    
+
     module.exports = {
         uploadFile,
         uploadMultipleFiles,
         createFolder,
         deleteFile,
         getFilesInFolder,
-        renameFolder
+        renameFolder,
+        deleteFolderAndContents
     }
