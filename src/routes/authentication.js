@@ -8,6 +8,7 @@ const { formatDate, unformatDate } = require("../lib/helpers")
 const passport = require('passport');
 const { isLoggedIn, isNotAuthenticated } = require('../lib/auth');
 const { getPayments } = require('../lib/db-payments');
+const helpers = require('../lib/helpers');
 
 // SIGNUP
 router.get('/admin/signup', (req, res) => {
