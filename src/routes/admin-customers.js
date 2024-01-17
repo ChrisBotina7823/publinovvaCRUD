@@ -137,6 +137,10 @@ router.get('/updatePhoto/:id', isLoggedIn, async(req, res) => {
         const {id} = req.params
         const customers = await pool.query('SELECT * FROM customers WHERE id = ?', [id]);
         const customer = customers[0][0]
+        if(customer?.user_id != req.user.id) {
+            res.redirect("/logout")
+            return
+        }
         console.log(customer)
         customer.photoUrl = customer.photoId ? `https://drive.google.com/thumbnail?id=${customer.photoId}` : "https://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png"
         res.render('customers/updatePhoto', {customer});
@@ -218,6 +222,12 @@ router.delete('/files/delete/:fileId', async (req, res) => {
 router.get('/payments/:userId', isLoggedIn, async (req, res) => {
     // console.log(req.user)
     const userId = req.params.userId;
+    const result = await pool.query('SELECT * FROM customers WHERE id = ?', [userId])
+    let customer = result[0][0]
+    if(req.user.id != userId && customer?.user_id != req.user.id) {
+        res.redirect("/logout")
+        return
+    }
     const payments = await getPayments(userId);
     res.render('customers/customer-payments', {payments, userId, allowDelete:true})
 })
@@ -226,6 +236,10 @@ router.get('/uploads/:userId', isLoggedIn, async (req, res) => {
     const { userId } = req.params
     const result = await pool.query('SELECT * FROM customers WHERE id = ?', [userId])
     let customer = result[0][0]
+    if(req.user.id != userId && customer?.user_id != req.user.id) {
+        res.redirect("/logout")
+        return
+    }
     customer.files = await getFilesInFolder(customer.folderId)
     res.render('customers/customer-uploads', {customer, userId})
 })
