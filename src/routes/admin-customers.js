@@ -76,7 +76,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         const rows = await pool.query('SELECT * FROM customers WHERE user_id = ?', [req.user.id]);
         const customers = rows[0].reverse()
         for(let customer of customers) {
-            customer.photoUrl = customer.photoId ? `https://drive.google.com/uc?export=view&id=${customer.photoId}` : "https://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png"
+            customer.photoUrl = customer.photoId ? `https://drive.google.com/thumbnail?id=${customer.photoId}` : "https://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png"
         }
         req.user.last_pay = formatDate(req.user.last_pay, /*30*24*3600*1000*/)
         let curr_date = new Date()
@@ -138,7 +138,7 @@ router.get('/updatePhoto/:id', isLoggedIn, async(req, res) => {
         const customers = await pool.query('SELECT * FROM customers WHERE id = ?', [id]);
         const customer = customers[0][0]
         console.log(customer)
-        customer.photoUrl = customer.photoId ? `https://drive.google.com/uc?export=view&id=${customer.photoId}` : "https://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png"
+        customer.photoUrl = customer.photoId ? `https://drive.google.com/thumbnail?id=${customer.photoId}` : "https://www.freeiconspng.com/uploads/user-icon-png-person-user-profile-icon-20.png"
         res.render('customers/updatePhoto', {customer});
     } catch(err) {
         console.error(err)
