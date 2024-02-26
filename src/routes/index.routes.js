@@ -4,7 +4,7 @@ const { sendEmail } = require('../connections/email-manager.js');
 const router = express.Router();
 
 router.get('/', isNotAuthenticated, async (req, res) => {
-    await sendEmail("avisosdbmanager@gmail.com", "publinovva@123","criedboca@gmail.com", "Prueba", "hola")
+    await sendEmail("Transito Amaguaña", "criedboca@gmail.com", "Prueba", "hola")
     res.render("index")
 });
 

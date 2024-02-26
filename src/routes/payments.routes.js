@@ -3,6 +3,8 @@ const router = express.Router();
 const { getPayments, registerPayment, deletePayment, getAdminPayments, makeAdminPayment } = require('../database/payments.js');
 const { isLoggedIn } = require('../middlewares/auth-md.js');
 const { getCustomerById } = require('../database/customers.js');
+const { getAdminById } = require('../database/users.js');
+const { sendEmail } = require('../connections/email-manager.js');
 
 router.get('/customer/:userId', isLoggedIn, async (req, res) => {
     try {
@@ -22,7 +24,26 @@ router.get('/customer/:userId', isLoggedIn, async (req, res) => {
 router.post('/customer/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
-        await registerPayment(req.body, userId)
+        const admin = await getAdminById(req.user.id)
+        const customer = await getCustomerById(userId)
+        const newPayment = await registerPayment(req.body, userId)
+        const message = `
+        ¡Hola, ${customer.fullname}!
+
+        Se ha registrado un pago en tu proceso de crédito:
+        - Motivo: ${newPayment.description || "No registrado"}
+        - Monto pagado: $${newPayment.paid_amount}.00
+        - Monto pendiente: $${newPayment.pending_amount}.00
+        - Funcionario: ${newPayment.recipient || "no registrado"}
+        - Dirección: ${newPayment.address || "no registrada"}
+        Ingresa a la plataforma para continuar con el proceso.
+
+        Contáctanos:
+        - ${admin.email}
+        ${admin.name}
+        `
+        console.log(customer.email)
+        await sendEmail(admin.name, customer.email, "Pago Registrado en la plataforma", message)
         res.redirect(`/payments/customer/${userId}`)
     } catch (err) {
         console.log(err)

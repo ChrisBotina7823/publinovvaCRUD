@@ -36,7 +36,6 @@ const signinUser = async ( user, password, req, done ) => {
   if(user.type == 'customer') validPassword = user.password == password
   if(!validPassword) return done(null, false, req.flash('message', 'Contraseña incorrecta'))  
   // Successful SignIn
-  console.log(user)
   return done(null, user, req.flash('success', 'Bienvenido, ' + ( user.fullname || user.name || user.user_id) ));
 }
 passport.use('superuser.signin', new LocalStrategy({

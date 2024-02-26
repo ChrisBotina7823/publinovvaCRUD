@@ -28,6 +28,7 @@ const registerPayment = async({paid_amount, pending_amount, description, recipie
         recipient
     }
     await pool.query(`INSERT INTO payments SET ?`, [payment])
+    return payment
 }
 
 const deletePayment = async (paymentId) => {

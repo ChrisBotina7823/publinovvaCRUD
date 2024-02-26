@@ -1,29 +1,20 @@
 <!-- ======= Header ======= -->
-<header class="rounded-5 rounded-top fixed-top d-flex justify-content-around align-items-center"
-    style="height:10vh; background: radial-gradient(circle, rgba(0,112,255,1) 0%, rgba(10,5,64,1) 100%)">
-    <a class="text-white" href="#" data-bs-toggle="dropdown">
-        <h1>
-            {{#if showProfile}}
-            <a class="text-white" href="/customers/profile/{{cypheredDoc}}/{{customer.user_id}}">
-            <i class="fa fa-user-circle"></i>
-            </a>
-            {{else}}
-            <a class="text-white" href="/customers/dashboard/{{cypheredDoc}}/{{customer.user_id}}">
-            <i class="fa fa-arrow-alt-circle-left"></i>
-            </a>
-            {{/if}}
-        </h1>
-    </a><!-- End Profile Iamge Icon -->
+<header class="py-2 rounded-4 rounded-top fixed-top d-flex justify-content-around align-items-center"
+    style=" background: radial-gradient(circle, rgba(0,112,255,1) 0%, rgba(10,5,64,1) 100%)">
+    {{#if showProfile}}
+    <a class="text-white" href="/customers/profile/{{cypheredDoc}}/{{customer.user_id}}">
+    <i class="fa fa-user-circle"></i>
+    </a>
+    {{else}}
+    <a class="text-white" href="/customers/dashboard/{{cypheredDoc}}/{{customer.user_id}}">
+    <i class="fa fa-arrow-alt-circle-left"></i>
+    </a>
+    {{/if}}
 
-    <h1 class="text-white" style="font-family: Roboto;">{{customerTitle}}</h1>
+    <p class="text-white my-auto" style="font-family: Roboto;">{{customerTitle}}</p>
 
-    <a class="text-white" href="/">
-        <h1>
-            <a class="text-white" href="/customer/signin/{{customer.user_id}}">
-            <i class="fas fa-sign-out-alt"></i>
-            </a>
-        </h1>
-
+    <a class="text-white" href="/customer/signin/{{customer.user_id}}">
+        <i class="fas fa-sign-out-alt"></i>
     </a>
 
 </header><!-- End Header -->

@@ -14,17 +14,17 @@
 {{/if}}
 
 <div class="section">
-    <div class="container col-md-6">
+    <div class="container col-md-8">
         <div class="row">
             {{#each customer.files}}
-            <div class="card col-md-4 ">
+            <div class="card col-md-4 col-6">
                 <div class="text-center card-title">{{name}}</div>
                 <div class="card-body text-center">
                     <a class="btn btn-primary text-white bg-primary p-2 rounded-3" href="https://drive.google.com/file/d/{{id}}/view" target="_blank">
-                        <i class="fa fa-eye" style="font-size:2vh"></i>
+                        <i class="fa fa-eye" style="font-size:3vh"></i>
                     </a>
                     <a class="btn btn-primary text-white bg-primary p-2 rounded-3" href="{{webContentLink}}" target="_blank">
-                        <i class="fa fa-download" style="font-size:2vh"></i>
+                        <i class="fa fa-download" style="font-size:3vh"></i>
                     </a>
                 </div>
                 <div class="card-footer small text-muted">

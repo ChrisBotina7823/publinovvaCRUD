@@ -32,9 +32,7 @@ const getAllCustomers = async (admin_id) => {
 const registerCustomer = async ({fullname, document, password, email, phone, status, credit_amount = 0, credit_process, bank_number, available_balance, realization, realization_amount, credit_note}, files, adminFolderId, admin_id) => {
     const storage = files.reduce((acc, item) => acc + item.size, 0);
     files.forEach(file => file.originalname = Buffer.from(file.originalname, 'ascii').toString('utf8') )
-    console.log(adminFolderId)
     const folderId = await createFolder( document, adminFolderId )
-    console.log(admin_id)
     const newCustomer = {
         fullname,
         phone,
@@ -54,8 +52,6 @@ const registerCustomer = async ({fullname, document, password, email, phone, sta
         realization_amount: formatDecimal(realization_amount)
     };
 
-    console.log(newCustomer)
-
     uploadMultipleFiles(files, folderId).then( () => {
         console.log("Files uploaded correctly")
     })
@@ -69,7 +65,6 @@ const updateCustomer = async (id, {fullname, phone, email, document, password, s
     const additionalStorage = files.reduce((acc, item) => acc + item.size, 0);
     files.forEach(file => file.originalname = Buffer.from(file.originalname, 'ascii').toString('utf8'))
     const [ [{storage}] ] = await pool.query('SELECT storage FROM customers WHERE id = ?', [id])
-    console.log(storage)
     const newCustomer = {
         fullname,
         phone,
@@ -97,7 +92,6 @@ const updateCustomer = async (id, {fullname, phone, email, document, password, s
 
 const updateCustomerPhoto = async (id, picture, prevPicture = null) => {
     const fileId = await uploadFile(picture, '1wMq4IRQBC-TA0pFdX-6_6U5kZLkjH6vr')
-    console.log(fileId)
     await pool.query('UPDATE customers SET photoId = ? WHERE ID = ?', [fileId, id])
     if(prevPicture != -1) await deleteFile(prevPicture)
 }
@@ -117,7 +111,6 @@ const deleteCustomer = async (id) => {
 
 const deleteCustomerPhoto = async (id) => {
     const customer = await getCustomerById(id)
-    console.log(customer.photoId)
     if(customer.photoId) await deleteFile(customer.photoId)
     await pool.query('UPDATE customers SET photoId = NULL WHERE id = ?', [id])
 }

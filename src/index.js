@@ -64,9 +64,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use( (req, res, next) => {
-  console.log(req.user)
   if(req.user && req.user.length) req.user = req.user[0]
-  console.log(req.user)
   next()
 } )
 

@@ -1,76 +1,90 @@
-<section class="mt-4">
+<section>
+    <div class="container" >
+        <div class="row">
+            <div class="col-sm-6">
+                <div id="accordion">
+                    <div class="card">
+                        <div class="row card-header" id="headingOne">
+                            <div class="col-10">
+                                <div class="text-muted font-weight-bold small" data-toggle="collapse"
+                                    data-target="#status-notes">
+                                    Tu crédito se encuentra:
+                                </div>
+                                <div class="text-uppercase font-weight-bold display-6" style="font-family: Roboto;">
+                                    {{customer.status}}
+                                </div>
+                            </div>
+                            <button class="col-2 btn btn-lg" data-toggle="collapse" data-target="#collapseOne"
+                                aria-expanded="false" aria-controls="collapseOne">
+                                <i class="fas fa-info-circle" style="font-size: 5vh;"></i>
+                            </button>
 
-    <div class="container col-md-6">
-        <div id="accordion">
-            <div class="card">
-                <div class="row card-header" id="headingOne">
-                    <div class="col-10">
-                        <div class="text-muted font-weight-bold display-8" data-toggle="collapse"
-                            data-target="#status-notes">
-                            Tu crédito se encuentra:
                         </div>
-                        <h1 class="text-uppercase font-weight-bold display-2" style="font-family: Roboto;">
-                            {{customer.status}}
-                        </h1>
+
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion" style="position:relative; z-index: 100;">
+                            <div class="card-body p-4">
+                                <p>
+                                    {{#if customer.credit_note}}
+                                    {{customer.credit_note}}.
+                                    {{else}}
+                                    No tienes notas
+                                    {{/if}}
+                                </p>
+                                <p><span class="font-weight-bold">Proceso de crédito: </span>{{customer.credit_process}}
+                                </p>
+                                <p><span class="font-weight-bold">Estado de Desembolso: </span>{{customer.realization}}
+                                </p>
+
+                            </div>
+                        </div>
                     </div>
-                    <button class="col-2 btn btn-lg" data-toggle="collapse" data-target="#collapseOne"
-                        aria-expanded="false" aria-controls="collapseOne">
-                        <i class="fas fa-info-circle" style="font-size: 4vh;"></i>
-                    </button>
+                </div> {{!-- End accordion --}}
+            </div>
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-6">
+                        <a href="/customers/payments/{{cypheredDoc}}/{{customer.user_id}}" class="card p-4 text-center">
+                            <i class="fas fa-donate m-auto" style="font-size:8vh"></i>
+                            <div class="font-weight-bold small mt-2 text-muted">Pagos</div>
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="/customers/files/{{cypheredDoc}}/{{customer.user_id}}" class="card p-4 text-center">
+                            <i class="fas fa-file-alt m-auto" style="font-size:8vh"></i>
+                            <div class="font-weight-bold small mt-2 text-muted">Archivos</div>
+                        </a>
+                    </div>
 
                 </div>
-
-                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                    <div class="card-body p-4">
-                        <p>
-                            {{#if customer.credit_note}}
-                            {{customer.credit_note}}.
-                            {{else}}
-                            No tienes notas
-                            {{/if}}
-                        </p>
-                        <p><span class="font-weight-bold">Proceso de crédito: </span>{{customer.credit_process}}</p>
-                        <p><span class="font-weight-bold">Estado de Desembolso: </span>{{customer.realization}}</p>
-                        
-                    </div>
-                </div>
             </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">
-                <h1 class="ml-4">Saldos</h1>
-            </div>
-            <div class="card-body">
-                <ul class="list-group">
-                    <li class="list-group-item font-weight-bold">
-                        Disponible: ${{customer.available_balance}},00
-                    </li>
-                    <li class="list-group-item font-weight-bold">
-                        Crédito: ${{customer.credit_amount}},00
-                    </li>
-                    <li class="list-group-item font-weight-bold">
-                        Desembolso: ${{customer.realization_amount}},00
-                    </li>
-                </ul>
-            </div>
-        </div>
+        </div> {{! end first row }}
 
         <div class="row">
-            <div class="col-6">
-                <a href="/customers/payments/{{cypheredDoc}}/{{customer.user_id}}" class="card p-4 text-center">
-                    <i class="fas fa-donate m-auto" style="font-size:8vh"></i>
-                    <div class="font-weight-bold display-8 mt-2 text-muted">Pagos</div>
-                </a>
-                <a href="/customers/files/{{cypheredDoc}}/{{customer.user_id}}" class="card p-4 text-center">
-                    <i class="fas fa-file-alt m-auto" style="font-size:8vh"></i>
-                    <div class="font-weight-bold display-8 mt-2 text-muted">Archivos</div>
-                </a>
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-title my-0">
+                        <div class="display-8 ml-4 my-0">Saldos</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="p-1 list-group-item font-weight-bold">
+                                Disponible: ${{customer.available_balance}},00
+                            </li>
+                            <li class="p-1 list-group-item font-weight-bold">
+                                Crédito: ${{customer.credit_amount}},00
+                            </li>
+                            <li class="p-1 list-group-item font-weight-bold">
+                                Desembolso: ${{customer.realization_amount}},00
+                            </li>
+                        </ul>
+                    </div>
+                </div> {{! end card }}
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <img src="/img/business-man.png" style="max-height: 40vh; max-width:100%" alt="business-man">
             </div>
         </div>
-
     </div>
 </section>
+
+

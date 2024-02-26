@@ -4,7 +4,6 @@ const isLoggedIn = (req, res, next) => {
 }
 
 const isNotAuthenticated = (req, res, next) => {
-    console.log("user: " + req.user)
     if (req.user && !req.user.length) return next();
     switch(req.user?.type) {
         case 'superuser': 
