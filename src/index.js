@@ -7,26 +7,15 @@ const validator = require('express-validator');
 const passport = require('passport');
 const flash = require('connect-flash');
 const cors = require('cors')
-const fileUpload = require('express-fileupload');
-
-// const FileStore = require('session-file-store')(session);
-const bodyParser = require('body-parser');
 const multer = require('multer');
 const dotenv = require('dotenv')
 
+
+// Server Settings
 dotenv.config()
-
-const { database } = require('./keys');
-const { strict } = require('assert');
-
-// Intializations
 const app = express();
-require('./lib/passport');
 
-
-
-
-// Settings
+// View Engine and Encoding
 app.set('port', process.env.PORT || 4000);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', exphbs({
@@ -34,62 +23,38 @@ app.engine('.hbs', exphbs({
   layoutsDir: path.join(app.get('views'), 'layouts'),
   partialsDir: path.join(app.get('views'), 'partials'),
   extname: '.hbs',
-  helpers: require('./lib/handlebars')
+  helpers: require('./helpers/handlebars')
 }))
 app.set('view engine', '.hbs');
-
-// Middlewares
 app.use(morgan('dev'));
 app.use(cors())
 app.use(express.urlencoded({extended: true}));
 app.use(express.json({strict:false}));
-// const MySQLStore = require('express-mysql-session')(session);
-// app.use(session({
-//   secret: 'faztmysqlnodemysql',
-//   resave: false,
-//   saveUninitialized: false,
-//   store: new MySQLStore({
-//     user: process.env.DB_USER,
-//     password: process.env.DB_PASSWORD,
-//     host: process.env.DB_HOST,
-//     port: process.env.DB_PORT,
-//     database: process.env.DB_NAME
-//   })
-// }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-
-// const SequelizeStore = require('connect-session-sequelize')(session.Store);
-// const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-//     host: process.env.DB_HOST,
-//     port: process.env.DB_PORT,
-//     dialect: 'mysql',
-//     logging: false
-// });
-// const sessionStore = new SequelizeStore({
-//     db: sequelize
-// });
-// app.use(session({
-//     secret: 'session secret',
-//     store: sessionStore,
-//     resave: false,
-//     saveUninitialized: false
-// }));
-// sessionStore.sync();
-
+// Sessions and Passport
 app.use(session({
-  secret: 'keyboard cat', // Una clave secreta para firmar la cookie
-  resave: false, // Si se debe guardar la sesión aunque no haya cambios
-  saveUninitialized: true, // Si se debe guardar la sesión aunque esté vacía
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
 }))
-
-
-app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(validator());
 
+// Multer
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    req.flash('error', err.message);
+    res.redirect('back');
+  } else {
+    next(err);
+  }
+});
 
-// Global variables
+
+// Flash messages
+app.use(flash());
 app.use((req, res, next) => {
   app.locals.message = req.flash('message');
   app.locals.success = req.flash('success');
@@ -98,41 +63,21 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use(require('./routes/index'));
-app.use(require('./routes/authentication'));
-app.use('/admin/customers', require('./routes/admin-customers'));
-app.use('/superuser/admins', require('./routes/superuser-admins'));
+app.use( (req, res, next) => {
+  console.log(req.user)
+  if(req.user && req.user.length) req.user = req.user[0]
+  console.log(req.user)
+  next()
+} )
 
-app.use((err, req, res, next) => {
-  if (err instanceof multer.MulterError) {
-      req.flash('error', err.message);
-      res.redirect('back');
-  } else {
-      next(err);
-  }
-});
-
-// Public
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(require('./routes/index.routes'));
+app.use(require('./routes/auth.routes'));
+app.use('/admins', require('./routes/admins.routes'));
+app.use('/customers', require('./routes/customers.routes'));
+app.use('/payments', require('./routes/payments.routes'))
+app.use('/files', require('./routes/files.routes'))
 
  // Starting
-app.listen(app.get('port'), () => {
+ app.listen(app.get('port'), () => {
   console.log('Server is in port', app.get('port'));
 });
-
-// // Scheduling 
-
-// new CronJob('0 16 * * *', async () => {
-//   // Registering metrics
-//   console.log("Registering today's metrics")
-//   await registerMetrics()
-//   console.log("Metrics registered")
-//   // Activating campaigns
-//   console.log("Activating Campaigns")
-//   await turnAllCampaigns(true)
-//   console.log("Campaigns Activated")
-
-//   // Check each 15 minutes for the daily goal
-//   checkJob.start()
-// }, null, true);
-  

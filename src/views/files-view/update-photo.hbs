@@ -1,0 +1,66 @@
+<div class="pagetitle">
+    <h1>Cambiar Foto</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/customers">Inicio</a></li>
+            <li class="breadcrumb-item">Clientes</li>
+            <li class="breadcrumb-item active">Cambiar Foto</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<section class="text-center">
+    <div class="container col-md-6">
+        <div class="card">
+            <div class="card-title">
+                {{customer.fullname}}
+            </div>
+            <div class="card-body">
+                <img id="img-preview" src="{{customer.photoUrl}}" alt="Profile picture" width="300vw" height="300vw"  class="border rounded-circle">
+                 <a href="/files/profile-picture/delete/{{customer.id}}" class="btn btn-danger rounded-circle">
+                    <i class="fa fa-trash"></i>
+                 </a>
+                <form id="form"
+                    action="/files/profile-picture/{{customer.id}}/{{#if customer.photoId}}{{customer.photoId}}{{else}}-1{{/if}}"
+                    method="POST" enctype="multipart/form-data">
+                    <div class="card mt-4 p-4 text-center">
+                        <h3>Subir Foto</h3>
+                        <input id="input-file" type="file" accept="image/*" name="photo" class="form-control"
+                            style="height:6vh">
+                        <div class="mx-auto mt-4">
+                            <button id="save-btn" disabled="true" class="btn btn-primary">
+                                Guardar
+                            </button>
+                            <a class="btn btn-danger" href="/">Cancelar</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    const inputFile = document.getElementById('input-file');
+    const imgPreview = document.getElementById('img-preview');
+    const saveBtn = document.getElementById('save-btn')
+
+    inputFile.addEventListener('change', () => {
+
+        console.log('{{{customer.photoUrl}}}')
+
+        saveBtn.disabled = !inputFile.value
+        const reader = new FileReader();
+        reader.onload = () => {
+            imgPreview.src = reader.result;
+        };
+
+        try {
+            reader.readAsDataURL(inputFile.files[0]);
+        } catch (err) {
+            imgPreview.src = '{{{customer.photoUrl}}}'
+        }
+    });
+
+</script>

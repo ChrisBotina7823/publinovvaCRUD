@@ -1,0 +1,128 @@
+<div class="pagetitle">
+    <h1>Lista de Pagos</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/customers">Inicio</a></li>
+            <li class="breadcrumb-item">Clientes</li>
+            <li class="breadcrumb-item active">Lista de Pagos</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<div class="section">
+    <div class="card">
+        <div class="card-body" style="overflow-x:auto;">
+            <table class="small table data-table table-bordered">
+                <thead>
+                    <th class="align-middle text-center">Fecha</th>
+                    <th class="align-middle text-center">Monto cancelado</th>
+                    <th class="align-middle text-center">Monto pendiente</th>
+                    <th class="align-middle text-center">Descripción</th>
+                    <th class="align-middle text-center">Dirección de Pago</th>
+                    <th class="align-middle text-center">Funcionario/a</th>
+                    <th class="align-middle text-center">Acciones</th>
+                </thead>
+                <tbody>
+
+                    <form class="form-inline" action="/payments/customer/{{userId}}" , method="POST">
+                        <tr>
+                            <td>
+
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input value="0" type="number" id="paid_amount_input" name="paid_amount"
+                                        class="form-control currency-input" placeholder="0" required>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    </div>
+                                    <input value="0" type="number" id="pending_amount_input" name="pending_amount"
+                                        class="form-control currency-input" placeholder="0" required>
+                                </div>
+                            </td>
+                            <td>
+                                <input type="text" name="description" class="form-control"
+                                    placeholder="Descripción">
+                            </td>
+                            <td>
+                                <input type="text" name="address" class="form-control"
+                                    placeholder="Dirección">
+                            </td>
+                            <td>
+                                <input type="text" name="recipient" class="form-control"
+                                    placeholder="Funcionario">
+
+                            </td>
+                            <td>
+                                <button class="btn btn-outline-primary btn-sm">
+                                    Añadir un Pago
+                                </button>
+                            </td>
+                        </tr>
+                    </form>
+
+                    {{#each payments}}
+                    <tr>
+                        <td class="align-middle text-center small text-muted">{{formatDate payment_date}}</td>
+                        <td class="align-middle text-center">{{paid_amount}}</td>
+                        <td class="align-middle text-center">{{pending_amount}}</td>
+                        <td class="align-middle text-center">{{description}}</td>
+                        <td class="align-middle text-center">{{address}}</td>
+                        <td class="align-middle text-center">{{recipient}}</td>
+                        <td class="align-middle text-center">
+                            <a class="mx-1 delete-link" style="color:red; cursor:pointer"
+                                onclick="deletePaymentRow(this, {{id}})">Eliminar</a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll(".pending-amount-highlighted").forEach(elem => {
+            const content = elem.firstChild.textContent.replace(/[^0-9]/g, "");
+            if (content == '0') {
+                elem.classList.remove("pending-amount-highlighted");
+            }
+        });
+    });
+
+    function deletePaymentRow(link, id) {
+        const paymentId = link.getAttribute('data-payment-id');
+        const row = link.closest('tr');
+
+        // Oculta el elemento tr
+        row.style.display = 'none';
+
+        // Realiza la petición DELETE utilizando fetch
+        fetch(`/payments/customer/delete/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('Error al realizar la solicitud DELETE');
+                    // Puedes mostrar un mensaje de error o realizar otras acciones si es necesario
+                }
+            })
+            .catch(error => {
+                console.error('Error en la solicitud DELETE:', error);
+                // Puedes mostrar un mensaje de error o realizar otras acciones si es necesario
+            });
+    }
+</script>

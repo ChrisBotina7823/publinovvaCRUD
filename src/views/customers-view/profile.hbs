@@ -1,0 +1,46 @@
+<section class="mt-4">
+    <div class="container col-md-6 text-center">
+        <div class="text-center mx-auto font-weight-bold text-uppercase border border-4 rounded-4">
+            ESTADO DE CUENTA: <span class="display-6">{{customer.status}}</span>
+        </div>
+        <div class="card my-4 p-4 text-center">
+            <img class="mx-auto border rounded-circle" src="{{customer.photoUrl}}" width="200vh" height="200vh" alt="customerPhoto">
+            <h3 class=" mt-4 font-weight-bold">
+                {{customer.fullname}}
+            </h3>
+
+        </div>
+
+
+
+        <ul class="list-group list-group-flush">
+            <li class=" text-left mb-0 list-group-item">
+                <i class="fas fa-id-card"></i> <span class="font-weight-bold">Documento</span> 
+                <p>{{customer.document}}</p>
+            </li>
+            <li class=" text-left mb-0 list-group-item">
+                <i class="fa fa-phone"></i> <span class="font-weight-bold">Teléfono</span> 
+                <p>
+                {{customer.phone}}
+                </p>
+            </li>
+            <li class=" text-left mb-0 list-group-item">
+                <i class="fas fa-envelope"></i> <span class="font-weight-bold">Correo Electrónico</span>
+                <p>
+                {{customer.email}}
+                </p>
+            </li>
+            <li class=" text-left mb-0 list-group-item">
+                <i class="fas fa-landmark"></i> <span class="font-weight-bold">Número de Cuenta</span>
+                <p>
+                    {{#if customer.bank_number}}
+                {{customer.bank_number}}
+                {{else}}
+                No registrado
+                {{/if}}
+                </p>
+            </li>
+        </ul>
+
+    </div>
+</section>

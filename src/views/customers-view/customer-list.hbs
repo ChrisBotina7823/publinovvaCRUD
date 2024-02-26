@@ -1,0 +1,201 @@
+<div class="clearfix">
+    <div class="pagetitle float-left">
+        <h1>Lista de Clientes</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                <li class="breadcrumb-item">Clientes</li>
+                <li class="breadcrumb-item active">Lista de Clientes</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+    <div class="float-right align-middle mb-4">
+        <a class="btn btn-outline-primary" href="/customers/add-form">
+            Añadir un cliente
+            <i class="fas fa-user-plus"></i>
+        </a>
+    </div>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card">
+                <div class="card-body" style="overflow-x:auto;">
+                    <h5 class="card-title">Tabla de Clientes</h5>
+
+                    <!-- Table with stripped rows -->
+                    <table id="customer-table" class="table datatable ">
+                        <thead>
+                            <tr>
+                                <th class="align-middle text-center">Acciones</th>
+                                <th class="align-middle text-center">Perfil</th>
+                                <th class="align-middle text-center">Información</th>
+                                <th class="align-middle text-center">Extra</th>
+                                <th class="align-middle text-center">Saldos</th>
+                                <th class="align-middle text-center">Fecha de Creación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {{#each customers}}
+                            <tr>
+                                <td class="align-middle text-left">
+                                    <a class="btn d-block text-secondary btn-sm" href="/customers/edit-form/{{id}}">
+                                        <i class="fas fa-user-edit"></i>
+                                        Editar
+                                    </a>
+                                    <a class="btn d-block btn-sm text-danger delete-link" href="/customers/delete/{{id}}">
+                                        <i class="fas fa-user-minus"></i>
+                                        Eliminar
+                                    </a>
+                                    <a class="btn d-block btn-sm text-success" href="/payments/customer/{{id}}">
+                                        <i class="fas fa-donate"></i>
+                                        Pagos
+                                    </a>
+                                    <a class="btn d-block btn-sm text-primary" href="/files/{{id}}">
+                                        <i class="fas fa-file-alt"></i>
+                                        Archivos
+                                    </a>
+                                </td>
+
+                                <td class="align-middle text-center ">
+                                    <div class="mb-2">
+                                        <img class="mx-auto img-circle border border-secondary rounded-circle"
+                                            src="{{photoUrl}}" alt="photo" style="height: 8vh; width:8vh">
+                                        <div>
+                                            <a class="btn text-secondary btn-sm mx-1" style="color:#39439a"
+                                                href="/files/profile-picture/edit-form/{{id}}">
+                                                <i class="fas fa-edit"></i>
+                                                Cambiar
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                    <div class="font-weight-bold text-uppercase border border-2 rounded">
+                                        {{status}}
+                                    </div>
+                                </td>
+
+                                <td class="col-md-2">
+                                    <ul class="list-group list-group-flush">
+                                        <li class=" text-left mb-0 list-group-item">
+                                            {{fullname}}
+                                        </li>
+                                        <li class=" text-left mb-0 list-group-item small">
+                                            <i class="fas fa-id-card"></i>
+                                            {{document}}
+                                        </li>
+                                        <li class=" text-left mb-0 list-group-item small">
+                                            <i class="fa fa-phone"></i>
+                                            {{phone}}
+                                        </li>
+                                        <li class=" text-left mb-0 list-group-item small">
+                                            <i class="fas fa-envelope"></i>
+                                            {{email}}
+                                        </li>
+                                        <li class=" text-left mb-0 list-group-item small">
+                                            <i class="fas fa-landmark"></i>
+                                            {{bank_number}}
+                                        </li>
+                                    </ul>
+                                </td>
+
+                                <td class="col-md-3 text-left">
+                                    <ul class="list-group list-group-flush">
+                                       <li class="list-group-item">
+                                            <span class="text-uppercase small font-weight-bold">
+                                            Proceso de crédito:
+                                            </span>
+                                            {{credit_process}}
+                                       </li>
+                                       <li class="list-group-item">
+                                            <span class="text-uppercase small font-weight-bold">
+                                            Notas:
+                                            </span>
+                                            {{credit_note}}
+                                       </li>
+                                       <li class="list-group-item">
+                                            <span class="text-uppercase small font-weight-bold">
+                                            Desembolso:
+                                            </span>
+                                            {{realization}}
+                                       </li>
+                                    </ul>
+                                </td>
+
+                                <td class="col-md-2 text-uppercase">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item align-middle">
+                                                Desembolso
+                                            <span class="font-weight-bold">
+                                                    {{formatCurrency realization_amount}}
+                                            </span>
+                                        </li>
+                                        <li class="list-group-item align-middle">
+                                                Crédito:
+                                            <span class="font-weight-bold">
+                                                    {{formatCurrency credit_amount}}
+                                            </span>
+                                        </li>
+                                        <li class="list-group-item align-middle">
+                                                Disponible:
+                                                <span class="font-weight-bold">
+                                                    {{formatCurrency available_balance}}                                        
+                                                </span>
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td class="col-md-1 align-middle text-center" id="date">
+                                    <div class="btn">
+                                        {{formatDate created_at}}
+                                    </div>
+                                </td>
+
+                            </tr>
+                            {{/each}}
+
+                        </tbody>
+                    </table>
+                    <!-- End Table with stripped rows -->
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('customer-table').addEventListener('click', function (event) {
+            // Verificar si el clic fue en un enlace de eliminación
+            if (event.target.classList.contains('delete-link')) {
+                event.preventDefault();
+                var deleteUrl = event.target.getAttribute('href');
+                console.log(deleteUrl)
+
+                // Confirmar la eliminación
+                if (confirm('¿Estás seguro de que quieres eliminar este elemento?')) {
+                    // Realizar la petición DELETE
+                    fetch(deleteUrl, {
+                        method: 'GET'
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Error al eliminar: ${response.status} ${response.statusText}`);
+                            }
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            // Manejar errores si es necesario
+                        });
+                    // Ocultar la fila de la tabla después de la eliminación
+                    event.target.closest('tr').style.display = 'none';
+                }
+            }
+        });
+    });
+</script>

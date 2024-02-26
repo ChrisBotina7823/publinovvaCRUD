@@ -1,0 +1,62 @@
+{{#if customerNav}}
+<div class="mt-4"></div>
+{{else }}
+<div class="pagetitle">
+    <h1>Archivos Subidos</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/customers">Inicio</a></li>
+            <li class="breadcrumb-item">Clientes</li>
+            <li class="breadcrumb-item active">Archivos Subidos</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+{{/if}}
+
+<div class="section">
+    <div class="container col-md-6">
+        <div class="row">
+            {{#each customer.files}}
+            <div class="card col-md-4 ">
+                <div class="text-center card-title">{{name}}</div>
+                <div class="card-body text-center">
+                    <a class="btn btn-primary text-white bg-primary p-2 rounded-3" href="https://drive.google.com/file/d/{{id}}/view" target="_blank">
+                        <i class="fa fa-eye" style="font-size:2vh"></i>
+                    </a>
+                    <a class="btn btn-primary text-white bg-primary p-2 rounded-3" href="{{webContentLink}}" target="_blank">
+                        <i class="fa fa-download" style="font-size:2vh"></i>
+                    </a>
+                </div>
+                <div class="card-footer small text-muted">
+                    Subido: {{formatDate modifiedTime}}
+                </div>
+            </div>
+            {{else}}
+            No se han subido archivos
+            {{/each}}
+        </div>
+
+    </div>
+</div>
+
+
+{{!-- <div id="scrollable-container" class="container main-container col-md-8"
+    style="height: 65vh; width: 100%; display:flex; overflow-x:scroll;">
+
+    <div class="card mx-auto col-md-8">
+        <div class="card card-header">
+            <h3 class="card-title">Archivos Subidos</h3>
+            <h4 class=" m-0" style="font-size:2vh">{{customer.fullname}}</h4>
+        </div>
+        <div class="card card-body">
+            <ul>
+                {{#each customer.files}}
+                <li><a href="https://drive.google.com/file/d/{{id}}/view" target="_blank">{{name}}</a></li>
+                {{else}}
+                No se han subido archivos
+                {{/each}}
+            </ul>
+        </div>
+
+    </div>
+</div> --}}

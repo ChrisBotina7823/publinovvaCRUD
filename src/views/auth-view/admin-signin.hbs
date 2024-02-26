@@ -1,0 +1,38 @@
+<section class="section register">
+
+  <div class="col-md-4 mx-auto">
+
+    <div class="card mb-3">
+
+      <div class="card-body">
+
+        <div class="pt-4 pb-2">
+          <h5 class="card-title text-center pb-0 fs-4">Ingresa a tu cuenta</h5>
+          <p class="text-center small">Escribe tu correo y contraseña</p>
+        </div>
+
+        <form class="row g-3 needs-validation" action="/admin/signin" method="POST" novalidate>
+
+          <div class="col-12">
+            <label for="yourUsername" class="form-label">Correo</label>
+            <div class="input-group has-validation">
+              <span class="input-group-text" id="inputGroupPrepend">@</span>
+              <input type="text" name="email" class="form-control" id="yourUsername" required>
+              <div class="invalid-feedback">Ingresa tu correo electrónico</div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label for="yourPassword" class="form-label">Contraseña</label>
+            <input type="password" name="password" class="form-control" id="yourPassword" required>
+            <div class="invalid-feedback">Ingresa tu contraseña</div>
+          </div>
+          <div class="col-12 my-4">
+            <button class="btn btn-primary w-100" type="submit">Iniciar sesión</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+</section>

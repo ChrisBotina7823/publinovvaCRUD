@@ -1,0 +1,46 @@
+<section class="mt-4">
+    <div class="container col-md-6">
+        <div id="accordion">
+            {{#each customer.payments}}
+            <div class="card mb-2">
+                <div class="text-dark card-header" id="heading{{id}}">
+                    <div class="row">
+                        <div class="col-6">
+                            <span class="font-weight-bold">Motivo: </span> {{description}}
+                        </div>
+                        <div class="col-4">
+                            Cancelado: <span class="font-weight-bold">{{formatCurrency paid_amount}}</span>
+                            Pendiente: <span class="font-weight-bold">{{formatCurrency pending_amount}}</span>
+                        </div>
+                        <div class="col-2">
+                            <button class="p-0 btn text-center" data-toggle="collapse" data-target="#collapse{{id}}" aria-expanded="true"
+                                aria-controls="collapse{{id}}">
+                                <i class="my-auto fa fa-info-circle text-center" style="font-size: 3vh;"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="collapse{{id}}" class="collapse" aria-labelledby="heading{{id}}" data-parent="#accordion">
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <span class="font-weight-bold">Dirección: </span> {{#if address}} {{address}} {{else}} No registrado {{/if}}
+                            </li>
+                            <li class="list-group-item">
+                                <span class="font-weight-bold">Fecha de Pago: </span> {{formatDate payment_date}}
+                            </li>
+                            <li class="list-group-item">
+                                <span class="font-weight-bold">Funcionario: </span> {{#if receiver}} {{receiver}} {{else}} No registrado {{/if}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {{else}}
+            No hay pagos registrados
+            {{/each}}
+        </div>
+
+    </div>
+</section>

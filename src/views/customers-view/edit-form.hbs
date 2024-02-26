@@ -1,0 +1,183 @@
+<div class="pagetitle">
+    <h1>Editar un cliente</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/customers">Inicio</a></li>
+            <li class="breadcrumb-item">Clientes</li>
+            <li class="breadcrumb-item active">Editar un cliente</li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<div class="section">
+    <div class="card">
+        <div class="card-body">
+            <form id="form" action="/customers/edit/{{customer.id}}/{{customer.folderId}}" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <p class="text-left">Nombre Completo</p>
+                    <input type="text" value="{{{customer.fullname}}}" name="fullname" class="form-control"
+                        placeholder="Nombre Completo" autofocus required>
+                </div>
+                <div class="form-group">
+                    <p class="text-left">Documento</p>
+                    <input type="text" value="{{{customer.document}}}" name="document" class="form-control"
+                        placeholder="Documento" required>
+                </div>
+                <div class="form-group">
+                    <p class="text-left">Contraseña</p>
+                    <input type="text" value="{{{customer.password}}}" name="password" class="form-control"
+                        placeholder="Contraseña" required>
+                </div>
+                <div class="form-group">
+                    <p class="text-left">Correo Electrónico</p>
+                    <input type="email" value="{{{customer.email}}}" name="email" class="form-control"
+                        placeholder="Correo Electrónico">
+                </div>
+                <div class="form-group">
+                    <p class="text-left">Teléfono</p>
+                    <input type="phone" value="{{{customer.phone}}}" name="phone" class="form-control"
+                        placeholder="Teléfono">
+                </div>
+                <div class="form-group">
+                    <p class="text-left">Proceso de crédito</p>
+                    <input type="text" name="credit_process" value="{{{customer.credit_process}}}" class="form-control"
+                        placeholder="Proceso de crédito">
+                </div>
+                <div class="form-group">
+                    <p class="text-left">Número de cuenta</p>
+                    <input type="text" name="bank_number" value="{{{customer.bank_number}}}" class="form-control"
+                        placeholder="Número de cuenta">
+                </div>
+                {{#if is_credit}}
+                <div class="form-group">
+                    <p class="text-left">Monto de crédito</p>
+                    <input type="text" name="credit_amount" value="{{{customer.credit_amount}}}"
+                        class="form-control currency-input" placeholder="Monto de crédito">
+                </div>
+                {{/if}}
+                <div class="form-group">
+                    <p class="text-left">Saldo Disponible</p>
+                    <input type="text" name="available_balance" value="{{{customer.available_balance}}}"
+                        class="form-control currency-input" placeholder="Saldo Disponible">
+                </div>
+
+                <div class="form-group">
+                    <div class="form-group">
+                        <p class="text-left">Estado</p>
+                        <select name="status" class="form-control">
+                            <option value="pendiente">Pendiente</option>
+                            <option value="aprobado">Aprobado</option>
+                            <option value="no aprobado">No aprobado</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <p class="text-left">Notas</p>
+                        <input type="text" name="credit_note" class="form-control" placeholder="Notas de crédito"
+                            value="{{{customer.credit_note}}}">
+                    </div>
+
+                    <div class="form-group">
+                        <p class="text-left">Desembolso</p>
+                        <select name="realization" class="form-control">
+                            <option value="en proceso" selected>En proceso</option>
+                            <option value="congelado">Congelado</option>
+                            <option value="realizado">Realizado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <p class="text-left">Monto de desembolso</p>
+                        <input type="text" id="realization_amount_input" value="{{{customer.realization_amount}}}"
+                            name="realization_amount" class="form-control currency-input" placeholder="$">
+                    </div>
+
+                    <ul class="form-control" style="height:10vh; overflow-y:scroll">
+                        {{#each customer.files}}
+                        <li id="file-{{id}}">
+                            <a href="https://drive.google.com/file/d/{{id}}/view" target="_blank">
+                                {{name}}
+                            </a>
+                            <a style="color:red;margin-left:1rem" href="javascript:void(0);"
+                                onclick="deleteFile('{{id}}')">Delete</a>
+                        </li>
+                        {{else}}
+                        <p class="text-muted">No se han subido archivos</p>
+                        {{/each}}
+                    </ul>
+
+                    <div class="form-group file-upload-wrapper">
+                        <p class="text-left">Subir Archivos <span class="text-muted"> (Tamaño restante: {{
+                                customer.remaining_size }} MB)</span></p>
+                        <input id="fileInput" type="file" accept=".txt, .pdf, .doc, .docx, .xls, .xlsx, .odt, .ods, image/*" style="height:3rem" name="files" class="form-control" multiple>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <button class="btn btn-primary btn-block">
+                                    Guardar
+                                </button>
+                            </div>
+                            <div class="col">
+                                <a href="/customers" class="btn btn-danger btn-block">
+                                    Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{!-- <script>
+    const MAX_SIZE = {{ customer.remaining_size }} * 1e6;
+    const fileInput = document.querySelector('#fileInput');
+    fileInput.addEventListener('change', (event) => {
+        const files = fileInput.files
+        let size = 0
+        for (let file of files) {
+            size += file.size
+        }
+        if (size > MAX_SIZE) {
+            event.preventDefault();
+            alert(`The maximum file size is ${MAX_SIZE / 1e6} MB`)
+            fileInput.value = ''
+        }
+    });
+
+</script> --}}
+
+
+<script>
+    const deleteAsync = async (fileId) => {
+        fetch(`/files/delete/${fileId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Element deleted successfully")
+                } else {
+                    console.error('Error al realizar la solicitud DELETE');
+                }
+            })
+            .catch(error => {
+                console.error('Error en la solicitud DELETE:', error);
+            });
+    }
+    function deleteFile(fileId) {
+        // Realiza la petición DELETE utilizando fetch
+        deleteAsync(fileId)
+        const liElement = document.getElementById(`file-${fileId}`);
+        if (liElement) {
+            liElement.style.display = 'none';
+        }
+    }
+</script>
+
+
+{{>currency-script}}
