@@ -116,7 +116,8 @@ router.post('/admin/edit/:id', isLoggedIn, async (req, res) => {
       let newAdmin = {
           email,
           name,
-          initial_pay : unformatDate(last_pay)
+          initial_pay : unformatDate(last_pay),
+          type:"admin"
       };
       if(password != "") {
         newAdmin.password = await helpers.encryptPassword(password)

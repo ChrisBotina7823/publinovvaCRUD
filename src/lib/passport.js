@@ -13,6 +13,7 @@ const registerAdmin = async (email, name, password) => {
     password: hashedPassword,
     name,
     folderId,
+    type: "admin"
   };
   // Saving in the Database
   const result = await pool.query('INSERT INTO admins SET ? ', newUser);

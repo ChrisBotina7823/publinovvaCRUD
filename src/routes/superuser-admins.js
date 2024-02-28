@@ -15,7 +15,7 @@ router.get('/', isLoggedIn, async (req, res) => {
         const rows = await pool.query('SELECT * FROM admins');
         const admins = rows[0]
         let current_date = new Date()
-        for(admin of admins) {
+        for(let admin of admins) {
             admin.last_pay = formatDate (admin.last_pay, /*30*24*3600*1000*/)
             admin.last_pay // offset 
             admin.pending_payment = admin.last_pay < current_date 

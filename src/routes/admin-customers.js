@@ -44,7 +44,8 @@ router.post('/add', upload.array('files', 128), async (req, res) => {
             status,
             realization,
             credit_note,
-            realization_amount: formatDecimal(realization_amount)
+            realization_amount: formatDecimal(realization_amount),
+            type: "customer"
         };
         const [ {insertId} ] = await pool.query('INSERT INTO customers set ?', [newCustomer]);
 
@@ -193,7 +194,8 @@ router.post('/edit/:userId/:folderId', upload.array('files', 128), async (req, r
             status,
             realization,
             credit_note,
-            realization_amount: formatDecimal(realization_amount)
+            realization_amount: formatDecimal(realization_amount),
+            type:"customer"
         };
         await pool.query('UPDATE customers set ? WHERE id = ?', [newCustomer, userId]);
 
