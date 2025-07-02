@@ -51,6 +51,16 @@
                         </div>
                         
                         <div class="form-group">
+                            <p class="text-left">Fecha oportuna para pago de cuota</p>
+                            <input type="date" name="opportune_payment_date" value="{{formatDateForInput customer.opportune_payment_date}}" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <p class="text-left">Fecha máxima sin mora</p>
+                            <input type="date" name="max_payment_date" value="{{formatDateForInput customer.max_payment_date}}" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
                             <div class="form-group">
                                 <p class="text-left">Estado</p>
                                 <select name="status" class="form-control">

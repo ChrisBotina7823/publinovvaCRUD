@@ -38,6 +38,8 @@
                 <th class="align-middle">Número de {{#if user.is_credit}}cuenta{{else}}placa{{/if}}</th>
                 {{#if is_credit}}<th class="align-middle">Monto de crédito</th>{{/if}}
                 <th class="align-middle">Saldo disponible</th>
+                <th class="align-middle">Fecha oportuna</th>
+                <th class="align-middle">Fecha máxima</th>
                 <th class="align-middle">Desembolso</th>
                 <th class="align-middle">Monto de desembolso</th>
                 <th class="align-middle">Información</th>
@@ -84,6 +86,20 @@
 
                 {{#if is_credit}}<td class="align-middle text-center">{{formatCurrency credit_amount}}</td>{{/if}}
                 <td class="align-middle text-center">{{formatCurrency available_balance}}</td>
+                <td class="align-middle text-center">
+                    {{#if opportune_payment_date}}
+                    {{formatDate opportune_payment_date}}
+                    {{else}}
+                    ---
+                    {{/if}}
+                </td>
+                <td class="align-middle text-center">
+                    {{#if max_payment_date}}
+                    {{formatDate max_payment_date}}
+                    {{else}}
+                    ---
+                    {{/if}}
+                </td>
 
                 <td class="align-middle text-center text-uppercase">{{realization}}</td>
                 <td class="align-middle text-center">{{formatCurrency realization_amount}}</td>

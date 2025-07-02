@@ -64,6 +64,14 @@
                         <p class="mb-1">Saldo disponible: {{formatCurrency customer.available_balance}}</p>
                         {{/if}}
 
+                        {{#if customer.opportune_payment_date}}
+                        <p class="mb-1">Fecha de pago oportuno: {{formatDate customer.opportune_payment_date}}</p>
+                        {{/if}}
+
+                        {{#if customer.max_payment_date}}
+                        <p class="mb-1">Fecha máxima de pago: {{formatDate customer.max_payment_date}}</p>
+                        {{/if}}
+
                         <div>
                             <p class="my-0 text-center" style="font-size:3vh"><strong>ESTADO</strong></p>
                             <h1 id="estado" class="my-0 text-uppercase text-center card-subtitle" style="font-size: 5vh"> <strong>{{customer.status}}</strong></h1>
@@ -75,6 +83,7 @@
                                     </p>
                             </div>
                         {{/if}}
+
 
                         <div class="my-4 card py-4" style="
                             {{#if realized}}

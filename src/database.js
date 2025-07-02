@@ -22,29 +22,25 @@
 
 // module.exports = pool;
 
+const { createPool } = require("mysql2/promise");
+const dotenv = require("dotenv");
 
-const {createPool} = require('mysql2/promise')
-const dotenv = require('dotenv')
-
-dotenv.config()
+dotenv.config();
 
 module.exports = {
-    pool: createPool({
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT,
-        database: process.env.DB_NAME
-    })
-}
-
+  pool: createPool({
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+  }),
+};
 
 // const mysql = require('mysql')
 // const { database } = require('./keys')
 // const connection = mysql.createConnection(database)
 // module.exports = connection;
-
-
 
 // const { MongoClient, ServerApiVersion } = require('mongodb');
 // const uri = "mongodb+srv://publinovva:Publinovva123@publinovvadb.6qrmmho.mongodb.net/?retryWrites=true&w=majority";
@@ -71,4 +67,3 @@ module.exports = {
 // }
 
 // module.exports = { connect }
-
