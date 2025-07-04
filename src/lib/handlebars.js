@@ -21,8 +21,8 @@ helpers.formatCurrency = (value) => {
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 2,
+    minimumFractionDigits: 2,
   });
 
   return formatter.format(value);
@@ -30,8 +30,8 @@ helpers.formatCurrency = (value) => {
 
 helpers.formatNumber = (value) => {
   const formatter = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 2,
+    minimumFractionDigits: 2,
   });
 
   return formatter.format(value);
